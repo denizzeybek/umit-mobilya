@@ -1,41 +1,34 @@
 // app.js
 
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const productRoutes = require('./routes/product.route');
+const connectDB = require('./configs/database');  // Veritabanı bağlantısını içe aktar
+const routes = require('./routes');   
 
-// Çevre değişkenlerini yükle
+// Çevresel değişkenleri yükleyin
 dotenv.config();
 
-// Uygulama başlatma
+// Express uygulaması başlat
 const app = express();
-const port = process.env.PORT || 3000;
 
-// JSON verisini almak için middleware
+// MongoDB bağlantısını yap
+connectDB();
+
+// JSON verilerini işlemek için middleware
 app.use(express.json());
 
-// MongoDB bağlantısı
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
-    console.log('MongoDB bağlantısı başarılı');
-  })
-  .catch((err) => {
-    console.error('MongoDB bağlantısı başarısız', err);
-  });
 
-// Ürün API'leri
-app.use('/api/products', productRoutes);
+// API'ler ve diğer middleware'ler burada tanımlanabilir
+app.use(routes);
 
 // Ana dizine hoş geldiniz mesajı
 app.get('/', (req, res) => {
   res.send('Hoş geldiniz! Express + MongoDB API çalışıyor!');
 });
 
-// Sunucu başlatma
-app.listen(port, () => {
-  console.log(`Sunucu ${port} portunda çalışıyor`);
+
+// Sunucuyu başlat
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Sunucu ${PORT} portunda çalışıyor`);
 });
