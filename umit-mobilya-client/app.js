@@ -16,7 +16,16 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 // MongoDB bağlantısı
-d
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => {
+    console.log('MongoDB bağlantısı başarılı');
+  })
+  .catch((err) => {
+    console.error('MongoDB bağlantısı başarısız', err);
+  });
 
 // Ürün API'leri
 app.use('/api/products', productRoutes);
