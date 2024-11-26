@@ -3,7 +3,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const productRoutes = require('./routes/productRoutes');
+const productRoutes = require('./routes/product.route');
 
 // Çevre değişkenlerini yükle
 dotenv.config();
@@ -16,16 +16,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 // MongoDB bağlantısı
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
-    console.log('MongoDB bağlantısı başarılı');
-  })
-  .catch((err) => {
-    console.error('MongoDB bağlantısı başarısız', err);
-  });
+d
 
 // Ürün API'leri
 app.use('/api/products', productRoutes);

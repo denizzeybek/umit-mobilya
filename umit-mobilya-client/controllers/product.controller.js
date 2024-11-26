@@ -1,6 +1,6 @@
 // controllers/productController.js
 
-const Product = require('../models/Product');
+const Product = require('../models/product.model');
 
 // Tüm ürünleri listeleme
 exports.getAllProducts = async (req, res) => {
