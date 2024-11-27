@@ -6,16 +6,17 @@ const {
   createProduct,
   deleteProduct,
 } = require('../controllers/product.controller');
+const { requireAuth } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
 // Tüm ürünleri listeleme
-router.get('/', getAllProducts);
+router.get('/', requireAuth, getAllProducts);
 
 // Yeni ürün ekleme
-router.post('/', createProduct);
+router.post('/', requireAuth, createProduct);
 
 // Ürün silme
-router.delete('/:id', deleteProduct);
+router.delete('/:id', requireAuth, deleteProduct);
 
 module.exports = router;

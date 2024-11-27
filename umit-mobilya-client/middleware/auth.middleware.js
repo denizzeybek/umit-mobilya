@@ -2,43 +2,52 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 
 const requireAuth = (req, res, next) => {
-  const token = req.cookies.jwt;
+  try {
+    const token = req.cookies.jwt;
 
-  // check json web token exists & is verified
-  if (token) {
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: 'Unauthorized - No token provided' });
+    }
+
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
       if (err) {
-        console.log(err.message);
-        res.redirect('/login');
-      } else {
-        console.log(decodedToken);
-        next();
+        console.error('JWT verification error:', err.message);
+        return res
+          .status(401)
+          .json({ message: 'Unauthorized - Invalid token' });
       }
+      next();
     });
-  } else {
-    res.redirect('/login');
+  } catch (error) {
+    console.error('Error in requireAuth:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-// check current user
-const checkUser = (req, res, next) => {
-  const token = req.cookies.jwt;
-  if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
-      if (err) {
-        res.locals.user = null;
+const checkUser = async (req, res, next) => {
+  try {
+    const token = req.cookies.jwt;
+
+    if (token) {
+      jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+        if (err) {
+          res.locals.user = null;
+        } else {
+          const user = await User.findById(decodedToken.id);
+          res.locals.user = user || null;
+        }
         next();
-      } else {
-        let user = await User.findById(decodedToken.id);
-        res.locals.user = user;
-        next();
-      }
-    });
-  } else {
-    res.locals.user = null;
-    next();
+      });
+    } else {
+      res.locals.user = null;
+      next();
+    }
+  } catch (error) {
+    console.error('Error in checkUser:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
 
 module.exports = { requireAuth, checkUser };

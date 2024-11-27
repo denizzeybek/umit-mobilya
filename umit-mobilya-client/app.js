@@ -4,6 +4,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./configs/database');  // Veritabanı bağlantısını içe aktar
 const routes = require('./routes');   
+const cookieParser = require('cookie-parser');
 
 // Çevresel değişkenleri yükleyin
 dotenv.config();
@@ -16,6 +17,8 @@ connectDB();
 
 // JSON verilerini işlemek için middleware
 app.use(express.json());
+
+app.use(cookieParser());
 
 
 // API'ler ve diğer middleware'ler burada tanımlanabilir
