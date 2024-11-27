@@ -10,6 +10,18 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  currency: {
+    type: String,
+    default: 'TRY',
+  },
+  imageUrl: {
+    type: String,
+    default: 'https://picsum.photos/536/354',
+  },
+  sizes: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
   },
@@ -22,9 +34,15 @@ const productSchema = new mongoose.Schema({
   },
   modules: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product', // 'Product' modeline referans
-      default: [],
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        default: 1, // Her modül için farklı quantity
+      },
     },
   ],
   createdAt: {
