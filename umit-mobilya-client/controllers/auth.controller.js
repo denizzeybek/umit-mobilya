@@ -84,3 +84,22 @@ module.exports.logout_get = (req, res) => {
   res.cookie('jwt', '', { maxAge: 1 });
   res.redirect('/');
 };
+
+// Fetch user from JWT
+module.exports.fetchUser = async (req, res) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.status(401).json({ error: 'Authentication token missing' });
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decodedToken.id).select('-password'); // Exclude password
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};
