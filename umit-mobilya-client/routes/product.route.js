@@ -5,7 +5,7 @@ const {
   getAllProducts,
   createProduct,
   deleteProduct,
-  filterProductsByName,
+  filterProducts,
 } = require('../controllers/product.controller');
 const { requireAuth } = require('../middleware/auth.middleware');
 
@@ -15,7 +15,7 @@ const router = express.Router();
 router.get('/', requireAuth, getAllProducts);
 
 // Ürünleri adıyla filtreleme
-router.get('/filter', requireAuth, filterProductsByName);
+router.get('/filter', requireAuth, filterProducts);
 
 // Yeni ürün ekleme
 router.post('/', requireAuth, createProduct);

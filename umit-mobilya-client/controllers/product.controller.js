@@ -2,10 +2,26 @@
 
 const Product = require('../models/product.model');
 
-const getProducts = async (name = '') => {
+const getProducts = async (payload) => {
   try {
     // Create a query object
-    const query = name ? { name: new RegExp(name, 'i') } : {}; // Case-insensitive search
+    const { name, category, dynamicQuery } = payload || {};
+    const query = {};
+
+    if (name) {
+      query.name = new RegExp(name, 'i');
+    }
+    if (category) {
+      query.category = new RegExp(category, 'i');
+    }
+
+    if (dynamicQuery) {
+      query.$or = [
+        { name: new RegExp(dynamicQuery, 'i') },  // Case-insensitive search for 'name'
+        { category: new RegExp(dynamicQuery, 'i') }  // Case-insensitive search for 'category'
+      ];
+    }
+
     const products = await Product.find(query).populate('modules.productId');
     const newProduct = products.map((product) => {
       return {
@@ -47,6 +63,21 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+// API endpoint to get filtered products by name
+exports.filterProducts = async (req, res) => {
+  try {
+    // Get the 'name' query parameter from the request
+    const { name, category, dynamicQuery } = req.body;
+
+    // Call getProducts with the name filter
+    const products = await getProducts({ name, category, dynamicQuery });
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Yeni ürün ekleme
 exports.createProduct = async (req, res) => {
   const {
@@ -78,21 +109,6 @@ exports.createProduct = async (req, res) => {
     res.status(201).json(newProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });
-  }
-};
-
-// API endpoint to get filtered products by name
-exports.filterProductsByName = async (req, res) => {
-  try {
-    // Get the 'name' query parameter from the request
-    const { name } = req.body;
-
-    // Call getProducts with the name filter
-    const products = await getProducts(name);
-
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
   }
 };
 
