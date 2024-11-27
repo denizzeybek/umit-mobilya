@@ -102,7 +102,7 @@ exports.deleteProduct = async (req, res) => {
     }
 
     // Burada silme işlemini gerçekleştirebilirsiniz
-    await product.remove(); // veya product.deleteOne() kullanabilirsiniz.
+    await Product.findByIdAndDelete(req.params.id);
 
     res.json({ message: 'Ürün silindi' });
   } catch (error) {
