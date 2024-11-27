@@ -2,9 +2,11 @@
 
 const Product = require('../models/product.model');
 
-const getProducts = async () => {
+const getProducts = async (name = '') => {
   try {
-    const products = await Product.find().populate('modules.productId');
+    // Create a query object
+    const query = name ? { name: new RegExp(name, 'i') } : {}; // Case-insensitive search
+    const products = await Product.find(query).populate('modules.productId');
     const newProduct = products.map((product) => {
       return {
         _id: product._id,
@@ -76,6 +78,21 @@ exports.createProduct = async (req, res) => {
     res.status(201).json(newProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+// API endpoint to get filtered products by name
+exports.filterProductsByName = async (req, res) => {
+  try {
+    // Get the 'name' query parameter from the request
+    const { name } = req.body;
+
+    // Call getProducts with the name filter
+    const products = await getProducts(name);
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
