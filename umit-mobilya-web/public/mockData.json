@@ -1,0 +1,4953 @@
+{
+  "/webapi/definition/employees": [
+    {
+      "Abbreviation": "JE",
+      "RoleName": "Manager",
+      "TeamName": "Commercial Project Bidding",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291770657a0318a082d51e0",
+      "MemberName": "Judith Elliott",
+      "TeamId": "629176ff57a0318a082d51b5",
+      "TitleId": "629176f457a0318a082d50e5",
+      "TitleName": "Bidding Supervisor",
+      "Salary": "10000",
+      "Password": 123456,
+      "Email": "judith@gmail.com",
+      "WindowsIdentity": "CONTOSO\\judith.elliott",
+      "Enabled": true,
+      "Role": 1,
+      "Tags": ["Analizyum"],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "EW",
+      "RoleName": "Manager",
+      "TeamName": "Finance Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291770757a0318a082d51e7",
+      "MemberName": "Evelyn Wall",
+      "TeamId": "629176fb57a0318a082d5166",
+      "TitleId": "629176f857a0318a082d513c",
+      "TitleName": "Finance Director",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\evelyn.wall",
+      "Enabled": true,
+      "Role": 1,
+      "Tags": ["Billing"],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "CM",
+      "RoleName": "Employee",
+      "TeamName": "Commercial Project Bidding",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291770957a0318a082d51fc",
+      "MemberName": "Celine Miller",
+      "TeamId": "629176ff57a0318a082d51b5",
+      "TitleId": "629176f757a0318a082d512d",
+      "TitleName": "Bidding Expert",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\celine.miller",
+      "Enabled": true,
+      "Role": 0,
+      "Tags": ["Accounting", "Finance", "Billing", "Collection"],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "KM",
+      "RoleName": "Manager",
+      "TeamName": "Strategy Development",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291770b57a0318a082d520a",
+      "MemberName": "Kyan Mooney",
+      "TeamId": "629176fc57a0318a082d516b",
+      "TitleId": "629176f357a0318a082d50de",
+      "TitleName": "Strategy Supervisor",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\kyan.mooney",
+      "Enabled": true,
+      "Role": 1,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "JH",
+      "RoleName": "Manager",
+      "TeamName": "Trading Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291771557a0318a082d5261",
+      "MemberName": "Julie Harding",
+      "TeamId": "629176ff57a0318a082d51b3",
+      "TitleId": "629176f757a0318a082d5128",
+      "TitleName": "Trade Manager",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\julie.harding",
+      "Enabled": true,
+      "Role": 1,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "AO",
+      "RoleName": "Manager",
+      "TeamName": "Collection and Budget",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291771657a0318a082d526d",
+      "MemberName": "Agnes Owens",
+      "TeamId": "629176fc57a0318a082d5177",
+      "TitleId": "629176f357a0318a082d50d2",
+      "TitleName": "Collection Supervisor",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\agnes.owens",
+      "Enabled": true,
+      "Role": 1,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "RC",
+      "RoleName": "Manager",
+      "TeamName": "Price and Competition Analysis",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291771a57a0318a082d5295",
+      "MemberName": "Remi Conner",
+      "TeamId": "629176fc57a0318a082d516e",
+      "TitleId": "629176f857a0318a082d5144",
+      "TitleName": "Bidding Supervisor",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\remi.conner",
+      "Enabled": true,
+      "Role": 1,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "EJ",
+      "RoleName": "Employee",
+      "TeamName": "Strategy Development",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291771d57a0318a082d52ae",
+      "MemberName": "Erik Johnson",
+      "TeamId": "629176fc57a0318a082d516b",
+      "TitleId": "629176f557a0318a082d5109",
+      "TitleName": "Strategy Expert",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\erik.johnson",
+      "Enabled": true,
+      "Role": 0,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "JW",
+      "RoleName": "Employee",
+      "TeamName": "Collection and Budget",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291772357a0318a082d52e1",
+      "MemberName": "Josephine Walsh",
+      "TeamId": "629176fc57a0318a082d5177",
+      "TitleId": "629176f857a0318a082d513e",
+      "TitleName": "Collection Expert",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\josephine.walsh",
+      "Enabled": true,
+      "Role": 0,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "DH",
+      "RoleName": "Manager",
+      "TeamName": "Accounting Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291772457a0318a082d52e8",
+      "MemberName": "Danielle Hurst",
+      "TeamId": "629176fc57a0318a082d5175",
+      "TitleId": "629176f357a0318a082d50dd",
+      "TitleName": "Accounting Manager",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\danielle.hurst",
+      "Enabled": true,
+      "Role": 1,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "LF",
+      "RoleName": "Manager",
+      "TeamName": "Finance Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291772457a0318a082d52ed",
+      "MemberName": "Luis Fox",
+      "TeamId": "629176ff57a0318a082d51ae",
+      "TitleId": "629176f357a0318a082d50dd",
+      "TitleName": "Accounting Manager",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\luis.fox",
+      "Enabled": true,
+      "Role": 1,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "KL",
+      "RoleName": "Employee",
+      "TeamName": "Sales Support Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291772b57a0318a082d5329",
+      "MemberName": "Kristina Lozano",
+      "TeamId": "629176ff57a0318a082d51ab",
+      "TitleId": "629176f857a0318a082d5141",
+      "TitleName": "Sales Supervisor",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\k.lozano",
+      "Enabled": true,
+      "Role": 0,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "JW",
+      "RoleName": "Administrator",
+      "TeamName": "Contoso",
+      "ImageUrl": "https://api.flexytime.com/Download/GetImage/6291772d57a0318a082d5340?638140671444100000&downloadKey=WUDSH27CR9WU",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291772d57a0318a082d5340",
+      "MemberName": "Jamie Watkins",
+      "TeamId": "629176fe57a0318a082d51a2",
+      "TitleId": "629176f957a0318a082d514d",
+      "TitleName": "General Manager",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\jamie.watkins",
+      "Enabled": true,
+      "Role": 2,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "JL",
+      "RoleName": "Employee",
+      "TeamName": "Accounting Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291772e57a0318a082d5346",
+      "MemberName": "Jose Lambert",
+      "TeamId": "629176fc57a0318a082d5175",
+      "TitleId": "629176f457a0318a082d50e8",
+      "TitleName": "Accounting Expert",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\jose.lambert",
+      "Enabled": true,
+      "Role": 0,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "FY",
+      "RoleName": "Manager",
+      "TeamName": "Sales Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291773057a0318a082d535b",
+      "MemberName": "FlexyTime Yönetici",
+      "TeamId": "629176fc57a0318a082d517e",
+      "TitleId": "629176f657a0318a082d5112",
+      "TitleName": "Sales Director",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": null,
+      "Enabled": true,
+      "Role": 1,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "SM",
+      "RoleName": "Employee",
+      "TeamName": "Accounting Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291773357a0318a082d5370",
+      "MemberName": "Samson Mullen",
+      "TeamId": "629176fc57a0318a082d5175",
+      "TitleId": "629176f457a0318a082d50e8",
+      "TitleName": "Accounting Expert",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\samson.mullen",
+      "Enabled": true,
+      "Role": 0,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "TT",
+      "RoleName": "Employee",
+      "TeamName": "Collection and Budget",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291773357a0318a082d5374",
+      "MemberName": "Tobias Turner",
+      "TeamId": "629176fc57a0318a082d5177",
+      "TitleId": "629176f857a0318a082d513e",
+      "TitleName": "Collection Expert",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "CONTOSO\\tobias.turner",
+      "Enabled": true,
+      "Role": 0,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "PD",
+      "RoleName": "Manager",
+      "TeamName": "Sales Support Department",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "6291773657a0318a082d538d",
+      "MemberName": "Phillip Dotson",
+      "TeamId": "629176ff57a0318a082d51ab",
+      "TitleId": "647c860c717e9a0f80979b49",
+      "TitleName": "Support Manager",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": null,
+      "Enabled": true,
+      "Role": 1,
+      "Tags": [],
+      "ImageData": null
+    },
+    {
+      "Abbreviation": "M",
+      "RoleName": "Employee",
+      "TeamName": "Work Group",
+      "ImageUrl": "",
+      "ManagementTitleId": null,
+      "EmployeeTitleId": null,
+      "EmployeeTitles": null,
+      "ManagerTitles": null,
+      "TagsDisplay": "",
+      "EnabledDisplay": "True",
+      "ID": "66a0b15a5e7b6c08a03fd096",
+      "MemberName": "mehme",
+      "TeamId": "66a0b15a5e7b6c08a03fd095",
+      "TitleId": "629176f957a0318a082d514b",
+      "TitleName": "UnTitled",
+      "Salary": "0",
+      "Password": null,
+      "Email": null,
+      "WindowsIdentity": "DESKTOP-DJETEOL\\mehme",
+      "Enabled": true,
+      "Role": 0,
+      "Tags": [],
+      "ImageData": null
+    }
+  ],
+  "/webapi/category/webaddresses/query": [
+    {
+      "HostName": "10.201.2.7",
+      "DomainDisplay": "Meeting",
+      "Name": "10.201.2.7",
+      "IsWork": false,
+      "IsMeeting": true,
+      "IsLeisure": false,
+      "TopicName": "Not Rated",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "12c7a998-af79-4c42-b4ee-c944eaaec0dc",
+      "AlwaysOn": true,
+      "Domain": 3
+    },
+    {
+      "HostName": "10.5.0.1",
+      "DomainDisplay": "Leisure",
+      "Name": "10.5.0.1",
+      "IsWork": false,
+      "IsMeeting": false,
+      "IsLeisure": true,
+      "TopicName": "Not Rated",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "dbd6cb5c-8a9e-4e51-9f30-8d7e40341b95",
+      "AlwaysOn": false,
+      "Domain": 2
+    },
+    {
+      "HostName": "10.5.17.241",
+      "DomainDisplay": "Leisure",
+      "Name": "10.5.17.241",
+      "IsWork": false,
+      "IsMeeting": false,
+      "IsLeisure": true,
+      "TopicName": "Not Rated",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "727ab586-7cb2-481c-a3e8-abb0af674616",
+      "AlwaysOn": false,
+      "Domain": 2
+    },
+    {
+      "HostName": "aa.com.tr",
+      "DomainDisplay": "Leisure",
+      "Name": "aa.com.tr",
+      "IsWork": false,
+      "IsMeeting": false,
+      "IsLeisure": true,
+      "TopicName": "News and Media",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "fc38d858-0400-4158-bb6e-ea283881a293",
+      "AlwaysOn": false,
+      "Domain": 2
+    },
+    {
+      "HostName": "account.live.com",
+      "DomainDisplay": "Work",
+      "Name": "account.live.com",
+      "IsWork": true,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": "Web-based Email",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "450d0cbc-7f66-484a-97f3-000c7b612224",
+      "AlwaysOn": true,
+      "Domain": 4
+    },
+    {
+      "HostName": "aa.com.tr",
+      "DomainDisplay": "Leisure",
+      "Name": "aa.com.tr",
+      "IsWork": false,
+      "IsMeeting": false,
+      "IsLeisure": true,
+      "TopicName": "News and Media",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "fc38d858-0400-4158-bb6e-ea283881a293",
+      "AlwaysOn": false,
+      "Domain": 2
+    },
+    {
+      "HostName": "account.live.com",
+      "DomainDisplay": "Work",
+      "Name": "account.live.com",
+      "IsWork": true,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": "Web-based Email",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "450d0cbc-7f66-484a-97f3-000c7b612224",
+      "AlwaysOn": true,
+      "Domain": 4
+    },
+    {
+      "HostName": "aa.com.tr",
+      "DomainDisplay": "Leisure",
+      "Name": "aa.com.tr",
+      "IsWork": false,
+      "IsMeeting": false,
+      "IsLeisure": true,
+      "TopicName": "News and Media",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "fc38d858-0400-4158-bb6e-ea283881a293",
+      "AlwaysOn": false,
+      "Domain": 2
+    },
+    {
+      "HostName": "account.live.com",
+      "DomainDisplay": "Work",
+      "Name": "account.live.com",
+      "IsWork": true,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": "Web-based Email",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "450d0cbc-7f66-484a-97f3-000c7b612224",
+      "AlwaysOn": true,
+      "Domain": 4
+    },
+    {
+      "HostName": "aa.com.tr",
+      "DomainDisplay": "Leisure",
+      "Name": "aa.com.tr",
+      "IsWork": false,
+      "IsMeeting": false,
+      "IsLeisure": true,
+      "TopicName": "News and Media",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "fc38d858-0400-4158-bb6e-ea283881a293",
+      "AlwaysOn": false,
+      "Domain": 2
+    },
+    {
+      "HostName": "account.live.com",
+      "DomainDisplay": "Work",
+      "Name": "account.live.com",
+      "IsWork": true,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": "Web-based Email",
+      "Actions": null,
+      "Customise": null,
+      "Timeout": {
+        "time": "00:00",
+        "statisticType": "starttime"
+      },
+      "Teams": "All",
+      "ID": "450d0cbc-7f66-484a-97f3-000c7b612224",
+      "AlwaysOn": true,
+      "Domain": 4
+    }
+  ],
+  "/webapi/category/allocations/query": [
+    {
+      "HostName": null,
+      "DomainDisplay": "Work",
+      "Name": " Ashampoo",
+      "IsWork": true,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": null,
+      "Actions": null,
+      "Customise": null,
+      "Timeout": null,
+      "Teams": "All",
+      "ID": "c3b06a4f-ede0-4213-8c82-b5be2c440def",
+      "AlwaysOn": true,
+      "Domain": 4
+    },
+    {
+      "HostName": null,
+      "DomainDisplay": "Unclassified",
+      "Name": "1056-winamp58_3653_beta_full_en-us",
+      "IsWork": false,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": null,
+      "Actions": null,
+      "Customise": null,
+      "Timeout": null,
+      "Teams": "All",
+      "ID": "e35d4f28-ad5c-4e4e-96c8-feb96161ff73",
+      "AlwaysOn": false,
+      "Domain": 2
+    },
+    {
+      "HostName": null,
+      "DomainDisplay": "Work",
+      "Name": "Adobe Acrobat",
+      "IsWork": true,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": null,
+      "Actions": null,
+      "Customise": null,
+      "Timeout": null,
+      "Teams": "All",
+      "ID": "151f8715-2628-42b1-8e2d-50129fa7339f",
+      "AlwaysOn": false,
+      "Domain": 4
+    },
+    {
+      "HostName": null,
+      "DomainDisplay": "Work",
+      "Name": "advanced_ip_scanner",
+      "IsWork": true,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": null,
+      "Actions": null,
+      "Customise": null,
+      "Timeout": null,
+      "Teams": "All",
+      "ID": "2263a1c4-75f1-4ffc-9bf8-2b585796e5e5",
+      "AlwaysOn": false,
+      "Domain": 4
+    },
+    {
+      "HostName": null,
+      "DomainDisplay": "Unclassified",
+      "Name": "Advanced_IP_Scanner_2.5.3850.tmp",
+      "IsWork": false,
+      "IsMeeting": false,
+      "IsLeisure": false,
+      "TopicName": null,
+      "Actions": null,
+      "Customise": null,
+      "Timeout": null,
+      "Teams": "All",
+      "ID": "89d6010c-751a-4629-a4c1-9192360fc23e",
+      "AlwaysOn": false,
+      "Domain": 3
+    }
+  ],
+  "/webapi/company/organization": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "title": "Accounting Department",
+              "Abbreviation": "AD",
+              "Name": "Accounting Department",
+              "ID": "629176fc57a0318a082d5175",
+              "TitleName": "Accounting Manager",
+              "TitleId": "629176f357a0318a082d50dd",
+              "MemberId": "64015c5ee435600a443e8dc4",
+              "MemberName": "Danielle Hurst",
+              "TeamId": null
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "title": "Collection and Budget",
+                  "Abbreviation": "CAB",
+                  "Name": "Collection and Budget",
+                  "ID": "629176fc57a0318a082d5177",
+                  "TitleName": "Collection Supervisor",
+                  "TitleId": "629176f357a0318a082d50d2",
+                  "MemberId": "64015c5ee435600a443e8c32",
+                  "MemberName": "Agnes Owens",
+                  "TeamId": null
+                }
+              ],
+              "title": "Finance Department",
+              "Abbreviation": "FD",
+              "Name": "Finance Department",
+              "ID": "629176ff57a0318a082d51ae",
+              "TitleName": "Accounting Manager",
+              "TitleId": "629176f357a0318a082d50dd",
+              "MemberId": "64015c5ee435600a443e8d7f",
+              "MemberName": "Luis Fox",
+              "TeamId": null
+            },
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [],
+                              "title": "Deniz Department",
+                              "Abbreviation": "CAB",
+                              "Name": "Collection and Budget",
+                              "ID": "629176fc57a0318a082d5177345123173984",
+                              "TitleName": "Collection Supervisor",
+                              "TitleId": "629176f357a0318a082d50d2",
+                              "MemberId": "64015c5ee435600a443e8c32",
+                              "MemberName": "Agnes Owens",
+                              "TeamId": null
+                            }
+                          ],
+                          "title": "Collection and Budget",
+                          "Abbreviation": "CAB",
+                          "Name": "Collection and Budget",
+                          "ID": "629176fc57a0318a082d517734573984",
+                          "TitleName": "Collection Supervisor",
+                          "TitleId": "629176f357a0318a082d50d2",
+                          "MemberId": "64015c5ee435600a443e8c32",
+                          "MemberName": "Agnes Owens",
+                          "TeamId": null
+                        }
+                      ],
+                      "title": "Collection and Budget",
+                      "Abbreviation": "CAB",
+                      "Name": "Collection and Budget",
+                      "ID": "629176fc57a0318a082d517712312",
+                      "TitleName": "Collection Supervisor",
+                      "TitleId": "629176f357a0318a082d50d2",
+                      "MemberId": "64015c5ee435600a443e8c32",
+                      "MemberName": "Agnes Owens",
+                      "TeamId": null
+                    }
+                  ],
+                  "title": "Strategy Development",
+                  "Abbreviation": "SD",
+                  "Name": "Strategy Development",
+                  "ID": "629176fc57a0318a082d516b",
+                  "TitleName": "Strategy Supervisor",
+                  "TitleId": "629176f357a0318a082d50de",
+                  "MemberId": "64015c5ee435600a443e8c13",
+                  "MemberName": "Kyan Mooney",
+                  "TeamId": null
+                },
+                {
+                  "children": [],
+                  "title": "Price and Competition Analysis",
+                  "Abbreviation": "PACA",
+                  "Name": "Price and Competition Analysis",
+                  "ID": "629176fc57a0318a082d516e",
+                  "TitleName": "Bidding Supervisor",
+                  "TitleId": "629176f857a0318a082d5144",
+                  "MemberId": "64015c5ee435600a443e8c27",
+                  "MemberName": "Remi Conner",
+                  "TeamId": null
+                },
+                {
+                  "children": [],
+                  "title": "Commercial Project Bidding",
+                  "Abbreviation": "CPB",
+                  "Name": "Commercial Project Bidding",
+                  "ID": "629176ff57a0318a082d51b5",
+                  "TitleName": "Bidding Supervisor",
+                  "TitleId": "629176f457a0318a082d50e5",
+                  "MemberId": "64015c5ee435600a443e8e3c",
+                  "MemberName": "Judith Elliott",
+                  "TeamId": null
+                }
+              ],
+              "title": "Trading Department",
+              "Abbreviation": "TD",
+              "Name": "Trading Department",
+              "ID": "629176ff57a0318a082d51b3",
+              "TitleName": "Trade Manager",
+              "TitleId": "629176f757a0318a082d5128",
+              "MemberId": "64015c5ee435600a443e8d79",
+              "MemberName": "Julie Harding",
+              "TeamId": null
+            }
+          ],
+          "title": "Finance Department",
+          "Abbreviation": "FD",
+          "Name": "Finance Department",
+          "ID": "629176fb57a0318a082d5166",
+          "TitleName": "Finance Director",
+          "TitleId": "629176f857a0318a082d513c",
+          "MemberId": "64015c5ee435600a443e8e1e",
+          "MemberName": "Evelyn Wall",
+          "TeamId": null
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "title": "Sales Support Department",
+              "Abbreviation": "SSD",
+              "Name": "Sales Support Department",
+              "ID": "629176ff57a0318a082d51ab",
+              "TitleName": "Support Manager",
+              "TitleId": "647c860c717e9a0f80979b49",
+              "MemberId": "64015c5ee435600a443e8cfb",
+              "MemberName": "Phillip Dotson",
+              "TeamId": null
+            }
+          ],
+          "title": "Sales Department",
+          "Abbreviation": "SD",
+          "Name": "Sales Department",
+          "ID": "629176fc57a0318a082d517e",
+          "TitleName": "Sales Director",
+          "TitleId": "629176f657a0318a082d5112",
+          "MemberId": "64015c5ee435600a443e8d19",
+          "MemberName": "FlexyTime Yönetici",
+          "TeamId": null
+        }
+      ],
+      "title": "Contoso",
+      "Abbreviation": "C",
+      "Name": "Contoso",
+      "ID": "629176fe57a0318a082d51a2",
+      "TitleName": "General Manager",
+      "TitleId": "629176f957a0318a082d514d",
+      "MemberId": "64015c5ee435600a443e8d02",
+      "MemberName": "Jamie Watkins",
+      "TeamId": null
+    },
+    {
+      "children": [],
+      "title": "Work Group",
+      "Abbreviation": "WG",
+      "Name": "Work Group",
+      "ID": "66a0b15a5e7b6c08a03fd095",
+      "TitleName": "UnTitled",
+      "TitleId": "629176f957a0318a082d514b",
+      "MemberId": "",
+      "MemberName": null,
+      "TeamId": null
+    }
+  ],
+  "/webapi/definition/annuals": {
+    "ActiveAnnuals": [
+      {
+        "ID": "671d6936717e9a0b68076a2a",
+        "StartDate": "27.10.2024",
+        "StartTime": "00:00",
+        "EndDate": "27.10.2024",
+        "EndTime": "01:11",
+        "StartFullDay": true,
+        "EndFullDay": false,
+        "MemberName": "Agnes Owens",
+        "MemberId": "64015c5ee435600a443e8c32",
+        "LeaveType": "Birth Leave",
+        "Abbreviation": "AO",
+        "ImageUrl": "",
+        "Days": 0,
+        "IsActive": true,
+        "StartDateText": "27.10.2024",
+        "EndDateText": "27.10.2024 01:11"
+      }
+    ],
+    "PassedAnnuals": [
+      {
+        "ID": "629176f157a0318a082d50d0",
+        "StartDate": "16.06.2021",
+        "StartTime": "00:00",
+        "EndDate": "20.06.2021",
+        "EndTime": "00:00",
+        "StartFullDay": true,
+        "EndFullDay": true,
+        "MemberName": "Danielle Hurst",
+        "MemberId": "64015c5ee435600a443e8dc4",
+        "LeaveType": "Sick Leave",
+        "Abbreviation": "DH",
+        "ImageUrl": "",
+        "Days": 3,
+        "IsActive": false,
+        "StartDateText": "16.06.2021",
+        "EndDateText": "20.06.2021"
+      }
+    ]
+  },
+  "/webapi/company/holidays": [
+    {
+      "ID": "64015c5de435600a443e8b60",
+      "StartDate": "14.06.2018",
+      "StartTime": "00:00",
+      "EndDate": "17.06.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "Ramazan Bayramı",
+      "Repeat": true,
+      "Days": 3,
+      "StartDateText": "14.06.2018",
+      "EndDateText": "17.06.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b61",
+      "StartDate": "30.08.2018",
+      "StartTime": "00:00",
+      "EndDate": "30.08.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "Zafer Bayramı",
+      "Repeat": true,
+      "Days": 0,
+      "StartDateText": "30.08.2018",
+      "EndDateText": "30.08.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b62",
+      "StartDate": "15.07.2018",
+      "StartTime": "00:00",
+      "EndDate": "15.07.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "15 Temmuz",
+      "Repeat": true,
+      "Days": 0,
+      "StartDateText": "15.07.2018",
+      "EndDateText": "15.07.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b63",
+      "StartDate": "29.10.2018",
+      "StartTime": "00:00",
+      "EndDate": "29.10.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "Cumhuriyet Bayramı",
+      "Repeat": true,
+      "Days": 0,
+      "StartDateText": "29.10.2018",
+      "EndDateText": "29.10.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b64",
+      "StartDate": "20.08.2018",
+      "StartTime": "00:00",
+      "EndDate": "24.08.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "Kurban Bayramı",
+      "Repeat": false,
+      "Days": 4,
+      "StartDateText": "20.08.2018",
+      "EndDateText": "24.08.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b65",
+      "StartDate": "19.05.2018",
+      "StartTime": "00:00",
+      "EndDate": "19.05.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "19 Mayıs",
+      "Repeat": true,
+      "Days": 0,
+      "StartDateText": "19.05.2018",
+      "EndDateText": "19.05.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b66",
+      "StartDate": "01.05.2018",
+      "StartTime": "00:00",
+      "EndDate": "01.05.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "1 Mayıs",
+      "Repeat": true,
+      "Days": 0,
+      "StartDateText": "01.05.2018",
+      "EndDateText": "01.05.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b67",
+      "StartDate": "01.01.2018",
+      "StartTime": "00:00",
+      "EndDate": "01.01.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "Yılbaşı",
+      "Repeat": true,
+      "Days": 0,
+      "StartDateText": "01.01.2018",
+      "EndDateText": "01.01.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b68",
+      "StartDate": "23.04.2018",
+      "StartTime": "00:00",
+      "EndDate": "23.04.2018",
+      "EndTime": "00:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "23 Nisan",
+      "Repeat": true,
+      "Days": 0,
+      "StartDateText": "23.04.2018",
+      "EndDateText": "23.04.2018"
+    },
+    {
+      "ID": "64015c5de435600a443e8b69",
+      "StartDate": "20.07.2021",
+      "StartTime": "21:00",
+      "EndDate": "23.07.2021",
+      "EndTime": "21:00",
+      "StartFullDay": true,
+      "EndFullDay": true,
+      "Name": "Kurban Bayramı",
+      "Repeat": false,
+      "Days": 3,
+      "StartDateText": "20.07.2021",
+      "EndDateText": "23.07.2021"
+    }
+  ],
+  "/webapi/company/timezones": [
+    {
+      "ID": "Dateline Standard Time",
+      "Name": "(UTC-12:00) International Date Line West"
+    },
+    {
+      "ID": "UTC-11",
+      "Name": "(UTC-11:00) Coordinated Universal Time-11"
+    },
+    {
+      "ID": "Aleutian Standard Time",
+      "Name": "(UTC-10:00) Aleutian Islands"
+    },
+    {
+      "ID": "Hawaiian Standard Time",
+      "Name": "(UTC-10:00) Hawaii"
+    },
+    {
+      "ID": "Marquesas Standard Time",
+      "Name": "(UTC-09:30) Marquesas Islands"
+    },
+    {
+      "ID": "Alaskan Standard Time",
+      "Name": "(UTC-09:00) Alaska"
+    },
+    {
+      "ID": "UTC-09",
+      "Name": "(UTC-09:00) Coordinated Universal Time-09"
+    },
+    {
+      "ID": "Pacific Standard Time (Mexico)",
+      "Name": "(UTC-08:00) Baja California"
+    },
+    {
+      "ID": "UTC-08",
+      "Name": "(UTC-08:00) Coordinated Universal Time-08"
+    },
+    {
+      "ID": "Pacific Standard Time",
+      "Name": "(UTC-08:00) Pacific Time (US & Canada)"
+    },
+    {
+      "ID": "US Mountain Standard Time",
+      "Name": "(UTC-07:00) Arizona"
+    },
+    {
+      "ID": "Mountain Standard Time (Mexico)",
+      "Name": "(UTC-07:00) La Paz, Mazatlan"
+    },
+    {
+      "ID": "Mountain Standard Time",
+      "Name": "(UTC-07:00) Mountain Time (US & Canada)"
+    },
+    {
+      "ID": "Yukon Standard Time",
+      "Name": "(UTC-07:00) Yukon"
+    },
+    {
+      "ID": "Central America Standard Time",
+      "Name": "(UTC-06:00) Central America"
+    },
+    {
+      "ID": "Central Standard Time",
+      "Name": "(UTC-06:00) Central Time (US & Canada)"
+    },
+    {
+      "ID": "Easter Island Standard Time",
+      "Name": "(UTC-06:00) Easter Island"
+    },
+    {
+      "ID": "Central Standard Time (Mexico)",
+      "Name": "(UTC-06:00) Guadalajara, Mexico City, Monterrey"
+    },
+    {
+      "ID": "Canada Central Standard Time",
+      "Name": "(UTC-06:00) Saskatchewan"
+    },
+    {
+      "ID": "SA Pacific Standard Time",
+      "Name": "(UTC-05:00) Bogota, Lima, Quito, Rio Branco"
+    },
+    {
+      "ID": "Eastern Standard Time (Mexico)",
+      "Name": "(UTC-05:00) Chetumal"
+    },
+    {
+      "ID": "Eastern Standard Time",
+      "Name": "(UTC-05:00) Eastern Time (US & Canada)"
+    },
+    {
+      "ID": "Haiti Standard Time",
+      "Name": "(UTC-05:00) Haiti"
+    },
+    {
+      "ID": "Cuba Standard Time",
+      "Name": "(UTC-05:00) Havana"
+    },
+    {
+      "ID": "US Eastern Standard Time",
+      "Name": "(UTC-05:00) Indiana (East)"
+    },
+    {
+      "ID": "Turks And Caicos Standard Time",
+      "Name": "(UTC-05:00) Turks and Caicos"
+    },
+    {
+      "ID": "Paraguay Standard Time",
+      "Name": "(UTC-04:00) Asuncion"
+    },
+    {
+      "ID": "Atlantic Standard Time",
+      "Name": "(UTC-04:00) Atlantic Time (Canada)"
+    },
+    {
+      "ID": "Venezuela Standard Time",
+      "Name": "(UTC-04:00) Caracas"
+    },
+    {
+      "ID": "Central Brazilian Standard Time",
+      "Name": "(UTC-04:00) Cuiaba"
+    },
+    {
+      "ID": "SA Western Standard Time",
+      "Name": "(UTC-04:00) Georgetown, La Paz, Manaus, San Juan"
+    },
+    {
+      "ID": "Pacific SA Standard Time",
+      "Name": "(UTC-04:00) Santiago"
+    },
+    {
+      "ID": "Newfoundland Standard Time",
+      "Name": "(UTC-03:30) Newfoundland"
+    },
+    {
+      "ID": "Tocantins Standard Time",
+      "Name": "(UTC-03:00) Araguaina"
+    },
+    {
+      "ID": "E. South America Standard Time",
+      "Name": "(UTC-03:00) Brasilia"
+    },
+    {
+      "ID": "SA Eastern Standard Time",
+      "Name": "(UTC-03:00) Cayenne, Fortaleza"
+    },
+    {
+      "ID": "Argentina Standard Time",
+      "Name": "(UTC-03:00) City of Buenos Aires"
+    },
+    {
+      "ID": "Montevideo Standard Time",
+      "Name": "(UTC-03:00) Montevideo"
+    },
+    {
+      "ID": "Magallanes Standard Time",
+      "Name": "(UTC-03:00) Punta Arenas"
+    },
+    {
+      "ID": "Saint Pierre Standard Time",
+      "Name": "(UTC-03:00) Saint Pierre and Miquelon"
+    },
+    {
+      "ID": "Bahia Standard Time",
+      "Name": "(UTC-03:00) Salvador"
+    },
+    {
+      "ID": "UTC-02",
+      "Name": "(UTC-02:00) Coordinated Universal Time-02"
+    },
+    {
+      "ID": "Greenland Standard Time",
+      "Name": "(UTC-02:00) Greenland"
+    },
+    {
+      "ID": "Mid-Atlantic Standard Time",
+      "Name": "(UTC-02:00) Mid-Atlantic - Old"
+    },
+    {
+      "ID": "Azores Standard Time",
+      "Name": "(UTC-01:00) Azores"
+    },
+    {
+      "ID": "Cape Verde Standard Time",
+      "Name": "(UTC-01:00) Cabo Verde Is."
+    },
+    {
+      "ID": "UTC",
+      "Name": "(UTC) Coordinated Universal Time"
+    },
+    {
+      "ID": "GMT Standard Time",
+      "Name": "(UTC+00:00) Dublin, Edinburgh, Lisbon, London"
+    },
+    {
+      "ID": "Greenwich Standard Time",
+      "Name": "(UTC+00:00) Monrovia, Reykjavik"
+    },
+    {
+      "ID": "Sao Tome Standard Time",
+      "Name": "(UTC+00:00) Sao Tome"
+    },
+    {
+      "ID": "Morocco Standard Time",
+      "Name": "(UTC+01:00) Casablanca"
+    },
+    {
+      "ID": "W. Europe Standard Time",
+      "Name": "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
+    },
+    {
+      "ID": "Central Europe Standard Time",
+      "Name": "(UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague"
+    },
+    {
+      "ID": "Romance Standard Time",
+      "Name": "(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"
+    },
+    {
+      "ID": "Central European Standard Time",
+      "Name": "(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb"
+    },
+    {
+      "ID": "W. Central Africa Standard Time",
+      "Name": "(UTC+01:00) West Central Africa"
+    },
+    {
+      "ID": "GTB Standard Time",
+      "Name": "(UTC+02:00) Athens, Bucharest"
+    },
+    {
+      "ID": "Middle East Standard Time",
+      "Name": "(UTC+02:00) Beirut"
+    },
+    {
+      "ID": "Egypt Standard Time",
+      "Name": "(UTC+02:00) Cairo"
+    },
+    {
+      "ID": "E. Europe Standard Time",
+      "Name": "(UTC+02:00) Chisinau"
+    },
+    {
+      "ID": "West Bank Standard Time",
+      "Name": "(UTC+02:00) Gaza, Hebron"
+    },
+    {
+      "ID": "South Africa Standard Time",
+      "Name": "(UTC+02:00) Harare, Pretoria"
+    },
+    {
+      "ID": "FLE Standard Time",
+      "Name": "(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius"
+    },
+    {
+      "ID": "Israel Standard Time",
+      "Name": "(UTC+02:00) Jerusalem"
+    },
+    {
+      "ID": "South Sudan Standard Time",
+      "Name": "(UTC+02:00) Juba"
+    },
+    {
+      "ID": "Kaliningrad Standard Time",
+      "Name": "(UTC+02:00) Kaliningrad"
+    },
+    {
+      "ID": "Sudan Standard Time",
+      "Name": "(UTC+02:00) Khartoum"
+    },
+    {
+      "ID": "Libya Standard Time",
+      "Name": "(UTC+02:00) Tripoli"
+    },
+    {
+      "ID": "Namibia Standard Time",
+      "Name": "(UTC+02:00) Windhoek"
+    },
+    {
+      "ID": "Jordan Standard Time",
+      "Name": "(UTC+03:00) Amman"
+    },
+    {
+      "ID": "Arabic Standard Time",
+      "Name": "(UTC+03:00) Baghdad"
+    },
+    {
+      "ID": "Syria Standard Time",
+      "Name": "(UTC+03:00) Damascus"
+    },
+    {
+      "ID": "Turkey Standard Time",
+      "Name": "(UTC+03:00) Istanbul"
+    },
+    {
+      "ID": "Arab Standard Time",
+      "Name": "(UTC+03:00) Kuwait, Riyadh"
+    },
+    {
+      "ID": "Belarus Standard Time",
+      "Name": "(UTC+03:00) Minsk"
+    },
+    {
+      "ID": "Russian Standard Time",
+      "Name": "(UTC+03:00) Moscow, St. Petersburg"
+    },
+    {
+      "ID": "E. Africa Standard Time",
+      "Name": "(UTC+03:00) Nairobi"
+    },
+    {
+      "ID": "Volgograd Standard Time",
+      "Name": "(UTC+03:00) Volgograd"
+    },
+    {
+      "ID": "Iran Standard Time",
+      "Name": "(UTC+03:30) Tehran"
+    },
+    {
+      "ID": "Arabian Standard Time",
+      "Name": "(UTC+04:00) Abu Dhabi, Muscat"
+    },
+    {
+      "ID": "Astrakhan Standard Time",
+      "Name": "(UTC+04:00) Astrakhan, Ulyanovsk"
+    },
+    {
+      "ID": "Azerbaijan Standard Time",
+      "Name": "(UTC+04:00) Baku"
+    },
+    {
+      "ID": "Russia Time Zone 3",
+      "Name": "(UTC+04:00) Izhevsk, Samara"
+    },
+    {
+      "ID": "Mauritius Standard Time",
+      "Name": "(UTC+04:00) Port Louis"
+    },
+    {
+      "ID": "Saratov Standard Time",
+      "Name": "(UTC+04:00) Saratov"
+    },
+    {
+      "ID": "Georgian Standard Time",
+      "Name": "(UTC+04:00) Tbilisi"
+    },
+    {
+      "ID": "Caucasus Standard Time",
+      "Name": "(UTC+04:00) Yerevan"
+    },
+    {
+      "ID": "Afghanistan Standard Time",
+      "Name": "(UTC+04:30) Kabul"
+    },
+    {
+      "ID": "West Asia Standard Time",
+      "Name": "(UTC+05:00) Ashgabat, Tashkent"
+    },
+    {
+      "ID": "Qyzylorda Standard Time",
+      "Name": "(UTC+05:00) Astana"
+    },
+    {
+      "ID": "Ekaterinburg Standard Time",
+      "Name": "(UTC+05:00) Ekaterinburg"
+    },
+    {
+      "ID": "Pakistan Standard Time",
+      "Name": "(UTC+05:00) Islamabad, Karachi"
+    },
+    {
+      "ID": "India Standard Time",
+      "Name": "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi"
+    },
+    {
+      "ID": "Sri Lanka Standard Time",
+      "Name": "(UTC+05:30) Sri Jayawardenepura"
+    },
+    {
+      "ID": "Nepal Standard Time",
+      "Name": "(UTC+05:45) Kathmandu"
+    },
+    {
+      "ID": "Central Asia Standard Time",
+      "Name": "(UTC+06:00) Bishkek"
+    },
+    {
+      "ID": "Bangladesh Standard Time",
+      "Name": "(UTC+06:00) Dhaka"
+    },
+    {
+      "ID": "Omsk Standard Time",
+      "Name": "(UTC+06:00) Omsk"
+    },
+    {
+      "ID": "Myanmar Standard Time",
+      "Name": "(UTC+06:30) Yangon (Rangoon)"
+    },
+    {
+      "ID": "SE Asia Standard Time",
+      "Name": "(UTC+07:00) Bangkok, Hanoi, Jakarta"
+    },
+    {
+      "ID": "Altai Standard Time",
+      "Name": "(UTC+07:00) Barnaul, Gorno-Altaysk"
+    },
+    {
+      "ID": "W. Mongolia Standard Time",
+      "Name": "(UTC+07:00) Hovd"
+    },
+    {
+      "ID": "North Asia Standard Time",
+      "Name": "(UTC+07:00) Krasnoyarsk"
+    },
+    {
+      "ID": "N. Central Asia Standard Time",
+      "Name": "(UTC+07:00) Novosibirsk"
+    },
+    {
+      "ID": "Tomsk Standard Time",
+      "Name": "(UTC+07:00) Tomsk"
+    },
+    {
+      "ID": "China Standard Time",
+      "Name": "(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi"
+    },
+    {
+      "ID": "North Asia East Standard Time",
+      "Name": "(UTC+08:00) Irkutsk"
+    },
+    {
+      "ID": "Singapore Standard Time",
+      "Name": "(UTC+08:00) Kuala Lumpur, Singapore"
+    },
+    {
+      "ID": "W. Australia Standard Time",
+      "Name": "(UTC+08:00) Perth"
+    },
+    {
+      "ID": "Taipei Standard Time",
+      "Name": "(UTC+08:00) Taipei"
+    },
+    {
+      "ID": "Ulaanbaatar Standard Time",
+      "Name": "(UTC+08:00) Ulaanbaatar"
+    },
+    {
+      "ID": "Aus Central W. Standard Time",
+      "Name": "(UTC+08:45) Eucla"
+    },
+    {
+      "ID": "Transbaikal Standard Time",
+      "Name": "(UTC+09:00) Chita"
+    },
+    {
+      "ID": "Tokyo Standard Time",
+      "Name": "(UTC+09:00) Osaka, Sapporo, Tokyo"
+    },
+    {
+      "ID": "North Korea Standard Time",
+      "Name": "(UTC+09:00) Pyongyang"
+    },
+    {
+      "ID": "Korea Standard Time",
+      "Name": "(UTC+09:00) Seoul"
+    },
+    {
+      "ID": "Yakutsk Standard Time",
+      "Name": "(UTC+09:00) Yakutsk"
+    },
+    {
+      "ID": "Cen. Australia Standard Time",
+      "Name": "(UTC+09:30) Adelaide"
+    },
+    {
+      "ID": "AUS Central Standard Time",
+      "Name": "(UTC+09:30) Darwin"
+    },
+    {
+      "ID": "E. Australia Standard Time",
+      "Name": "(UTC+10:00) Brisbane"
+    },
+    {
+      "ID": "AUS Eastern Standard Time",
+      "Name": "(UTC+10:00) Canberra, Melbourne, Sydney"
+    },
+    {
+      "ID": "West Pacific Standard Time",
+      "Name": "(UTC+10:00) Guam, Port Moresby"
+    },
+    {
+      "ID": "Tasmania Standard Time",
+      "Name": "(UTC+10:00) Hobart"
+    },
+    {
+      "ID": "Vladivostok Standard Time",
+      "Name": "(UTC+10:00) Vladivostok"
+    },
+    {
+      "ID": "Lord Howe Standard Time",
+      "Name": "(UTC+10:30) Lord Howe Island"
+    },
+    {
+      "ID": "Bougainville Standard Time",
+      "Name": "(UTC+11:00) Bougainville Island"
+    },
+    {
+      "ID": "Russia Time Zone 10",
+      "Name": "(UTC+11:00) Chokurdakh"
+    },
+    {
+      "ID": "Magadan Standard Time",
+      "Name": "(UTC+11:00) Magadan"
+    },
+    {
+      "ID": "Norfolk Standard Time",
+      "Name": "(UTC+11:00) Norfolk Island"
+    },
+    {
+      "ID": "Sakhalin Standard Time",
+      "Name": "(UTC+11:00) Sakhalin"
+    },
+    {
+      "ID": "Central Pacific Standard Time",
+      "Name": "(UTC+11:00) Solomon Is., New Caledonia"
+    },
+    {
+      "ID": "Russia Time Zone 11",
+      "Name": "(UTC+12:00) Anadyr, Petropavlovsk-Kamchatsky"
+    },
+    {
+      "ID": "New Zealand Standard Time",
+      "Name": "(UTC+12:00) Auckland, Wellington"
+    },
+    {
+      "ID": "UTC+12",
+      "Name": "(UTC+12:00) Coordinated Universal Time+12"
+    },
+    {
+      "ID": "Fiji Standard Time",
+      "Name": "(UTC+12:00) Fiji"
+    },
+    {
+      "ID": "Kamchatka Standard Time",
+      "Name": "(UTC+12:00) Petropavlovsk-Kamchatsky - Old"
+    },
+    {
+      "ID": "Chatham Islands Standard Time",
+      "Name": "(UTC+12:45) Chatham Islands"
+    },
+    {
+      "ID": "UTC+13",
+      "Name": "(UTC+13:00) Coordinated Universal Time+13"
+    },
+    {
+      "ID": "Tonga Standard Time",
+      "Name": "(UTC+13:00) Nuku'alofa"
+    },
+    {
+      "ID": "Samoa Standard Time",
+      "Name": "(UTC+13:00) Samoa"
+    },
+    {
+      "ID": "Line Islands Standard Time",
+      "Name": "(UTC+14:00) Kiritimati Island"
+    }
+  ],
+  "/webapi/company/workhours": {
+    "Days": [
+      {
+        "ID": 1,
+        "Name": "Monday",
+        "IsWorkday": true,
+        "StartTime": "08:00",
+        "EndTime": "18:00"
+      },
+      {
+        "ID": 2,
+        "Name": "Tuesday",
+        "IsWorkday": true,
+        "StartTime": "09:00",
+        "EndTime": "18:00"
+      },
+      {
+        "ID": 3,
+        "Name": "Wednesday",
+        "IsWorkday": true,
+        "StartTime": "09:00",
+        "EndTime": "18:00"
+      },
+      {
+        "ID": 4,
+        "Name": "Thursday",
+        "IsWorkday": true,
+        "StartTime": "09:00",
+        "EndTime": "18:00"
+      },
+      {
+        "ID": 5,
+        "Name": "Friday",
+        "IsWorkday": true,
+        "StartTime": "09:00",
+        "EndTime": "18:00"
+      },
+      {
+        "ID": 6,
+        "Name": "Saturday",
+        "IsWorkday": false,
+        "StartTime": "08:00",
+        "EndTime": "17:00"
+      },
+      {
+        "ID": 0,
+        "Name": "Sunday",
+        "IsWorkday": false,
+        "StartTime": "08:00",
+        "EndTime": "17:00"
+      }
+    ],
+    "MaxIdleTime": "03:00",
+    "ShiftRangeTime": "01:00",
+    "TimeZone": "Pacific Standard Time (Mexico)"
+  },
+  "/webapi/setting/permissions": [
+    {
+      "Id": "64015c5ce435600a443e827a",
+      "Name": "Business Hours Calculation",
+      "VisibleOnlyByAdmin": true,
+      "Enabled": false,
+      "Key": "mesai-ici"
+    },
+    {
+      "Id": "64015c5ce435600a443e8424",
+      "Name": "Cost Display",
+      "VisibleOnlyByAdmin": false,
+      "Enabled": true,
+      "Key": "maliyet-gosterimi"
+    },
+    {
+      "Id": "64015c5ce435600a443e854a",
+      "Name": "Detayları Maskele",
+      "VisibleOnlyByAdmin": true,
+      "Enabled": true,
+      "Key": "detaylari-maskele"
+    },
+    {
+      "Id": "64015c5ce435600a443e8231",
+      "Name": "Locations",
+      "VisibleOnlyByAdmin": false,
+      "Enabled": true,
+      "Key": "konumlar"
+    },
+    {
+      "Id": "64015c5ce435600a443e82da",
+      "Name": "Meetings",
+      "VisibleOnlyByAdmin": true,
+      "Enabled": true,
+      "Key": "toplantilar"
+    },
+    {
+      "Id": "64015c5ce435600a443e8479",
+      "Name": "Phone Calls",
+      "VisibleOnlyByAdmin": false,
+      "Enabled": true,
+      "Key": "gorusmeler"
+    },
+    {
+      "Id": "64015c5ce435600a443e822c",
+      "Name": "Productivity",
+      "VisibleOnlyByAdmin": false,
+      "Enabled": true,
+      "Key": "verimlilik"
+    },
+    {
+      "Id": "64015c5ce435600a443e8233",
+      "Name": "Show Group Manager",
+      "VisibleOnlyByAdmin": false,
+      "Enabled": true,
+      "Key": "list-supervisors"
+    },
+    {
+      "Id": "64015c5ce435600a443e8349",
+      "Name": "Time Entries",
+      "VisibleOnlyByAdmin": false,
+      "Enabled": true,
+      "Key": "zaman-girisleri"
+    },
+    {
+      "Id": "64015c5ce435600a443e82c1",
+      "Name": "Web History",
+      "VisibleOnlyByAdmin": false,
+      "Enabled": true,
+      "Key": "web-gecmisi"
+    },
+    {
+      "Id": "64015c5ce435600a443e821f",
+      "Name": "Wellbeing",
+      "VisibleOnlyByAdmin": false,
+      "Enabled": true,
+      "Key": "calisan-refahi"
+    }
+  ],
+  "/webapi/setting/advances": [
+    {
+      "TypeName": "Tag employees",
+      "DataType": 2,
+      "SettingType": 5,
+      "Value": "true"
+    },
+    {
+      "TypeName": "Show well being indicators",
+      "DataType": 2,
+      "SettingType": 6,
+      "Value": "false"
+    },
+    {
+      "TypeName": "Show group manager",
+      "DataType": 2,
+      "SettingType": 9,
+      "Value": "true"
+    },
+    {
+      "TypeName": "Show employee costs",
+      "DataType": 2,
+      "SettingType": 11,
+      "Value": "true"
+    },
+    {
+      "TypeName": "Employee activity in working hours",
+      "DataType": 2,
+      "SettingType": 12,
+      "Value": "true"
+    },
+    {
+      "TypeName": "Show meeting details",
+      "DataType": 2,
+      "SettingType": 13,
+      "Value": "True"
+    },
+    {
+      "TypeName": "Show productivity",
+      "DataType": 2,
+      "SettingType": 14,
+      "Value": "True"
+    },
+    {
+      "TypeName": "Show web site activities",
+      "DataType": 2,
+      "SettingType": 15,
+      "Value": "True"
+    },
+    {
+      "TypeName": "Enable manual time entries",
+      "DataType": 2,
+      "SettingType": 16,
+      "Value": "True"
+    },
+    {
+      "TypeName": "Should time worked on days off be included in the average? If the feature is not enabled, it will not be included in the average if a range that includes the day off is selected. Only if days off are selected, the average can be displayed.",
+      "DataType": 2,
+      "SettingType": 4,
+      "Value": "False"
+    },
+    {
+      "TypeName": "The earliest starting time of the employee. If the employee starts earlier than the defined time, the start time is updated to the defined time.",
+      "DataType": 1,
+      "SettingType": 1,
+      "Value": "01:32"
+    },
+    {
+      "TypeName": "The minimum working time required for an employee to be included in the average. If the employee works less than the defined time, all values are displayed as 0.",
+      "DataType": 1,
+      "SettingType": 0,
+      "Value": "00:00"
+    }
+  ],
+  "/webapi/profile": {
+    "UserDuty": null,
+    "UserTitle": "General Manager",
+    "ImagePath": "https://api.flexytime.com/Download/GetImage/6291772d57a0318a082d5340?638140671444100000&downloadKey=WUDSH27CR9WU",
+    "EmailConfirmed": true,
+    "EmailAddress": "jamie.watkins@contoso.com",
+    "IsMailSubscribe": true,
+    "HasGoogle": false,
+    "HasOffice": false,
+    "TimeZone": "Pacific Standard Time (Mexico)",
+    "Languages": [
+      {
+        "Culture": "en-US",
+        "Code": "en",
+        "Name": "English"
+      },
+      {
+        "Culture": "tr-TR",
+        "Code": "tr",
+        "Name": "Türkçe"
+      }
+    ],
+    "LanguageCode": "en",
+    "HasOutlook": false,
+    "GoogleCalendars": [],
+    "OfficeCalendars": [],
+    "OutlookCalendars": [],
+    "Alerts": {
+      "IsLicenseDanger": true,
+      "ExpireDays": 0,
+      "IsLicenseWarning": false,
+      "Email": "jamie.watkins@contoso.com",
+      "IsConfirmation": true,
+      "IsDownloaded": true,
+      "IsWaitingData": false,
+      "CardError": null,
+      "IsCardError": false
+    },
+    "Employee": {
+      "id": null,
+      "fullname": "Jamie Watkins",
+      "teamname": null,
+      "teamid": null,
+      "abbreviation": "JW",
+      "avatarcolor": null,
+      "title": "General Manager",
+      "imageurl": "https://api.flexytime.com/Download/GetImage/6291772d57a0318a082d5340?638140671444100000&downloadKey=WUDSH27CR9WU",
+      "since": null,
+      "uninstalldate": null,
+      "islicensed": false,
+      "Availability": 0,
+      "AvailabilityImageUrl": "~/Images/gray.png",
+      "Tags": [],
+      "HasAnnual": false,
+      "AnnualStart": null,
+      "AnnualEnd": null,
+      "AnnualDays": 0,
+      "AnnualType": null,
+      "Email": "jamie.watkins@contoso.com",
+      "CompanyName": "Varsayılan"
+    },
+    "Wizard": {
+      "IsSingleUser": false,
+      "IsFresh": false,
+      "Permissions": [
+        "wellbeing",
+        "productivity",
+        "location",
+        "supervisor",
+        "inshift",
+        "web",
+        "meeting",
+        "manual",
+        "cost",
+        "phone",
+        "mask"
+      ],
+      "Roles": ["supervisor", "manager"],
+      "MemberId": "6291772d57a0318a082d5340",
+      "AccessKey": null,
+      "Email": "jamie.watkins@contoso.com",
+      "Fullname": "Jamie Watkins",
+      "CompanyName": "Varsayılan",
+      "IsEmployee": false,
+      "IsHR": false,
+      "IsManager": true
+    },
+    "IsUnsubscribe": true
+  },
+  "/webapi/license": {
+    "CustomerName": "Varsayılan",
+    "ExpireDate": "10.09.2023",
+    "RemainingDays": 0,
+    "TotalUsers": 19,
+    "ActiveUsers": 2,
+    "LicensedUsers": 0,
+    "RemainingUsers": -2,
+    "IsUnsubscribe": true,
+    "LicenseKey": "Boig16ugMe5Kl9O2uZR1uJNjUcy9ZOAqtJ+ORO4M9BI1f7hwMR1cfi6D5qdJfs3I2PJN/LcepckHGUUddauNeigop+RhHw5djTAaB4YLXOyPJkmXtDp8dryalg6116gFqGcaYVgB4u2Wkc3GRU1b4ai47MpQx5U3SKquyE3ip6lfiLQDrGSRd2y1i/HrOd+PADIqz3V9he7RXhCa/xXwvO8BykJj2hdPZNSaIfLiWjQ="
+  },
+  "/webapi/setting/download": {
+    "InvitationLink": "https://api.flexytime.com/Download/DownloadApp/64234183717e9a0ef059901c?downloadKey=J6AQ9AFE74J6",
+    "InvitationId": "64234183717e9a0ef059901c",
+    "ServiceKey": "hWa91-6TekSzJilr8j2-sA"
+  },
+  "/webapi/promotion/promote": {
+    "PromotionLink": "https://web.flexytime.com/signup/?promotion=ff2330780fab"
+  },
+  "/webapi/promotions": {
+    "Earned": [],
+    "Promoted": [
+      {
+        "ID": "641602d4717e9a0c981944a7",
+        "CompanyId": "d7bd6685-93ee-447a-b326-296bf23dbeb0",
+        "UserId": null,
+        "EmailAddress": "flexydeneme007@gmail.com",
+        "SendDate": "18.03.2023",
+        "SignUpDate": null,
+        "UsageDate": null,
+        "InstallDate": null,
+        "IsDownloaded": false
+      },
+      {
+        "ID": "642353ff717ea40ef06c5bc8",
+        "CompanyId": "d7bd6685-93ee-447a-b326-296bf23dbeb0",
+        "UserId": null,
+        "EmailAddress": "hebele.gubele@gmail.me.com",
+        "SendDate": "28.03.2023",
+        "SignUpDate": null,
+        "UsageDate": null,
+        "InstallDate": null,
+        "IsDownloaded": false
+      }
+    ]
+  },
+  "/webapi/setting/companies": [
+    {
+      "ID": "UBGqZ498RkqP0DU75J8b2w",
+      "Name": "Mehmet Ali ÖNAL",
+      "Fullname": "Mehmet Ali ÖNAL",
+      "Email": "mehmetali.onal93@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2024.10.31",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "tMRuSQF0oEqrRVgLp4Ccpw",
+      "Name": "software firm",
+      "Fullname": "software lead",
+      "Email": "john.dow@software.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2024.10.31",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "kIK3Ay4wIUusQG5JnXafgg",
+      "Name": "Dimitri Roggon",
+      "Fullname": "Dimitri Roggon",
+      "Email": "dirockon@googlemail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2024.05.07",
+      "LastActivityDate": "2024.09.30",
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "kElpk7kbbEKJmhjgBYk7fQ",
+      "Name": "Berk Güven",
+      "Fullname": "Berk Güven",
+      "Email": "ilhanberkguven@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2023.03.04",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "X_vh-xBH4EGwohjK35D9rw",
+      "Name": "Yeni Firma",
+      "Fullname": "tuğçe özten",
+      "Email": "tugceozten@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2023.02.27",
+      "LastActivityDate": "2024.10.28",
+      "DashboardActivityDate": "2023.02.27"
+    },
+    {
+      "ID": "y33ESEfXv0O04Bfz0VFP-g",
+      "Name": "Ttlink 5 g hash Ltd",
+      "Fullname": "Ezekiel Hightower",
+      "Email": "ezekiel.hightower@ax101.gemmasmith.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2023.02.21",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2023.02.26"
+    },
+    {
+      "ID": "YixIIiQklkCJRRe2MfAHfA",
+      "Name": "Amelie & Rudolph CO KG",
+      "Fullname": "Amelie Rudolph",
+      "Email": "amelie.rudolph1010@web.bookmarkclup.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2023.02.18",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2023.02.18"
+    },
+    {
+      "ID": "7gOCh027VEiI-xXJjdDjOw",
+      "Name": "Buqima GbR",
+      "Fullname": "Hannah Walder",
+      "Email": "hannah.walder@dvmagic.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2023.01.08",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2023.01.08"
+    },
+    {
+      "ID": "Ls-38hV1u0unDhVGsgOu8Q",
+      "Name": "Corrine seo services in london mbH",
+      "Fullname": "Corrine Kean",
+      "Email": "corrine-kean60@ax101-7.gemmasmith.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2023.01.01",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2023.01.01"
+    },
+    {
+      "ID": "CBtiTCyjtE2mbhUmfKfgqw",
+      "Name": "Ames 1billionlinks Ames GbR",
+      "Fullname": "Piper Ames",
+      "Email": "piper-ames7104@cdn4.moneysite.xyz",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.12.23",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.12.23"
+    },
+    {
+      "ID": "xtLL9uVsVU2N1xTirzrqRQ",
+      "Name": "Kristine listcrawler & Lucia Consulting",
+      "Fullname": "Kristine Lucia",
+      "Email": "alexfremanbest@yandex.ru",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.12.17",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.12.17"
+    },
+    {
+      "ID": "fzZ_o1ScMECAuxS_HJ01YA",
+      "Name": "Lush Carmon GbR",
+      "Fullname": "Carmon Lush",
+      "Email": "carmon.lush@ax101-7.gemmasmith.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.12.12",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.12.12"
+    },
+    {
+      "ID": "W2SabHgfC0invhRdd67n-w",
+      "Name": "Google http://www.google.cz/ Holding",
+      "Fullname": "Junior Shumack",
+      "Email": "adrian9@seo0.s3.lolekemail.net",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.12.11",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.12.11"
+    },
+    {
+      "ID": "pRx7wLx8KkubwRQJcjgPVQ",
+      "Name": "ASD",
+      "Fullname": "SDR",
+      "Email": "sdr.ozturk@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.11.15",
+      "LastActivityDate": "2022.12.27",
+      "DashboardActivityDate": "2022.12.12"
+    },
+    {
+      "ID": "A0Pe8hPCPkuTChPg2t9GMw",
+      "Name": "Mirams & Andreas Holding",
+      "Fullname": "Andreas Mirams",
+      "Email": "andreas_mirams@ax101-7.gemmasmith.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.11.12",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.11.12"
+    },
+    {
+      "ID": "K9jOsCpRP0OTghPUS3cUeg",
+      "Name": "Joey Services",
+      "Fullname": "Joey Mcdonough",
+      "Email": "selinawojcik2912@1secmail.org",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.11.09",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.11.09"
+    },
+    {
+      "ID": "9lIYrIQTvUGFOhNk2hAcMw",
+      "Name": "Yeni Firma",
+      "Fullname": "Dakota Thompson",
+      "Email": "thompson.dakota@sunnyvaleisd.net",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.10.31",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "nKY2kprCvEGWmBMKAGCerA",
+      "Name": "Alexandra neoral & Francisco mbH",
+      "Fullname": "Alexandra Francisco",
+      "Email": "sytyvtnyu@acvemellikes.online",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.10.30",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.10.30"
+    },
+    {
+      "ID": "_t5r5mfSrEepRxNFoco5xA",
+      "Name": "inspital medikal a.ş.",
+      "Fullname": "Hulusi Okman",
+      "Email": "hulusi.okman@inspital.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.10.26",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.10.26"
+    },
+    {
+      "ID": "9tAgCgelfE6uiBMU6zAnNg",
+      "Name": "inspital teknoloji a.ş.",
+      "Fullname": "eray özkan",
+      "Email": "eray.ozkan@inspital.com.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "4/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.10.26",
+      "LastActivityDate": "2023.10.30",
+      "DashboardActivityDate": "2023.11.01"
+    },
+    {
+      "ID": "fRapEUEPs0ixtBKs6VsA0w",
+      "Name": "Studio Billion",
+      "Fullname": "Studio Billion",
+      "Email": "accounts@studiobillion.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.09.26",
+      "LastActivityDate": "2022.10.01",
+      "DashboardActivityDate": "2022.12.27"
+    },
+    {
+      "ID": "80yjaPTyoEKN0BKe9U6Ycg",
+      "Name": "Studio Billion",
+      "Fullname": "Eşref Bektaş",
+      "Email": "esref@studiobillion.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.09.26",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.09.26"
+    },
+    {
+      "ID": "bko-my3BVUyMoRJrb6D7Kg",
+      "Name": "Photonfeel GbR",
+      "Fullname": "Lewis Guest",
+      "Email": "lewis-guest@ax101-7.gemmasmith.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.09.21",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.09.27"
+    },
+    {
+      "ID": "sMhqK35XBk6SSBHgRxaDcw",
+      "Name": "Clark Stanford CO KG",
+      "Fullname": "Clark Stanford",
+      "Email": "clarkstanford89@golf.bekkr.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.09.20",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.09.20"
+    },
+    {
+      "ID": "lduvWJAxvE2V2RGgoes7oQ",
+      "Name": "Marylin UK & Poirier GmbH",
+      "Fullname": "Marylin Poirier",
+      "Email": "sharronblanco3283@hidebox.org",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.09.20",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.09.20"
+    },
+    {
+      "ID": "OL0slBv6zEOK6hFTScMEMQ",
+      "Name": "Ball & Ball Solutions",
+      "Fullname": "Brenna Ball",
+      "Email": "brenna-ball@ax101-7.gemmasmith.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.09.15",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.09.16"
+    },
+    {
+      "ID": "wlpqM8HuEUasORE9lDQZVA",
+      "Name": "Mabry & Anderson Services",
+      "Fullname": "Anderson Mabry",
+      "Email": "andersonmabry@awer.blastzane.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.09.06",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.09.06"
+    },
+    {
+      "ID": "It4YI7z8mkKNcRDZdqCheQ",
+      "Name": "Roden Preakness Solutions",
+      "Fullname": "Trevor Roden",
+      "Email": "silviahanna@savedaday.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.09.03",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.09.03"
+    },
+    {
+      "ID": "Z_vP-vkB80yk1xDQXCq3Yg",
+      "Name": "Yeni Firma",
+      "Fullname": "Vladyslav Farion",
+      "Email": "vladyslav.farion.ys@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.08.29",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.08.29"
+    },
+    {
+      "ID": "U_Fnh5xxP0aKpxC16ucnzQ",
+      "Name": "zafer petrol",
+      "Fullname": "ZAFER SORAN",
+      "Email": "zafersoran@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.07.25",
+      "LastActivityDate": "2024.11.05",
+      "DashboardActivityDate": "2022.08.31"
+    },
+    {
+      "ID": "b1feny4Xhk6OmhCjBAe6tQ",
+      "Name": "Yeni Firma",
+      "Fullname": "Haluk Ziya Tercan",
+      "Email": "tercanhalukziya@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.07.08",
+      "LastActivityDate": "2022.11.23",
+      "DashboardActivityDate": "2022.07.08"
+    },
+    {
+      "ID": "TdpDU_DntUmzxRCOMzk8og",
+      "Name": "Yeni Firma",
+      "Fullname": "Deniz Zeybek",
+      "Email": "zeybekdeniz654321@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.07.07",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.07.07"
+    },
+    {
+      "ID": "vK26bGn03kivYhAgSCNiIg",
+      "Name": "Goodson Holding",
+      "Fullname": "Hope Goodson",
+      "Email": "olashanahan@1secmail.org",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.07.04",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.07.04"
+    },
+    {
+      "ID": "c120ptxL2E-j9A-lzXLNBg",
+      "Name": "Burnside https://novelfullweb.com & Ruby mbH",
+      "Fullname": "Ruby Burnside",
+      "Email": "novelfwinfo@rambler.ru",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.06.28",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.06.28"
+    },
+    {
+      "ID": "v-SqCxGZpUmcaw-KIKr6pg",
+      "Name": "Double Glazed Repairs 56136 Is Blog Stirling Ltd",
+      "Fullname": "Debbra Stirling",
+      "Email": "debbra-stirling45@ax101-6.gemmasmith.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.06.13",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "6Sdlg_i4mkuMwg87w7IeNg",
+      "Name": "Trivett & Larry CO KG",
+      "Fullname": "Larry Trivett",
+      "Email": "jacelynmatthias9373@hidebox.org",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.06.13",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "3Zio-yEdP0-JmA660AbHCA",
+      "Name": "Thebookmarkplaza Consulting",
+      "Fullname": "Kerrie Wentz",
+      "Email": "kerrie_wentz68@ax101-6.gemmasmith.co.uk",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.06.09",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "xGSoSwKh-kCxoA2D0mvHEg",
+      "Name": "Armand казино Вулкан Рояль Sturm Ltd",
+      "Fullname": "Armand Sturm",
+      "Email": "egor578@lotofkning.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.06.04",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "uU3ghJGrekG-fw0DfYY5Pw",
+      "Name": "Julie Julie AG",
+      "Fullname": "Julie Borden",
+      "Email": "julie-borden7@4serial.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.05.24",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "Wk4oJ4344k6m2Azpyakncw",
+      "Name": "ABCD",
+      "Fullname": "DİLEK TOK",
+      "Email": "tok.dilek89@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.05.22",
+      "LastActivityDate": "2022.05.24",
+      "DashboardActivityDate": "2022.05.23"
+    },
+    {
+      "ID": "PkO3KadX7k2s-gyXLR1tFA",
+      "Name": "Trista hx400v CO KG",
+      "Fullname": "Trista Virgo",
+      "Email": "lawannagiblin3178@hidebox.org",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.05.22",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "UUzGehG0PUGlTAx6y_h1yA",
+      "Name": "Altay Otomotiv A.Ş.",
+      "Fullname": "Emrah Dincer",
+      "Email": "emrahdincer@altayoto.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.05.18",
+      "LastActivityDate": "2024.11.04",
+      "DashboardActivityDate": "2022.12.12"
+    },
+    {
+      "ID": "2NEBtx_tLk-MBww__MlNzw",
+      "Name": "Yeni Firma",
+      "Fullname": "Bulent Caliskan",
+      "Email": "bcaliskan27@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.05.04",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "XCuXMPuZ20m7bQwwi-UFdQ",
+      "Name": "Yeni Firma",
+      "Fullname": "Deniz Gokce Gemici",
+      "Email": "denizgokcegemici@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.04.22",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.04.22"
+    },
+    {
+      "ID": "vqsdSjTzjEm5owwf9jlIOA",
+      "Name": "Yeni Firma",
+      "Fullname": "Akmyrat Tashpulatov",
+      "Email": "takmyrat@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.04.19",
+      "LastActivityDate": "2022.04.22",
+      "DashboardActivityDate": "2022.04.19"
+    },
+    {
+      "ID": "MHjWp0pOQkG2bQwG8UDTuA",
+      "Name": "setk",
+      "Fullname": "Çakın",
+      "Email": "berker.c@samsung.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.04.12",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "xO6f18y6PU2gHAuzC7dADw",
+      "Name": "Malberti",
+      "Fullname": "Rafaellafanninho",
+      "Email": "Rafaella.malberti@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.03.21",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.03.21"
+    },
+    {
+      "ID": "wM-n8qhJ9USVQwsFcW8tRg",
+      "Name": "Yeni Firma",
+      "Fullname": "Seyit Ali Cavus",
+      "Email": "seyitalicavuss@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.03.17",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "0vM7BaqG4UC7GArmu8qapQ",
+      "Name": "Vektora",
+      "Fullname": "burak verep",
+      "Email": "burak.verep@vektora.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.03.17",
+      "LastActivityDate": "2024.09.10",
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "SMvNXFdO7U2Bxgp2SK7azQ",
+      "Name": "Yeni Firma",
+      "Fullname": "Bilal Samed Şahin",
+      "Email": "bilalsamed@hotmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.03.15",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.03.17"
+    },
+    {
+      "ID": "Y3yywnkENEmypgm_YrQl3A",
+      "Name": "Softcand",
+      "Fullname": "enes dur",
+      "Email": "enes@softcand.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.03.09",
+      "LastActivityDate": "2023.07.08",
+      "DashboardActivityDate": "2023.07.05"
+    },
+    {
+      "ID": "dZGhXKKWKUO0lAmbQapbvw",
+      "Name": "Vektora",
+      "Fullname": "Bülent Özen",
+      "Email": "bulent.ozen@vektora.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.03.07",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.03.07"
+    },
+    {
+      "ID": "Q4zacLv9ekay8AkqGOhXCg",
+      "Name": "Yeni Firma",
+      "Fullname": "Deniz Zeybek",
+      "Email": "deniz.zeybek@ecl.one",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.02.23",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.02.23"
+    },
+    {
+      "ID": "KOQgOCP_5kGTmgsMnF38RQ",
+      "Name": "Yeni Firma",
+      "Fullname": "Deniz Zeybek",
+      "Email": "zeybekdeniz64@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.02.22",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.02.22"
+    },
+    {
+      "ID": "hID7Xf72ckWBugh0MdVEvw",
+      "Name": "Yeni Firma",
+      "Fullname": "Tuba Taraklioglu",
+      "Email": "tubataraklioglu@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.02.07",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "X6w2PkTyVUye6QebRqyHsg",
+      "Name": "Camille iptv android player Strayer LLC",
+      "Fullname": "Camille Strayer",
+      "Email": "mikeleuschke1188@iservmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.01.31",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "Zic9xskBFkSKIgeW_dGg5w",
+      "Name": "Dg & Jai Consulting",
+      "Fullname": "Jai Edye",
+      "Email": "rachelgriego@adult-work.info",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.01.24",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "cyelQ7CyJkOKEwd_4xPfXg",
+      "Name": "Yeni Firma",
+      "Fullname": "Gürkan Bülbül",
+      "Email": "gurkan.bulbul@nanobilgisayar.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.01.19",
+      "LastActivityDate": "2023.04.26",
+      "DashboardActivityDate": "2022.01.19"
+    },
+    {
+      "ID": "dU9bdctYVEykoAdlCcftgA",
+      "Name": "Yeni Firma",
+      "Fullname": "Cengiz YAMAN",
+      "Email": "cengiz@cengizyaman.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.01.19",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.01.19"
+    },
+    {
+      "ID": "o3Bdu8n0iEKSgwdHNKLZAQ",
+      "Name": "Yeni Firma",
+      "Fullname": "Hamza sucuoğlu",
+      "Email": "hamzasucuoglu@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.01.12",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "reNhcLplhEqgHwbiEChSQQ",
+      "Name": "Monahan Forex trading programs Monahan Ltd",
+      "Fullname": "Norma Monahan",
+      "Email": "sysfor@pochtampt.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.01.08",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "cDtzyvoN7EmIXgat6F5T4Q",
+      "Name": "Yeni Firma",
+      "Fullname": "Tugay Arıcı",
+      "Email": "tugayariciws@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.01.06",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "1JNcF546BU6ZHgacEtSZmQ",
+      "Name": "Yeni Firma",
+      "Fullname": "MUZAFFER ULUÇ",
+      "Email": "atilganteknolojix@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2022.01.05",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2022.01.05"
+    },
+    {
+      "ID": "MjiKFcNs1Eq_6QZo-ndY9w",
+      "Name": "Phtvmedia Baltzell Consulting",
+      "Fullname": "Fausto Baltzell",
+      "Email": "maxinewitting748@uiscape.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.12.18",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "vUeNAkSN70i26wZnpL1EBA",
+      "Name": "Yeni Firma",
+      "Fullname": "Turgay Piyadeoğlu",
+      "Email": "turgayp@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.12.15",
+      "LastActivityDate": "2022.02.03",
+      "DashboardActivityDate": "2022.02.03"
+    },
+    {
+      "ID": "8GcuidOrMUS7_gYVMM2vJA",
+      "Name": "Yeni Firma",
+      "Fullname": "Dilek Eyigün (Hepsiburada/Bilgi Teknolojileri)",
+      "Email": "dilek.eyigun@hepsiburada.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.12.14",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.12.14"
+    },
+    {
+      "ID": "CI8RWqGXA0a_dwXv7daYHA",
+      "Name": "Yeni Firma",
+      "Fullname": "Ömer Vural",
+      "Email": "omervural135@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.12.13",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.12.13"
+    },
+    {
+      "ID": "lHhF6mVAikaLsAV5WhAjfw",
+      "Name": "Yeni Firma",
+      "Fullname": "Dilek Eyigün",
+      "Email": "dilek.eyigun.92@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.12.10",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "wClksFPwfUOzNwV2kjjW6A",
+      "Name": "GSS Pazarlama ve Dağıtım A.Ş ",
+      "Fullname": "Şahap Güven",
+      "Email": "gsahap@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.12.10",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "NaDwkpbSmky_9gUafl9Vyg",
+      "Name": "Personal",
+      "Fullname": "Mehmet Pekcan",
+      "Email": "mehmetpekcannn@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.12.02",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.12.02"
+    },
+    {
+      "ID": "PzBwuTtSuUWWjwA3V--_9g",
+      "Name": "Kyle Trade LLC",
+      "Fullname": "Kyle Lovelady",
+      "Email": "klaudialassiter@23.8.dnsabr.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.12.01",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "jP4MWj8ajkiD7AP65BCcOw",
+      "Name": "PERYÖN",
+      "Fullname": "Pınar Demir",
+      "Email": "pinar.demir@peryon.org.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.11.29",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.11.29"
+    },
+    {
+      "ID": "iN42fUfr7kqIHgLbIwcymw",
+      "Name": "Yeni Firma",
+      "Fullname": "Gürkan Gürtürk",
+      "Email": "gurkan@sunugoo.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.11.11",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.11.11"
+    },
+    {
+      "ID": "VGnX31HrYUmpKAHXAQjX7w",
+      "Name": "365 derece",
+      "Fullname": "yavuz kısa",
+      "Email": "yavuzk@365derece.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.11.11",
+      "LastActivityDate": "2022.02.19",
+      "DashboardActivityDate": "2021.11.25"
+    },
+    {
+      "ID": "5RieiTDzvke9FAUOVUUJlw",
+      "Name": "CSEXPERT",
+      "Fullname": "Baturhan TEKE",
+      "Email": "Baturhanteke@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.11.02",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.11.02"
+    },
+    {
+      "ID": "fbjgERNJvUmpWwTjKXcu0A",
+      "Name": "Indo Amines PRV LTD",
+      "Fullname": "Tejas madavi ",
+      "Email": "Tejasmadavi9405@gemail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.11.01",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.11.01"
+    },
+    {
+      "ID": "skjkPvS_kEivuQTiDmiPzQ",
+      "Name": "Yeni Firma",
+      "Fullname": "volkan çelikel",
+      "Email": "volkancelikel@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.10.27",
+      "LastActivityDate": "2021.11.22",
+      "DashboardActivityDate": "2021.10.27"
+    },
+    {
+      "ID": "rM3Dcao4akK0HATYJtFxsw",
+      "Name": "Kuveyt Türk",
+      "Fullname": "Muhammet Yılmaz",
+      "Email": "muhammet_yilmaz@kuveytturk.com.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.10.26",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.10.26"
+    },
+    {
+      "ID": "VvqN90ZAQUCgUATOFBJXCQ",
+      "Name": "Yeni Firma",
+      "Fullname": "Samet Can Demir",
+      "Email": "sametcandemir@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.10.26",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "kcCE6pI0gkyWVQRL5FwOLA",
+      "Name": "HT Bilişim Eğitim Danışmanlık",
+      "Fullname": "Hakan Topuzoğlu",
+      "Email": "hakan.topuzoglu@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.10.25",
+      "LastActivityDate": "2021.11.28",
+      "DashboardActivityDate": "2021.10.25"
+    },
+    {
+      "ID": "pyIDMUUNek6CCwQVFZF3bA",
+      "Name": "Yeni Firma",
+      "Fullname": "Tunkem Ltd.Şti",
+      "Email": "tunkemltd@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.10.25",
+      "LastActivityDate": null,
+      "DashboardActivityDate": "2021.10.25"
+    },
+    {
+      "ID": "V9K6rp2ScEKdYAP6p6CfXw",
+      "Name": "GÜNAL LOJİSTİK",
+      "Fullname": "BATUHAN GÜNAL",
+      "Email": "gunal64@hotmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.10.10",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "4wEmIBGikEajyAO5fSmCRQ",
+      "Name": "Yeni Firma",
+      "Fullname": "ates can",
+      "Email": "hectordwnld@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.10.08",
+      "LastActivityDate": "2021.10.08",
+      "DashboardActivityDate": "2021.10.08"
+    },
+    {
+      "ID": "2Sp-9W0YKUKNdgN--gTSfQ",
+      "Name": "Vektora",
+      "Fullname": "Vektora Yöneticisi",
+      "Email": "can.ozkan@vektora.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "80/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.09.30",
+      "LastActivityDate": "2024.11.05",
+      "DashboardActivityDate": "2024.05.15"
+    },
+    {
+      "ID": "kqI7z3MVck2ZgANAcS5aqg",
+      "Name": "Yeni Firma",
+      "Fullname": "ilhan Oğlakçıoğlu",
+      "Email": "ilhanoglakcioglu@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.09.22",
+      "LastActivityDate": "2021.09.22",
+      "DashboardActivityDate": "2021.09.22"
+    },
+    {
+      "ID": "ziOUJ_8gnUu0wQMW3CzFoA",
+      "Name": "Yeni Firma",
+      "Fullname": "serkan peduk",
+      "Email": "serkanpeduk2@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.09.21",
+      "LastActivityDate": "2022.12.27",
+      "DashboardActivityDate": "2022.09.23"
+    },
+    {
+      "ID": "4pk3186sTEGhOgMWkXzeAA",
+      "Name": "aa",
+      "Fullname": "Akın ALADAĞ",
+      "Email": "aladag_akin34@hotmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.09.17",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "Iktbf48YUEq13ALmkSjpjg",
+      "Name": "Yeni Firma",
+      "Fullname": "Ömer SAİD",
+      "Email": "saidomer160@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.09.09",
+      "LastActivityDate": "2024.04.23",
+      "DashboardActivityDate": "2022.10.16"
+    },
+    {
+      "ID": "BH8J_1nABUW8hgLazYOw5A",
+      "Name": "Yeni Firma",
+      "Fullname": "Aslı Kaya",
+      "Email": "aysegul234231@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.08.31",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "80HeinQXykO9ogMbynuWfA",
+      "Name": "Teknorex",
+      "Fullname": "Safa Cihat Nizamoğlu",
+      "Email": "safa_nizamoglu@hotmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.07.16",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "GqJhBgSkSUOPIwLOXQ5ikQ",
+      "Name": "Tüm Teknoloji Üretim Merkezi Yazılım ",
+      "Fullname": "Ömer Demir ",
+      "Email": "Omeralidemir44@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.07.14",
+      "LastActivityDate": "2021.07.15",
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "Tsdf1AY3uEa3tAJ6JEdMTQ",
+      "Name": "GSS",
+      "Fullname": "Şahap Güven",
+      "Email": "gsahap@hotmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.07.10",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "uv-17PG3pEqGBQHuD_hRew",
+      "Name": "Yeni Firma",
+      "Fullname": "Songül ÜNSAL",
+      "Email": "songulunsal98@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.07.10",
+      "LastActivityDate": "2022.03.25",
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "dgToJeJmoUiu_AGnGQ6ofQ",
+      "Name": "Yeni Firma",
+      "Fullname": "Ana Dağıtım",
+      "Email": "anadagitim1992@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.06.12",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "qIfI7GKxv0KqgAFxz9W0Uw",
+      "Name": "XXX",
+      "Fullname": "Bural Sevengil",
+      "Email": "buralsevengil@yandex.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.06.04",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "Ug-fi_E1AUWZ2gEkAgeBSQ",
+      "Name": "Digibus",
+      "Fullname": "Salih ÇAKTI",
+      "Email": "salih@digibus.com.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "0/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.06.04",
+      "LastActivityDate": "2021.11.12",
+      "DashboardActivityDate": "2022.11.03"
+    },
+    {
+      "ID": "oIlj97bujUCzr5hD1PE0KA",
+      "Name": "Yeni Firma",
+      "Fullname": "Yusuf Ekiz",
+      "Email": "yekiz0454@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.04.29",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "g9KJbEHSu0GsbWT-Z_POEw",
+      "Name": "Yeni Firma",
+      "Fullname": "Erkam Tuzgen",
+      "Email": "erkamt@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.04.19",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "7T4IY2vp5UWT5D912aMzwg",
+      "Name": "Yeni Firma",
+      "Fullname": "İsmail Hakkı Eren",
+      "Email": "ismailhakkierenn@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.03.18",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "npRBuouHQkKER-uhTIqMig",
+      "Name": "İSDO Web Yazılım",
+      "Fullname": "Doğan Sezgin",
+      "Email": "dogansezgin@yandex.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.03.18",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "WMBC4PMe-U637GyANRAsJQ",
+      "Name": "Dinçer Lojistik",
+      "Fullname": "Cemil Çelik",
+      "Email": "cemil.celik@dincerlojistik.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "3/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.02.18",
+      "LastActivityDate": "2024.11.05",
+      "DashboardActivityDate": "2023.02.24"
+    },
+    {
+      "ID": "SNQyEibOpUaJmrQxwinB1Q",
+      "Name": "Foneks",
+      "Fullname": "Naim Bey",
+      "Email": "naim@fonex.com.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.02.17",
+      "LastActivityDate": "2021.04.19",
+      "DashboardActivityDate": "2021.09.30"
+    },
+    {
+      "ID": "qG_zIZKLcUyZYH3opYtM4A",
+      "Name": "Yıldız Holding",
+      "Fullname": "Orçun Gücüm",
+      "Email": "orcun.gucum@yildizholding.com.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "242/250 kullanıcı 05.02.2025",
+      "CreateDate": "2021.02.12",
+      "LastActivityDate": "2024.11.05",
+      "DashboardActivityDate": "2024.11.04"
+    },
+    {
+      "ID": "w8BwHru7G0G3tnjUMY8elg",
+      "Name": "Koton Mağazacılık Tekstil San. ve Tic. A.Ş.",
+      "Fullname": "SEYHAN TİLBAÇ",
+      "Email": "SEYHAN.TILBAC@koton.com.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.01.28",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "1y06pa2520KOa2fTtecAGA",
+      "Name": "Erkim İlaç",
+      "Fullname": "Hakan Şimşek",
+      "Email": "H.SIMSEK@erkim-ilac.com.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "1/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.01.27",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "u_wvA4GbG02Sf7QkNxAEzA",
+      "Name": "Fevzi Özçakmak Danışmanlık",
+      "Fullname": "Fevzi Özçakmak",
+      "Email": "fevzi.ozcakmak@gmail.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.01.27",
+      "LastActivityDate": null,
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "iuJVA2UkKkSb1Mbaqqglpw",
+      "Name": "Tilia Furniture",
+      "Fullname": "Murat IT",
+      "Email": "it@tilia.com.tr",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "11/0 kullanıcı 01.01.0001",
+      "CreateDate": "2021.01.22",
+      "LastActivityDate": "2024.10.02",
+      "DashboardActivityDate": null
+    },
+    {
+      "ID": "hWa91-6TekSzJilr8j2-sA",
+      "Name": "Varsayılan",
+      "Fullname": "Jamie Watkins",
+      "Email": "jamie.watkins@contoso.com",
+      "Password": null,
+      "UserCount": 0,
+      "Month": 0,
+      "License": "2/0 kullanıcı 10.09.2023",
+      "CreateDate": "2020.11.28",
+      "LastActivityDate": "2024.11.04",
+      "DashboardActivityDate": "2024.11.05"
+    }
+  ],
+  "/webapi/report/filters": {
+    "Projects": [
+      {
+        "ID": "641894e2717e9a047475ee35",
+        "Name": "Çiko Gofret"
+      },
+      {
+        "ID": "64128edb57a0312af0b477f2",
+        "Name": "Clearing"
+      },
+      {
+        "ID": "641171f0717e9a13cc5ffa58",
+        "Name": "Pınar"
+      },
+      {
+        "ID": "648762c2717e9a0924ba569f",
+        "Name": "Productiivty"
+      },
+      {
+        "ID": "64128b1c57a0315f9c8a6913",
+        "Name": "Reconciliation"
+      },
+      {
+        "ID": "64a6677c717e9a1114b81417",
+        "Name": "SAP"
+      },
+      {
+        "ID": "640dc980717e9e14bc535a4a",
+        "Name": "TXT"
+      },
+      {
+        "ID": "6432af9c717e9a08c4a00ca4",
+        "Name": "Yeni proje"
+      }
+    ],
+    "Tags": [
+      {
+        "ID": "640dc994717e9e14bc535a53",
+        "Name": "Color"
+      },
+      {
+        "ID": "641171f6717e9a13cc5ffa68",
+        "Name": "Lansman"
+      },
+      {
+        "ID": "64128b2257a0315f9c8a6914",
+        "Name": "Reporting"
+      },
+      {
+        "ID": "64128f7b57a0312af0b47802",
+        "Name": "Seller"
+      },
+      {
+        "ID": "64128cc857a0315f9c8a6928",
+        "Name": "Vendor"
+      }
+    ],
+    "Employees": [
+      {
+        "ID": "64015c5ee435600a443e8cde",
+        "Name": "Admin"
+      },
+      {
+        "ID": "64015c5ee435600a443e8c32",
+        "Name": "Agnes Owens"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d90",
+        "Name": "Aneesa Ward"
+      },
+      {
+        "ID": "64015c5ee435600a443e8c66",
+        "Name": "Celine Miller"
+      },
+      {
+        "ID": "64015c5ee435600a443e8dc4",
+        "Name": "Danielle Hurst"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d07",
+        "Name": "Erik Johnson"
+      },
+      {
+        "ID": "64015c5ee435600a443e8c10",
+        "Name": "Estelle Montes"
+      },
+      {
+        "ID": "64015c5ee435600a443e8e1e",
+        "Name": "Evelyn Wall"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d19",
+        "Name": "FlexyTime Yönetici"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d66",
+        "Name": "Hanna Rowland"
+      },
+      {
+        "ID": "64015c5ee435600a443e8c79",
+        "Name": "Isabel Morris"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d02",
+        "Name": "Jamie Watkins"
+      },
+      {
+        "ID": "64015c5ee435600a443e8e6d",
+        "Name": "Jose Lambert"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d41",
+        "Name": "Josephine Walsh"
+      },
+      {
+        "ID": "64015c5ee435600a443e8e3c",
+        "Name": "Judith Elliott"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d79",
+        "Name": "Julie Harding"
+      },
+      {
+        "ID": "64015c5ee435600a443e8beb",
+        "Name": "Kristina Lozano"
+      },
+      {
+        "ID": "64015c5ee435600a443e8c13",
+        "Name": "Kyan Mooney"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d7f",
+        "Name": "Luis Fox"
+      },
+      {
+        "ID": "64015c5ee435600a443e8e2e",
+        "Name": "makman"
+      },
+      {
+        "ID": "66a0b1595e7b6c08a03fd093",
+        "Name": "mehme"
+      },
+      {
+        "ID": "64015c5ee435600a443e8de7",
+        "Name": "Natalie Nixon"
+      },
+      {
+        "ID": "64015c5ee435600a443e8cfb",
+        "Name": "Phillip Dotson"
+      },
+      {
+        "ID": "64015c5ee435600a443e8c27",
+        "Name": "Remi Conner"
+      },
+      {
+        "ID": "64015c5ee435600a443e8d83",
+        "Name": "Samson Mullen"
+      },
+      {
+        "ID": "64015c5ee435600a443e8e58",
+        "Name": "Sonia Watkins"
+      },
+      {
+        "ID": "64015c5ee435600a443e8c7c",
+        "Name": "Tobias Turner"
+      }
+    ],
+    "Teams": [
+      {
+        "ID": "629176fc57a0318a082d5175",
+        "Name": "Accounting Department"
+      },
+      {
+        "ID": "629176fc57a0318a082d5177",
+        "Name": "Collection and Budget"
+      },
+      {
+        "ID": "629176ff57a0318a082d51b5",
+        "Name": "Commercial Project Bidding"
+      },
+      {
+        "ID": "629176fe57a0318a082d51a2",
+        "Name": "Contoso"
+      },
+      {
+        "ID": "629176fb57a0318a082d5166",
+        "Name": "Finance Department"
+      },
+      {
+        "ID": "629176ff57a0318a082d51ae",
+        "Name": "Finance Department"
+      },
+      {
+        "ID": "629176fc57a0318a082d516e",
+        "Name": "Price and Competition Analysis"
+      },
+      {
+        "ID": "629176fc57a0318a082d517e",
+        "Name": "Sales Department"
+      },
+      {
+        "ID": "629176ff57a0318a082d51ab",
+        "Name": "Sales Support Department"
+      },
+      {
+        "ID": "629176fc57a0318a082d516b",
+        "Name": "Strategy Development"
+      },
+      {
+        "ID": "629176ff57a0318a082d51b3",
+        "Name": "Trading Department"
+      },
+      {
+        "ID": "66a0b15a5e7b6c08a03fd095",
+        "Name": "Work Group"
+      }
+    ]
+  },
+  "/webapi/report/query": {
+    "Summary": {
+      "Billable": "02.13:51",
+      "Unbillable": "00.00:00",
+      "Total": "02.13:51"
+    },
+    "Graphs": {
+      "Main": {
+        "labels": ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday"],
+        "datasets": [
+          {
+            "label": "Entries",
+            "data": [
+              9.933333333333334, 10.833333333333334, 10.116666666666667, 9.9, 10.65,
+              10.416666666666666
+            ],
+            "backgroundColor": "rgb(153, 102, 255)",
+            "borderColor": "rgba(153, 102, 255 ,0.2)"
+          }
+        ],
+        "Unit": "Hour"
+      },
+      "Group": [
+        {
+          "label": "Reconciliation",
+          "value": 11.668014012395581
+        },
+        {
+          "label": "Reconciliation",
+          "value": 10.778765831312315
+        },
+        {
+          "label": "Reconciliation",
+          "value": 9.26973861492859
+        },
+        {
+          "label": "Reconciliation",
+          "value": 4.79655079493398
+        },
+        {
+          "label": "Reconciliation",
+          "value": 6.036108865534897
+        },
+        {
+          "label": "Reconciliation",
+          "value": 4.715710051199138
+        },
+        {
+          "label": "Reconciliation",
+          "value": 7.895445971436271
+        },
+        {
+          "label": "Reconciliation",
+          "value": 4.823497709512261
+        },
+        {
+          "label": "Clearing",
+          "value": 2.3443815683104283
+        },
+        {
+          "label": "Clearing",
+          "value": 8.407437348423606
+        },
+        {
+          "label": "Clearing",
+          "value": 1.643761789275128
+        },
+        {
+          "label": "Clearing",
+          "value": 2.1827000808407435
+        },
+        {
+          "label": "Clearing",
+          "value": 8.111021288062517
+        },
+        {
+          "label": "Clearing",
+          "value": 4.2306655887900835
+        },
+        {
+          "label": "Clearing",
+          "value": 10.26677445432498
+        },
+        {
+          "label": "Clearing",
+          "value": 2.8294260307194827
+        }
+      ]
+    },
+    "Grouping": [
+      {
+        "Group1": "Reconciliation",
+        "Group2": "Celine Miller",
+        "Total": "07:13"
+      },
+      {
+        "Group1": "Reconciliation",
+        "Group2": "Josephine Walsh",
+        "Total": "06:40"
+      },
+      {
+        "Group1": "Reconciliation",
+        "Group2": "Kristina Lozano",
+        "Total": "05:44"
+      },
+      {
+        "Group1": "Reconciliation",
+        "Group2": "Jose Lambert",
+        "Total": "02:58"
+      },
+      {
+        "Group1": "Reconciliation",
+        "Group2": "Samson Mullen",
+        "Total": "03:44"
+      },
+      {
+        "Group1": "Reconciliation",
+        "Group2": "mehme",
+        "Total": "02:55"
+      },
+      {
+        "Group1": "Reconciliation",
+        "Group2": "Erik Johnson",
+        "Total": "04:53"
+      },
+      {
+        "Group1": "Reconciliation",
+        "Group2": "Tobias Turner",
+        "Total": "02:59"
+      },
+      {
+        "Group1": "Clearing",
+        "Group2": "Erik Johnson",
+        "Total": "01:27"
+      },
+      {
+        "Group1": "Clearing",
+        "Group2": "Tobias Turner",
+        "Total": "05:12"
+      },
+      {
+        "Group1": "Clearing",
+        "Group2": "Kristina Lozano",
+        "Total": "01:01"
+      },
+      {
+        "Group1": "Clearing",
+        "Group2": "Celine Miller",
+        "Total": "01:21"
+      },
+      {
+        "Group1": "Clearing",
+        "Group2": "Jose Lambert",
+        "Total": "05:01"
+      },
+      {
+        "Group1": "Clearing",
+        "Group2": "Samson Mullen",
+        "Total": "02:37"
+      },
+      {
+        "Group1": "Clearing",
+        "Group2": "mehme",
+        "Total": "06:21"
+      },
+      {
+        "Group1": "Clearing",
+        "Group2": "Josephine Walsh",
+        "Total": "01:45"
+      }
+    ],
+    "DownloadKey": "UZOYHZNDEXUZ"
+  },
+  "/webapi/company/reports": {
+    "ReportTypes": [
+      {
+        "ID": "1",
+        "Name": "Productivity Report"
+      },
+      {
+        "ID": "2",
+        "Name": "Usage Report"
+      },
+      {
+        "ID": "3",
+        "Name": "Distribution Report"
+      },
+      {
+        "ID": "4",
+        "Name": "Worktime Productivity Report"
+      },
+      {
+        "ID": "5",
+        "Name": "Worktime Productivity Email"
+      },
+      {
+        "ID": "6",
+        "Name": "Trend Report"
+      }
+    ],
+    "ReportRecipientTypes": [
+      {
+        "ID": "0 0 9 ? * MON,TUE,WED,THU,FRI,SAT *",
+        "Name": "Every Weekday"
+      },
+      {
+        "ID": "0 0 9 ? * FRI *",
+        "Name": "Every Week on Friday"
+      }
+    ],
+    "SectionList": [
+      {
+        "ID": "629176fb57a0318a082d5166",
+        "Name": "Finance Department"
+      },
+      {
+        "ID": "629176fc57a0318a082d516b",
+        "Name": "Strategy Development"
+      },
+      {
+        "ID": "629176fc57a0318a082d516e",
+        "Name": "Price and Competition Analysis"
+      },
+      {
+        "ID": "629176fc57a0318a082d5175",
+        "Name": "Accounting Department"
+      },
+      {
+        "ID": "629176fc57a0318a082d5177",
+        "Name": "Collection and Budget"
+      },
+      {
+        "ID": "629176fc57a0318a082d517e",
+        "Name": "Sales Department"
+      },
+      {
+        "ID": "629176fe57a0318a082d51a2",
+        "Name": "Contoso"
+      },
+      {
+        "ID": "629176ff57a0318a082d51ab",
+        "Name": "Sales Support Department"
+      },
+      {
+        "ID": "629176ff57a0318a082d51ae",
+        "Name": "Finance Department"
+      },
+      {
+        "ID": "629176ff57a0318a082d51b3",
+        "Name": "Trading Department"
+      },
+      {
+        "ID": "629176ff57a0318a082d51b5",
+        "Name": "Commercial Project Bidding"
+      },
+      {
+        "ID": "66a0b15a5e7b6c08a03fd095",
+        "Name": "Work Group"
+      }
+    ],
+    "Items": [
+      {
+        "CronDisplay": "",
+        "TypeDisplay": "Productivity Report",
+        "SectionNameDisplay": "Strategy Development",
+        "ScheduleDisplay": "Everyday",
+        "ID": "672be472717e9a105818e242",
+        "To": ["deniz@gmail.com", "arda@gmail.com"],
+        "Cc": ["ege@gmail.com"],
+        "Bcc": ["pekcan@gmail.com"],
+        "Type": 0,
+        "Cron": null,
+        "SectionId": null,
+        "Schedule": null
+      }
+    ]
+  },
+  "/webapi/timesheet/week/person": [
+    {
+      "Name": "Celine Miller",
+      "Children": [
+        {
+          "Name": "Reconciliation",
+          "Days": ["00:59", "01:04", "01:46", "01:56", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Clearing",
+          "Days": ["00:00", "00:00", "00:00", "00:00", "01:24", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["00:59", "01:04", "01:46", "01:56", "01:24", "00:00", "00:00"]
+    },
+    {
+      "Name": "Erik Johnson",
+      "Children": [
+        {
+          "Name": "Reconciliation",
+          "Days": ["01:30", "01:14", "00:00", "00:57", "00:56", "00:00", "00:00"]
+        },
+        {
+          "Name": "Clearing",
+          "Days": ["00:00", "00:00", "00:47", "00:00", "00:00", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["01:30", "01:14", "00:47", "00:57", "00:56", "00:00", "00:00"]
+    },
+    {
+      "Name": "Josephine Walsh",
+      "Children": [
+        {
+          "Name": "Reconciliation",
+          "Days": ["01:50", "00:00", "01:18", "01:09", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Clearing",
+          "Days": ["00:00", "01:45", "00:00", "00:00", "00:37", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["01:50", "01:45", "01:18", "01:09", "00:37", "00:00", "00:00"]
+    },
+    {
+      "Name": "Kristina Lozano",
+      "Children": [
+        {
+          "Name": "Reconciliation",
+          "Days": ["00:50", "01:06", "01:33", "01:40", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Clearing",
+          "Days": ["00:00", "00:00", "00:00", "00:00", "01:48", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["00:50", "01:06", "01:33", "01:40", "01:48", "00:00", "00:00"]
+    },
+    {
+      "Name": "Jose Lambert",
+      "Children": [
+        {
+          "Name": "Clearing",
+          "Days": ["01:11", "00:46", "01:13", "01:40", "01:51", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["01:11", "00:46", "01:13", "01:40", "01:51", "00:00", "00:00"]
+    },
+    {
+      "Name": "Samson Mullen",
+      "Children": [
+        {
+          "Name": "Clearing",
+          "Days": ["00:31", "00:00", "01:26", "01:20", "01:13", "00:00", "00:00"]
+        },
+        {
+          "Name": "Reconciliation",
+          "Days": ["00:00", "01:37", "00:00", "00:00", "00:00", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["00:31", "01:37", "01:26", "01:20", "01:13", "00:00", "00:00"]
+    },
+    {
+      "Name": "Tobias Turner",
+      "Children": [
+        {
+          "Name": "Reconciliation",
+          "Days": ["01:41", "01:18", "00:00", "00:00", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Clearing",
+          "Days": ["00:00", "00:00", "00:46", "00:33", "01:04", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["01:41", "01:18", "00:46", "00:33", "01:04", "00:00", "00:00"]
+    },
+    {
+      "Name": "mehme",
+      "Children": [
+        {
+          "Name": "Clearing",
+          "Days": ["01:22", "01:49", "01:36", "00:45", "01:55", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["01:22", "01:49", "01:36", "00:45", "01:55", "00:00", "00:00"]
+    }
+  ],
+  "/webapi/timesheet/week/project": [
+    {
+      "Name": "Reconciliation",
+      "Children": [
+        {
+          "Name": "Celine Miller",
+          "Days": ["00:59", "01:04", "01:46", "01:56", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Erik Johnson",
+          "Days": ["01:30", "01:14", "00:00", "00:57", "00:56", "00:00", "00:00"]
+        },
+        {
+          "Name": "Josephine Walsh",
+          "Days": ["01:50", "00:00", "01:18", "01:09", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Kristina Lozano",
+          "Days": ["00:50", "01:06", "01:33", "01:40", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Tobias Turner",
+          "Days": ["01:41", "01:18", "00:00", "00:00", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Samson Mullen",
+          "Days": ["00:00", "01:37", "00:00", "00:00", "00:00", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["06:50", "06:19", "04:37", "05:42", "00:56", "00:00", "00:00"]
+    },
+    {
+      "Name": "Clearing",
+      "Children": [
+        {
+          "Name": "Jose Lambert",
+          "Days": ["01:11", "00:46", "01:13", "01:40", "01:51", "00:00", "00:00"]
+        },
+        {
+          "Name": "Samson Mullen",
+          "Days": ["00:31", "00:00", "01:26", "01:20", "01:13", "00:00", "00:00"]
+        },
+        {
+          "Name": "mehme",
+          "Days": ["01:22", "01:49", "01:36", "00:45", "01:55", "00:00", "00:00"]
+        },
+        {
+          "Name": "Josephine Walsh",
+          "Days": ["00:00", "01:45", "00:00", "00:00", "00:37", "00:00", "00:00"]
+        },
+        {
+          "Name": "Erik Johnson",
+          "Days": ["00:00", "00:00", "00:47", "00:00", "00:00", "00:00", "00:00"]
+        },
+        {
+          "Name": "Tobias Turner",
+          "Days": ["00:00", "00:00", "00:46", "00:33", "01:04", "00:00", "00:00"]
+        },
+        {
+          "Name": "Celine Miller",
+          "Days": ["00:00", "00:00", "00:00", "00:00", "01:24", "00:00", "00:00"]
+        },
+        {
+          "Name": "Kristina Lozano",
+          "Days": ["00:00", "00:00", "00:00", "00:00", "01:48", "00:00", "00:00"]
+        }
+      ],
+      "Days": ["03:04", "04:20", "05:48", "04:18", "09:52", "00:00", "00:00"]
+    }
+  ],
+  "/webapi/timeEntries/manual": [
+    {
+      "timeEntry": "Reconcilliation",
+      "startTime": "14:50",
+      "endTime": "15:00",
+      "date": "2024-11-13T12:00:18.255Z",
+      "project": {
+        "name": "Clearing",
+        "value": "Clearing"
+      },
+      "tags": [
+        {
+          "name": "Lansman",
+          "value": "Lansman"
+        }
+      ],
+      "isBillable": false,
+      "elapsedTime": "00:00:00",
+      "timeDifference": "00:10:00",
+      "type": "manual"
+    },
+    {
+      "timeEntry": "Reconcilliation",
+      "startTime": "14:00",
+      "endTime": "14:10",
+      "date": "2024-11-13T11:12:03.258Z",
+      "project": { "name": "Productivity", "value": "Productivity" },
+      "tags": [
+        { "name": "Seller", "value": "Seller" },
+        { "name": "Reporting", "value": "Reporting" }
+      ],
+      "isBillable": true,
+      "elapsedTime": "00:00:06",
+      "type": "timer"
+    }
+  ],
+  "/webapi/timesheet/clocks": [
+    {
+      "ID": "2411130000",
+      "Selected": true,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "08:00",
+      "Clocks": [
+        {
+          "ID": "673443fb5e7b6c0ac4b74bb4",
+          "Selected": true,
+          "Spend": 136,
+          "Name": "SAP",
+          "Title": null,
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 08:04",
+          "EndDate": "13.11.2024 08:07"
+        }
+      ]
+    },
+    {
+      "ID": "2411130900",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "09:00",
+      "Clocks": [
+        {
+          "ID": "673443fb5e7b6c0ac4b74bb6",
+          "Selected": true,
+          "Spend": 1508,
+          "Name": "Excel",
+          "Title": "647509.PDF",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 09:05",
+          "EndDate": "13.11.2024 09:30"
+        },
+        {
+          "ID": "67344d7f5e7b6c0ac4b7f7db",
+          "Selected": false,
+          "Spend": 1311,
+          "Name": "FortiClient",
+          "Title": "Microsoft Teams",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 09:30",
+          "EndDate": "13.11.2024 09:52"
+        },
+        {
+          "ID": "673451095e7b6c0ac4b82b28",
+          "Selected": false,
+          "Spend": 1089,
+          "Name": "Microsoft Word",
+          "Title": "File Explorer",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 09:52",
+          "EndDate": "13.11.2024 10:10"
+        }
+      ]
+    },
+    {
+      "ID": "2411131000",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "10:00",
+      "Clocks": [
+        {
+          "ID": "673454a25e7b6c0ac4b861c1",
+          "Selected": true,
+          "Spend": 1578,
+          "Name": "Web",
+          "Title": null,
+          "Domain": 2,
+          "Details": [
+            {
+              "ID": "673454a25e7b6c0ac4b861c1",
+              "Spend": 1578,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "amazon.com",
+              "Selected": true,
+              "StartDate": "13.11.2024 10:20",
+              "EndDate": "13.11.2024 10:46"
+            },
+            {
+              "ID": "673454a25e7b6c0ac4b861c1",
+              "Spend": 1578,
+              "Title": "test data",
+              "Name": "test.flexytime.com",
+              "Selected": true,
+              "StartDate": "13.11.2024 10:20",
+              "EndDate": "13.11.2024 10:46"
+            }
+          ],
+          "StartDate": "13.11.2024 10:20",
+          "EndDate": "13.11.2024 10:46"
+        },
+        {
+          "ID": "67345c975e7b6c0ac4b8cd84",
+          "Selected": false,
+          "Spend": 977,
+          "Name": "Excel",
+          "Title": "647509.PDF",
+          "Domain": 4,
+          "Details": [
+            {
+              "ID": "673454a25e7b6c0ac4b861c1",
+              "Spend": 1578,
+              "Title": "222",
+              "Name": "222amazon.com",
+              "Selected": true,
+              "StartDate": "13.11.2024 10:20",
+              "EndDate": "13.11.2024 10:46"
+            },
+            {
+              "ID": "673454a25e7b6c0ac4b861c1",
+              "Spend": 1578,
+              "Title": "333test data",
+              "Name": "333test.flexytime.com",
+              "Selected": false,
+              "StartDate": "13.11.2024 10:20",
+              "EndDate": "13.11.2024 10:46"
+            }
+          ],
+          "StartDate": "13.11.2024 10:46",
+          "EndDate": "13.11.2024 11:02"
+        },
+        {
+          "ID": "673454a25e7b6c0ac4b861bf",
+          "Selected": false,
+          "Spend": 378,
+          "Name": "Web",
+          "Title": null,
+          "Domain": 4,
+          "Details": [
+            {
+              "ID": "673454a25e7b6c0ac4b861bf",
+              "Spend": 139,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "google.com",
+              "Selected": false,
+              "StartDate": "13.11.2024 10:16",
+              "EndDate": "13.11.2024 10:18"
+            },
+            {
+              "ID": "673454a25e7b6c0ac4b861bd",
+              "Spend": 239,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "discord.com",
+              "Selected": false,
+              "StartDate": "13.11.2024 10:10",
+              "EndDate": "13.11.2024 10:14"
+            }
+          ],
+          "StartDate": "13.11.2024 10:10",
+          "EndDate": "13.11.2024 10:18"
+        }
+      ]
+    },
+    {
+      "ID": "2411131100",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "11:00",
+      "Clocks": [
+        {
+          "ID": "673472de5e7b6c0ac4b9d3a1",
+          "Selected": false,
+          "Spend": 1777,
+          "Name": "Teams",
+          "Title": "SAP GUI security",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 11:40",
+          "EndDate": "13.11.2024 12:10"
+        },
+        {
+          "ID": "67346be25e7b6c0ac4b97d48",
+          "Selected": false,
+          "Spend": 947,
+          "Name": "Outlook",
+          "Title": "FortiTray Desktop",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 11:18",
+          "EndDate": "13.11.2024 11:34"
+        },
+        {
+          "ID": "673464f55e7b6c0ac4b93fec",
+          "Selected": false,
+          "Spend": 657,
+          "Name": "Pulse Secure",
+          "Title": "IBM BPM Portal - Google Chrome",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 11:08",
+          "EndDate": "13.11.2024 11:18"
+        },
+        {
+          "ID": "673460dc5e7b6c0ac4b9054c",
+          "Selected": false,
+          "Spend": 312,
+          "Name": "Microsoft Edge",
+          "Title": "Current Settlement - Excel",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 11:02",
+          "EndDate": "13.11.2024 11:08"
+        },
+        {
+          "ID": "67346be25e7b6c0ac4b97d4a",
+          "Selected": false,
+          "Spend": 265,
+          "Name": "Web",
+          "Title": null,
+          "Domain": 2,
+          "Details": [
+            {
+              "ID": "67346be25e7b6c0ac4b97d4a",
+              "Spend": 265,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "twitch.tv",
+              "Selected": false,
+              "StartDate": "13.11.2024 11:36",
+              "EndDate": "13.11.2024 11:40"
+            }
+          ],
+          "StartDate": "13.11.2024 11:36",
+          "EndDate": "13.11.2024 11:40"
+        }
+      ]
+    },
+    {
+      "ID": "2411131200",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "12:00",
+      "Clocks": [
+        {
+          "ID": "673478b05e7b6c0ac4ba0ea2",
+          "Selected": false,
+          "Spend": 1642,
+          "Name": "Outlook",
+          "Title": "FortiTray Desktop",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 12:24",
+          "EndDate": "13.11.2024 12:51"
+        },
+        {
+          "ID": "673478b05e7b6c0ac4ba0ea0",
+          "Selected": false,
+          "Spend": 646,
+          "Name": "FortiClient",
+          "Title": "Microsoft Teams",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 12:10",
+          "EndDate": "13.11.2024 12:21"
+        },
+        {
+          "ID": "67347c5b5e7b6c0ac4ba3255",
+          "Selected": false,
+          "Spend": 555,
+          "Name": "Web",
+          "Title": null,
+          "Domain": 2,
+          "Details": [
+            {
+              "ID": "67347c5b5e7b6c0ac4ba3255",
+              "Spend": 555,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "facebook.com",
+              "Selected": false,
+              "StartDate": "13.11.2024 12:51",
+              "EndDate": "13.11.2024 13:01"
+            }
+          ],
+          "StartDate": "13.11.2024 12:51",
+          "EndDate": "13.11.2024 13:01"
+        }
+      ]
+    },
+    {
+      "ID": "2411131300",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "13:00",
+      "Clocks": [
+        {
+          "ID": "673484155e7b6c0ac4ba761f",
+          "Selected": false,
+          "Spend": 1628,
+          "Name": "Microsoft Word",
+          "Title": "File Explorer",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 13:28",
+          "EndDate": "13.11.2024 13:55"
+        },
+        {
+          "ID": "67347c5b5e7b6c0ac4ba3257",
+          "Selected": false,
+          "Spend": 1602,
+          "Name": "SAP",
+          "Title": "Microsoft Teams Notice",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 13:01",
+          "EndDate": "13.11.2024 13:28"
+        },
+        {
+          "ID": "673494e85e7b6c0ac4bb12b6",
+          "Selected": false,
+          "Spend": 986,
+          "Name": "Excel",
+          "Title": "647509.PDF",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 13:55",
+          "EndDate": "13.11.2024 14:12"
+        }
+      ]
+    },
+    {
+      "ID": "2411131400",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "14:00",
+      "Clocks": [
+        {
+          "ID": "673494e85e7b6c0ac4bb12ba",
+          "Selected": false,
+          "Spend": 1890,
+          "Name": "Web",
+          "Title": null,
+          "Domain": 4,
+          "Details": [
+            {
+              "ID": "673494e85e7b6c0ac4bb12ba",
+              "Spend": 1659,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "google.com",
+              "Selected": false,
+              "StartDate": "13.11.2024 14:17",
+              "EndDate": "13.11.2024 14:45"
+            },
+            {
+              "ID": "673494e85e7b6c0ac4bb12b8",
+              "Spend": 231,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "whatsapp.com",
+              "Selected": false,
+              "StartDate": "13.11.2024 14:13",
+              "EndDate": "13.11.2024 14:17"
+            }
+          ],
+          "StartDate": "13.11.2024 14:13",
+          "EndDate": "13.11.2024 14:45"
+        },
+        {
+          "ID": "6734ac475e7b6c0ac4bbb38d",
+          "Selected": false,
+          "Spend": 1223,
+          "Name": "Microsoft Edge",
+          "Title": "Current Settlement - Excel",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 14:45",
+          "EndDate": "13.11.2024 15:05"
+        }
+      ]
+    },
+    {
+      "ID": "2411131500",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "15:00",
+      "Clocks": [
+        {
+          "ID": "6734ac475e7b6c0ac4bbb38f",
+          "Selected": false,
+          "Spend": 1722,
+          "Name": "FortiClient",
+          "Title": "Microsoft Teams",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 15:05",
+          "EndDate": "13.11.2024 15:34"
+        },
+        {
+          "ID": "6734b63a5e7b6c0ac4bbf472",
+          "Selected": false,
+          "Spend": 1029,
+          "Name": "Excel",
+          "Title": "647509.PDF",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 15:53",
+          "EndDate": "13.11.2024 16:10"
+        },
+        {
+          "ID": "6734b63a5e7b6c0ac4bbf470",
+          "Selected": false,
+          "Spend": 752,
+          "Name": "Outlook",
+          "Title": "FortiTray Desktop",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 15:40",
+          "EndDate": "13.11.2024 15:52"
+        },
+        {
+          "ID": "6734b63a5e7b6c0ac4bbf46e",
+          "Selected": false,
+          "Spend": 134,
+          "Name": "Microsoft Edge",
+          "Title": "Current Settlement - Excel",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 15:34",
+          "EndDate": "13.11.2024 15:36"
+        }
+      ]
+    },
+    {
+      "ID": "2411131600",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "16:00",
+      "Clocks": [
+        {
+          "ID": "6734b63a5e7b6c0ac4bbf479",
+          "Selected": false,
+          "Spend": 1673,
+          "Name": "SAP",
+          "Title": "Microsoft Teams Notice",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 16:10",
+          "EndDate": "13.11.2024 17:09"
+        },
+        {
+          "ID": "6734b63a5e7b6c0ac4bbf477",
+          "Selected": false,
+          "Spend": 1272,
+          "Name": "Microsoft Word",
+          "Title": "File Explorer",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 16:23",
+          "EndDate": "13.11.2024 16:44"
+        },
+        {
+          "ID": "6734b63a5e7b6c0ac4bbf475",
+          "Selected": false,
+          "Spend": 400,
+          "Name": "Pulse Secure",
+          "Title": "IBM BPM Portal - Google Chrome",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 16:15",
+          "EndDate": "13.11.2024 16:21"
+        }
+      ]
+    },
+    {
+      "ID": "2411131700",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "17:00",
+      "Clocks": [
+        {
+          "ID": "6734dcfb5e7b6c0ac4bd92df",
+          "Selected": false,
+          "Spend": 1638,
+          "Name": "Teams",
+          "Title": "SAP GUI security",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 17:35",
+          "EndDate": "13.11.2024 18:02"
+        },
+        {
+          "ID": "6734d36c5e7b6c0ac4bd464c",
+          "Selected": false,
+          "Spend": 735,
+          "Name": "FortiClient",
+          "Title": "Microsoft Teams",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 17:19",
+          "EndDate": "13.11.2024 17:31"
+        },
+        {
+          "ID": "6734d36c5e7b6c0ac4bd464a",
+          "Selected": false,
+          "Spend": 487,
+          "Name": "Web",
+          "Title": null,
+          "Domain": 4,
+          "Details": [
+            {
+              "ID": "6734d36c5e7b6c0ac4bd464a",
+              "Spend": 487,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "tureng.com",
+              "Selected": false,
+              "StartDate": "13.11.2024 17:09",
+              "EndDate": "13.11.2024 17:18"
+            }
+          ],
+          "StartDate": "13.11.2024 17:09",
+          "EndDate": "13.11.2024 17:18"
+        },
+        {
+          "ID": "6734dcfb5e7b6c0ac4bd92dd",
+          "Selected": false,
+          "Spend": 110,
+          "Name": "Microsoft Word",
+          "Title": "File Explorer",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 17:31",
+          "EndDate": "13.11.2024 17:33"
+        }
+      ]
+    },
+    {
+      "ID": "2411131800",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "18:00",
+      "Clocks": [
+        {
+          "ID": "6734dcfb5e7b6c0ac4bd92e7",
+          "Selected": false,
+          "Spend": 1883,
+          "Name": "SAP",
+          "Title": "Microsoft Teams Notice",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 18:03",
+          "EndDate": "13.11.2024 19:14"
+        },
+        {
+          "ID": "6734dcfb5e7b6c0ac4bd92e5",
+          "Selected": false,
+          "Spend": 1502,
+          "Name": "FortiClient",
+          "Title": "Microsoft Teams",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 18:22",
+          "EndDate": "13.11.2024 18:47"
+        },
+        {
+          "ID": "6734dcfb5e7b6c0ac4bd92e3",
+          "Selected": false,
+          "Spend": 420,
+          "Name": "Pulse Secure",
+          "Title": "IBM BPM Portal - Google Chrome",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 18:11",
+          "EndDate": "13.11.2024 18:18"
+        }
+      ]
+    },
+    {
+      "ID": "2411131900",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "19:00",
+      "Clocks": [
+        {
+          "ID": "6734df555e7b6c0ac4bda0b1",
+          "Selected": false,
+          "Spend": 1743,
+          "Name": "Excel",
+          "Title": "647509.PDF",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 19:30",
+          "EndDate": "13.11.2024 20:03"
+        },
+        {
+          "ID": "6734dcfb5e7b6c0ac4bd92e9",
+          "Selected": false,
+          "Spend": 995,
+          "Name": "Outlook",
+          "Title": "FortiTray Desktop",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 19:14",
+          "EndDate": "13.11.2024 19:30"
+        }
+      ]
+    },
+    {
+      "ID": "2411132000",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "20:00",
+      "Clocks": [
+        {
+          "ID": "6734e96a5e7b6c0ac4bdc20a",
+          "Selected": false,
+          "Spend": 3401,
+          "Name": "FortiClient",
+          "Title": "Microsoft Teams",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 20:07",
+          "EndDate": "13.11.2024 21:18"
+        },
+        {
+          "ID": "6734e2705e7b6c0ac4bdacf4",
+          "Selected": false,
+          "Spend": 875,
+          "Name": "Pulse Secure",
+          "Title": "IBM BPM Portal - Google Chrome",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 20:22",
+          "EndDate": "13.11.2024 20:37"
+        }
+      ]
+    },
+    {
+      "ID": "2411132100",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "21:00",
+      "Clocks": [
+        {
+          "ID": "6734f3c15e7b6c0ac4bddb78",
+          "Selected": false,
+          "Spend": 798,
+          "Name": "Microsoft Edge",
+          "Title": "Current Settlement - Excel",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 21:31",
+          "EndDate": "13.11.2024 21:45"
+        },
+        {
+          "ID": "6734ee365e7b6c0ac4bdcebb",
+          "Selected": false,
+          "Spend": 798,
+          "Name": "SAP",
+          "Title": "Microsoft Teams Notice",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 21:18",
+          "EndDate": "13.11.2024 21:31"
+        },
+        {
+          "ID": "6734f5585e7b6c0ac4bde1a7",
+          "Selected": false,
+          "Spend": 774,
+          "Name": "Outlook",
+          "Title": "FortiTray Desktop",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 21:46",
+          "EndDate": "13.11.2024 21:59"
+        },
+        {
+          "ID": "6734f8705e7b6c0ac4bde944",
+          "Selected": false,
+          "Spend": 84,
+          "Name": "Microsoft Word",
+          "Title": "File Explorer",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 21:59",
+          "EndDate": "13.11.2024 22:00"
+        }
+      ]
+    },
+    {
+      "ID": "2411132200",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "22:00",
+      "Clocks": [
+        {
+          "ID": "673506fb5e7b6c0ac4be0599",
+          "Selected": false,
+          "Spend": 3401,
+          "Name": "Excel",
+          "Title": "647509.PDF",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 22:30",
+          "EndDate": "13.11.2024 23:27"
+        },
+        {
+          "ID": "6734f8705e7b6c0ac4bde945",
+          "Selected": false,
+          "Spend": 1178,
+          "Name": "FortiClient",
+          "Title": "Microsoft Teams",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 22:00",
+          "EndDate": "13.11.2024 22:20"
+        },
+        {
+          "ID": "6734fd345e7b6c0ac4bdf41c",
+          "Selected": false,
+          "Spend": 255,
+          "Name": "Web",
+          "Title": null,
+          "Domain": 4,
+          "Details": [
+            {
+              "ID": "6734fd345e7b6c0ac4bdf41c",
+              "Spend": 255,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "wikipedia.org",
+              "Selected": false,
+              "StartDate": "13.11.2024 22:20",
+              "EndDate": "13.11.2024 22:24"
+            }
+          ],
+          "StartDate": "13.11.2024 22:20",
+          "EndDate": "13.11.2024 22:24"
+        },
+        {
+          "ID": "6734ff3d5e7b6c0ac4bdf867",
+          "Selected": false,
+          "Spend": 241,
+          "Name": "Microsoft Word",
+          "Title": "File Explorer",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 22:24",
+          "EndDate": "13.11.2024 22:28"
+        }
+      ]
+    },
+    {
+      "ID": "2411132300",
+      "Selected": false,
+      "RecordDate": "13.11.2024",
+      "RecordTime": "23:00",
+      "Clocks": [
+        {
+          "ID": "673510f65e7b6c0ac4be1ac2",
+          "Selected": false,
+          "Spend": 891,
+          "Name": "Microsoft Word",
+          "Title": "File Explorer",
+          "Domain": 4,
+          "Details": [],
+          "StartDate": "13.11.2024 23:35",
+          "EndDate": "13.11.2024 23:50"
+        },
+        {
+          "ID": "67350e745e7b6c0ac4be147c",
+          "Selected": false,
+          "Spend": 485,
+          "Name": "Web",
+          "Title": null,
+          "Domain": 2,
+          "Details": [
+            {
+              "ID": "67350e745e7b6c0ac4be147c",
+              "Spend": 485,
+              "Title": "ABOUT RECONCILIATION",
+              "Name": "reddit.com",
+              "Selected": false,
+              "StartDate": "13.11.2024 23:27",
+              "EndDate": "13.11.2024 23:35"
+            }
+          ],
+          "StartDate": "13.11.2024 23:27",
+          "EndDate": "13.11.2024 23:35"
+        }
+      ]
+    }
+  ]
+}
