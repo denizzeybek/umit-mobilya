@@ -16,6 +16,17 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
   },
+  quantity: {
+    type: Number,
+    default: 1,
+  },
+  modules: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product', // 'Product' modeline referans
+      default: [],
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

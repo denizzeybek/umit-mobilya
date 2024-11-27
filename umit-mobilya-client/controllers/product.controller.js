@@ -5,7 +5,7 @@ const Product = require('../models/product.model');
 // Tüm ürünleri listeleme
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('modules');
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -14,13 +14,15 @@ exports.getAllProducts = async (req, res) => {
 
 // Yeni ürün ekleme
 exports.createProduct = async (req, res) => {
-  const { name, price, description, category } = req.body;
+  const { name, price, description, quantity, category, modules } = req.body;
 
   const product = new Product({
     name,
     price,
     description,
     category,
+    quantity,
+    modules,
   });
 
   try {
