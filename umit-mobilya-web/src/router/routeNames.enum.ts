@@ -1,8 +1,9 @@
+import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
 export enum ERouteNames {
   // AUTH
   Login = 'Login',
   Logout = 'Logout',
   Register = 'Register',
-  ProductList = 'ProductList',
   Products = 'Products',
+  Dashboard = 'Dashboard',
 }

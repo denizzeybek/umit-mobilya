@@ -1,6 +1,7 @@
 // app.js
 
 const express = require('express');
+const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./configs/database');  // Veritabanı bağlantısını içe aktar
 const routes = require('./routes');   
@@ -19,6 +20,15 @@ connectDB();
 app.use(express.json());
 
 app.use(cookieParser());
+
+// CORS'u aktif et
+app.use(cors());
+
+// Eğer belirli bir frontend domainine izin vermek istiyorsanız:
+app.use(cors({
+  origin: 'http://localhost:3001', // Frontend URL'niz buraya
+  credentials: true, // Cookie gibi yetkilendirme bilgilerini taşımak için
+}));
 
 
 // API'ler ve diğer middleware'ler burada tanımlanabilir

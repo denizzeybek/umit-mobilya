@@ -66,7 +66,6 @@ const { handleSubmit, isSubmitting } = useForm({
 
 const submitHandler = handleSubmit(async (values) => {
   try {
-    console.log('values ', values);
     showSuccessMessage('Registered!');
   } catch (error: any) {
     showErrorMessage(error as any);

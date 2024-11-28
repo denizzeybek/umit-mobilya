@@ -1,20 +1,20 @@
 <template>
-  <div class="flex w-full min-h-screen 3xl:justify-center">
-    <div class="flex flex-col max-w-[1800px] w-full relative">
-      <Sidebar />
-      <MobileSidebar v-model="visible" @drawerChange="visible = $event" />
-      <PageWrapper @drawerChange="visible = $event">
+  <div class="flex flex-col min-h-screen">
+  <PageHeader @drawerChange="visible = $event" />
+  <div class="flex w-full flex-grow 3xl:justify-center">
+    <div class="flex flex-col w-full relative">
+      <PageWrapper>
         <RouterView />
       </PageWrapper>
     </div>
   </div>
+</div>
 </template>
 
 <script lang="ts" setup>
-import Sidebar from './_components/Sidebar.vue'
-import MobileSidebar from './_components/MobileSidebar.vue'
-import PageWrapper from './_components/PageWrapper.vue'
-import { ref } from 'vue'
+import PageWrapper from './_components/PageWrapper.vue';
+import { ref } from 'vue';
+import PageHeader from './_components/PageHeader.vue';
 
-const visible = ref(false)
+const visible = ref(false);
 </script>

@@ -3,14 +3,14 @@ const User = require('../models/user.model');
 
 const requireAuth = (req, res, next) => {
   try {
-    const token = req.cookies.jwt;
-
-    if (!token) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res
         .status(401)
         .json({ message: 'Unauthorized - No token provided' });
     }
 
+    const token = authHeader.split(' ')[1]; // Extract the token
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
       if (err) {
         console.error('JWT verification error:', err.message);

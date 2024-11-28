@@ -6,6 +6,12 @@
 </script>
 
 <style>
+/* #region megamenu */
+.p-megamenu {
+  @apply !border-none !py-5 !px-7;
+}
+/* #endregion */
+
 /* #region tablist */
 .p-tablist-content {
   @apply !px-5;

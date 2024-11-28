@@ -87,8 +87,8 @@ module.exports.logout_get = (req, res) => {
 
 // Fetch user from JWT
 module.exports.fetchUser = async (req, res) => {
-  const token = req.cookies.jwt;
-  if (!token) {
+  const token = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Authentication token missing' });
   }
 
