@@ -10,6 +10,7 @@ declare module 'vue' {
     Avatar: typeof import('./src/components/ui/global/Avatar.vue')['default']
     Badge: typeof import('primevue/badge')['default']
     Button: typeof import('primevue/button')['default']
+    Carousel: typeof import('primevue/carousel')['default']
     Checkbox: typeof import('./src/components/ui/global/Checkbox.vue')['default']
     DateTimePicker: typeof import('./src/components/ui/global/DateTimePicker.vue')['default']
     EmailList: typeof import('./src/components/ui/global/EmailList.vue')['default']
@@ -28,6 +29,7 @@ declare module 'vue' {
     SelectSwitchButton: typeof import('./src/components/ui/global/SelectSwitchButton.vue')['default']
     SuccessToast: typeof import('./src/components/ui/global/SuccessToast.vue')['default']
     Switch: typeof import('./src/components/ui/global/Switch.vue')['default']
+    Tag: typeof import('primevue/tag')['default']
     Text: typeof import('./src/components/ui/global/Text.vue')['default']
   }
 }

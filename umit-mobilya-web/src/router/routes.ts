@@ -4,6 +4,7 @@ import DefaultLayout from '@/layouts/default/DefaultLayout.vue';
 
 import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
 import Products from '@/views/products/_views/Products.vue';
+import ProductDetails from '@/views/products/_views/ProductDetails.vue';
 
 import Login from '@/views/auth/Login.vue';
 
@@ -46,6 +47,16 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           title: ERouteNames.Products,
           name: ERouteNames.Products,
+        },
+      },
+      {
+        path: '/product-details/:id',
+        name: ERouteNames.ProductDetails,
+        component: ProductDetails,
+        meta: {
+          requiresAuth: true,
+          title: ERouteNames.ProductDetails,
+          name: ERouteNames.ProductDetails,
         },
       },
     ],

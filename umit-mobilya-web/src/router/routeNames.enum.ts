@@ -5,5 +5,6 @@ export enum ERouteNames {
   Logout = 'Logout',
   Register = 'Register',
   Products = 'Products',
+  ProductDetails = 'ProductDetails',
   Dashboard = 'Dashboard',
 }

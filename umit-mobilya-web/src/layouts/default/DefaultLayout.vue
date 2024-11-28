@@ -1,7 +1,9 @@
 <template>
   <div class="flex flex-col min-h-screen">
-  <PageHeader @drawerChange="visible = $event" />
-  <div class="flex w-full flex-grow 3xl:justify-center">
+    <div class="fixed top-0 left-0 w-full z-50">
+      <PageHeader @drawerChange="visible = $event" />
+    </div>
+  <div class="flex w-full flex-grow 3xl:justify-center mt-[101px]">
     <div class="flex flex-col w-full relative">
       <PageWrapper>
         <RouterView />

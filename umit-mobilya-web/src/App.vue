@@ -8,7 +8,7 @@
 <style>
 /* #region megamenu */
 .p-megamenu {
-  @apply !border-none !py-5 !px-7;
+  @apply !border-none !py-5 !px-7 !rounded-none;
 }
 /* #endregion */
 
