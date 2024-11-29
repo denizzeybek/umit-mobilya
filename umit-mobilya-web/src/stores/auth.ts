@@ -29,8 +29,7 @@ export const useAuthStore = defineStore(EStoreNames.AUTH, () => {
       }
     },
     $reset() {
-      //   OpenAPI.TOKEN = undefined
-      localStorage.removeItem(EStorageKeys.AUTHENTICATION);
+      localStorage.removeItem(EStorageKeys.TOKEN);
     },
     async login(payload: { email: string; password: string }) {
       return new Promise((resolve, reject) => {

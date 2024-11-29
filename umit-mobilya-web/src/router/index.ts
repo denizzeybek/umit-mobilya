@@ -19,13 +19,14 @@ router.beforeEach(async (to, _, next) => {
   let token = localStorage.getItem(EStorageKeys.TOKEN);
   const { requiresAuth, requiresUnAuth, isPublic } = to.meta;
 
-  // if (token && !usersStore.isAuthenticated) {
-  //   try {
-  //     await usersStore.fetchUser(token)
-  //   } catch (error: any) {
-  //     console.log(error)
-  //   }
-  // }
+  if (token && !usersStore.isAuthenticated) {
+    try {
+      await usersStore.fetchUser(token)
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
+
   if (requiresAuth) {
     if (requiresUnAuth) {
       next();

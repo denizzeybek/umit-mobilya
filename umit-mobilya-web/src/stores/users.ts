@@ -15,10 +15,9 @@ export const useUsersStore = defineStore(EStoreNames.COMMON_USERS, {
   actions: {
     async setUser(payload: any) {
       this.user = payload?.authentication?.user;
-      this.isAuthenticated = payload?.authentication?.user ? true : false;
+      this.isAuthenticated = payload?.authentication?.token ? true : false;
     },
     async fetchUser(token: string) {
-      // burda elinde token var ama login değil, tekrar user'ı fetch ediceksin
       return new Promise((resolve, reject) => {
         axios
           .get('/auth/me', {
