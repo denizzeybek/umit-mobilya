@@ -1,37 +1,21 @@
 <template>
   <ProductDetailLayout>
     <template #breadcrumb>
-      <Card>
-        <template #content>
-          <ProductHeader />
-        </template>
-      </Card>
+      <ProductHeader />
     </template>
     <template #details>
       <div class="flex flex-col gap-4">
-      <Card>
-        <template #content>
-          <ProductCarousel />
-        </template>
-      </Card>
-      <Card>
-        <template #content>
-          <ProductModules />
-        </template>
-      </Card>
-    </div>
+        <ProductCarousel />
+        <ProductModules v-if="productsStore.currentProduct?.modules?.length" />
+      </div>
     </template>
     <template #basket>
-      <Card>
-        <template #content>
-          <ProductBasket />
-        </template>
-      </Card>
+      <ProductBasket />
     </template>
   </ProductDetailLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRoute } from 'vue-router';
 import ProductDetailLayout from '@/layouts/product/ProductDetailLayout.vue';
 import ProductBasket from '@/views/products/_components/ProductBasket.vue';
@@ -44,9 +28,8 @@ import { useProductsStore } from '@/stores/products';
 const productsStore = useProductsStore();
 const route = useRoute();
 
-onMounted(() => {
-  productsStore.find(route.params.id);
-  console.log(route.params.id);
+onMounted(async () => {
+  await productsStore.find(route.params.id?.toString());
 });
 </script>
 

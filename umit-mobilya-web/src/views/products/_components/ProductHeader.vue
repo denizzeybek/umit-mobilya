@@ -1,11 +1,15 @@
 <template>
-  <div class="flex justify-between items-center">
-    <Breadcrumb :home="home" :model="items" />
-    <ActionsMenu v-if="usersStore.isAuthenticated"/>
-  </div>
+  <Card>
+    <template #content>
+      <div class="flex justify-between items-center">
+        <Breadcrumb :home="home" :model="items" />
+        <ActionsMenu v-if="usersStore.isAuthenticated" />
+      </div>
+    </template>
+  </Card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useUsersStore } from '@/stores/users';
 import ActionsMenu from './ActionsMenu.vue';
