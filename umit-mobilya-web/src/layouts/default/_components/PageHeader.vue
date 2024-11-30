@@ -6,7 +6,10 @@
       style="border-radius: 3rem"
     >
       <template #start>
-        <RouterLink :to="{ name: ERouteNames.Dashboard }" class="!w-60 lg:mr-10">
+        <RouterLink
+          :to="{ name: ERouteNames.Dashboard }"
+          class="!w-60 lg:mr-10"
+        >
           <img
             class="!w-60 lg:mr-10"
             src="@/assets/images/umit-mobilya-logo.png"
@@ -53,12 +56,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import MegaMenu from 'primevue/megamenu';
 import { ERouteNames } from '@/router/routeNames.enum';
+import { useUsersStore } from '@/stores/users';
 
 const route = useRoute();
+const usersStore = useUsersStore();
 
 interface IEmits {
   (event: 'drawerChange', val: boolean): void;
@@ -66,103 +71,111 @@ interface IEmits {
 
 defineEmits<IEmits>();
 
-const items = ref([
-  {
-    label: 'Company',
-    root: true,
-    items: [
-      [
-        {
-          items: [
-            {
-              label: 'Features',
-              icon: 'pi pi-list',
-              subtext: 'Subtext of item',
-            },
-            {
-              label: 'Customers',
-              icon: 'pi pi-users',
-              subtext: 'Subtext of item',
-            },
-            {
-              label: 'Case Studies',
-              icon: 'pi pi-file',
-              subtext: 'Subtext of item',
-            },
-          ],
-        },
+const items = computed(() => {
+  return [
+    {
+      label: 'Company',
+      root: true,
+      items: [
+        [
+          {
+            items: [
+              {
+                label: 'Features',
+                icon: 'pi pi-list',
+                subtext: 'Subtext of item',
+              },
+              {
+                label: 'Customers',
+                icon: 'pi pi-users',
+                subtext: 'Subtext of item',
+              },
+              {
+                label: 'Case Studies',
+                icon: 'pi pi-file',
+                subtext: 'Subtext of item',
+              },
+            ],
+          },
+        ],
+        [
+          {
+            items: [
+              {
+                label: 'Solutions',
+                icon: 'pi pi-shield',
+                subtext: 'Subtext of item',
+              },
+              {
+                label: 'Faq',
+                icon: 'pi pi-question',
+                subtext: 'Subtext of item',
+              },
+              {
+                label: 'Library',
+                icon: 'pi pi-search',
+                subtext: 'Subtext of item',
+              },
+            ],
+          },
+        ],
+        [
+          {
+            items: [
+              {
+                label: 'Community',
+                icon: 'pi pi-comments',
+                subtext: 'Subtext of item',
+              },
+              {
+                label: 'Rewards',
+                icon: 'pi pi-star',
+                subtext: 'Subtext of item',
+              },
+              {
+                label: 'Investors',
+                icon: 'pi pi-globe',
+                subtext: 'Subtext of item',
+              },
+            ],
+          },
+        ],
+        [
+          {
+            items: [
+              {
+                image:
+                  'https://primefaces.org/cdn/primevue/images/uikit/uikit-system.png',
+                label: 'GET STARTED',
+                subtext: 'Build spectacular apps in no time.',
+              },
+            ],
+          },
+        ],
       ],
-      [
-        {
-          items: [
-            {
-              label: 'Solutions',
-              icon: 'pi pi-shield',
-              subtext: 'Subtext of item',
-            },
-            {
-              label: 'Faq',
-              icon: 'pi pi-question',
-              subtext: 'Subtext of item',
-            },
-            {
-              label: 'Library',
-              icon: 'pi pi-search',
-              subtext: 'Subtext of item',
-            },
-          ],
-        },
-      ],
-      [
-        {
-          items: [
-            {
-              label: 'Community',
-              icon: 'pi pi-comments',
-              subtext: 'Subtext of item',
-            },
-            {
-              label: 'Rewards',
-              icon: 'pi pi-star',
-              subtext: 'Subtext of item',
-            },
-            {
-              label: 'Investors',
-              icon: 'pi pi-globe',
-              subtext: 'Subtext of item',
-            },
-          ],
-        },
-      ],
-      [
-        {
-          items: [
-            {
-              image:
-                'https://primefaces.org/cdn/primevue/images/uikit/uikit-system.png',
-              label: 'GET STARTED',
-              subtext: 'Build spectacular apps in no time.',
-            },
-          ],
-        },
-      ],
-    ],
-  },
-  {
-    label: 'Resources',
-    root: true,
-  },
-  {
-    label: 'Contact',
-    root: true,
-  },
-  {
-    label: 'Login',
-    route: { name: ERouteNames.Login },
-  },
-  {
-    label: 'Products',
-    route: { name: ERouteNames.Products },
-  },
-]);
+    },
+    {
+      label: 'Resources',
+      root: true,
+    },
+    {
+      label: 'Contact',
+      root: true,
+    },
+    ...!usersStore.isAuthenticated ? [
+    {
+      label: 'Login',
+      route: { name: ERouteNames.Login },
+    }
+    ]: [],
+    ...usersStore.isAuthenticated
+      ? [
+          {
+            label: 'Products',
+            route: { name: ERouteNames.Products },
+          },
+        ]
+      : [],
+  ];
+});
 </script>
