@@ -24,6 +24,14 @@
         >
           <span>{{ item.label }}</span>
         </a>
+        <a
+          v-else-if="item?.method"
+          href="#"
+          @click="item.method"
+          class="flex items-center cursor-pointer px-4 py-2 overflow-hidden relative font-semibold text-lg uppercase"
+        >
+          {{ item.label }}
+        </a>
         <RouterLink
           v-else-if="item?.route"
           :to="item.route"
@@ -57,11 +65,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRoute } from 'vue-router';
 import MegaMenu from 'primevue/megamenu';
 import { ERouteNames } from '@/router/routeNames.enum';
 import { useUsersStore } from '@/stores/users';
+import { useAuthStore } from '@/stores/auth';
 
+const authStore = useAuthStore();
 const usersStore = useUsersStore();
 
 interface IEmits {
@@ -162,6 +171,17 @@ const items = computed(() => {
           {
             label: 'Login',
             route: { name: ERouteNames.Login },
+          },
+        ]
+      : []),
+    ...(usersStore.isAuthenticated
+      ? [
+          {
+            label: 'Logout',
+            route: { name: ERouteNames.Login },
+            method: () => {
+              authStore.logout();
+            },
           },
         ]
       : []),

@@ -44,7 +44,10 @@ export const useAuthStore = defineStore(EStoreNames.AUTH, () => {
           });
       });
     },
-
+    logout() {
+      this.$reset();
+      usersStore.setUser(null);
+    },
     async getProfile(result) {
       const languageCode = localStorage.getItem('languageCode');
       if (!languageCode) localStorage.setItem('languageCode', 'en');
