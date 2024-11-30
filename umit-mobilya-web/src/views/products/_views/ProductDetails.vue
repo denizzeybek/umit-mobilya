@@ -38,6 +38,7 @@ import ProductBasket from '@/views/products/_components/ProductBasket.vue';
 import ProductCarousel from '@/views/products/_components/ProductCarousel.vue';
 import ProductHeader from '@/views/products/_components/ProductHeader.vue';
 import ProductModules from '@/views/products/_components/ProductModules.vue';
+
 const route = useRoute();
 </script>
 

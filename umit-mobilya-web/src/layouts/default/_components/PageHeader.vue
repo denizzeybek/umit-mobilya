@@ -62,7 +62,6 @@ import MegaMenu from 'primevue/megamenu';
 import { ERouteNames } from '@/router/routeNames.enum';
 import { useUsersStore } from '@/stores/users';
 
-const route = useRoute();
 const usersStore = useUsersStore();
 
 interface IEmits {
@@ -155,27 +154,17 @@ const items = computed(() => {
       ],
     },
     {
-      label: 'Resources',
-      root: true,
+      label: 'Products',
+      route: { name: ERouteNames.Products },
     },
-    {
-      label: 'Contact',
-      root: true,
-    },
-    ...!usersStore.isAuthenticated ? [
-    {
-      label: 'Login',
-      route: { name: ERouteNames.Login },
-    }
-    ]: [],
-    ...usersStore.isAuthenticated
+    ...(!usersStore.isAuthenticated
       ? [
           {
-            label: 'Products',
-            route: { name: ERouteNames.Products },
+            label: 'Login',
+            route: { name: ERouteNames.Login },
           },
         ]
-      : [],
+      : []),
   ];
 });
 </script>

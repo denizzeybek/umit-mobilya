@@ -44,7 +44,7 @@ const routes: RouteRecordRaw[] = [
         name: ERouteNames.Products,
         component: Products,
         meta: {
-          requiresAuth: true,
+          requiresUnAuth: true,
           title: ERouteNames.Products,
           name: ERouteNames.Products,
         },
@@ -54,7 +54,7 @@ const routes: RouteRecordRaw[] = [
         name: ERouteNames.ProductDetails,
         component: ProductDetails,
         meta: {
-          requiresAuth: true,
+          requiresUnAuth: true,
           title: ERouteNames.ProductDetails,
           name: ERouteNames.ProductDetails,
         },
