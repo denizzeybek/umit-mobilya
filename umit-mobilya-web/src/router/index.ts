@@ -23,7 +23,7 @@ router.beforeEach(async (to, _, next) => {
     try {
       await usersStore.fetchUser(token)
     } catch (error: any) {
-      console.log(error)
+      console.error(error)
     }
   }
 
