@@ -4,6 +4,7 @@ import ToastService from 'primevue/toastservice';
 import 'primeicons/primeicons.css';
 import Drawer from 'primevue/drawer';
 import { flexyPreset } from './flexytheme';
+// import Aura from '@primevue/themes/aura';
 
 import StyleClass from 'primevue/styleclass';
 import Ripple from 'primevue/ripple';
@@ -46,6 +47,8 @@ import Step from 'primevue/step';
 import StepPanel from 'primevue/steppanel';
 import Chart from 'primevue/chart';
 import Carousel from 'primevue/carousel';
+import Toolbar from 'primevue/toolbar';
+import DataView from 'primevue/dataview';
 
 
 export default {
@@ -53,6 +56,7 @@ export default {
     app.use(PrimeVue, {
       theme: {
         preset: flexyPreset,
+        // preset: Aura,
         options: {
           darkModeSelector: '.my-app-dark',
         },
@@ -60,6 +64,8 @@ export default {
     });
     app.use(ToastService);
 
+    app.component('DataView', DataView);
+    app.component('Toolbar', Toolbar);
     app.component('Carousel', Carousel);
     app.component('Chart', Chart);
     app.component('StepPanel', StepPanel);

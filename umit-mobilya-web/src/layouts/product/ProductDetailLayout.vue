@@ -1,14 +1,16 @@
 <template>
-  <div class="grid grid-flow-row-dense grid-cols-2 lg:grid-cols-3 relative">
-    <div class="col-span-2 overflow-y-auto">
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Toolbar Row -->
+    <div class="col-span-2 lg:col-span-3">
+      <slot name="breadcrumb" />
+    </div>
+    <div class="col-span-2">
       <slot name="details" />
     </div>
-    <div class="relative w-full">
-      <div
-        class="col-span-2 lg:col-span-1 lg:fixed top-[101px] right-0 w-full sm:w-auto bg-white shadow-lg p-4"
-      >
-        <slot name="basket" />
-      </div>
+    <div
+      class="col-span-2 lg:col-span-1  sm:w-auto"
+    >
+      <slot name="basket" />
     </div>
   </div>
 </template>

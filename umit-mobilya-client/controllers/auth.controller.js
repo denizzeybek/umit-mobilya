@@ -99,11 +99,9 @@ module.exports.fetchUser = async (req, res) => {
 
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('decodedToken ', decodedToken)
 
     // Find the user by decoded token's id
     const user = await User.findById(decodedToken.id).select('-password');
-    console.log('user ', user)
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
