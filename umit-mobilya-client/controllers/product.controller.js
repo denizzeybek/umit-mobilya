@@ -5,8 +5,13 @@ const Product = require('../models/product.model');
 const getProducts = async (payload) => {
   try {
     // Create a query object
-    const { name, category, dynamicQuery } = payload || {};
+    const { id, name, category, dynamicQuery } = payload || {};
     const query = {};
+
+    // Build the query object
+    if (id) {
+      query._id = id; // Find product by exact ID
+    }
 
     if (name) {
       query.name = new RegExp(name, 'i');
@@ -17,8 +22,8 @@ const getProducts = async (payload) => {
 
     if (dynamicQuery) {
       query.$or = [
-        { name: new RegExp(dynamicQuery, 'i') },  // Case-insensitive search for 'name'
-        { category: new RegExp(dynamicQuery, 'i') }  // Case-insensitive search for 'category'
+        { name: new RegExp(dynamicQuery, 'i') }, // Case-insensitive search for 'name'
+        { category: new RegExp(dynamicQuery, 'i') }, // Case-insensitive search for 'category'
       ];
     }
 
@@ -60,6 +65,21 @@ exports.getAllProducts = async (req, res) => {
     res.status(201).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getProductById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const product = await getProducts({ id });
+    if (product?.length) {
+      res.status(201).json(product[0]);
+    } else {
+      res.status(404).json({ message: 'Ürün bulunamadı' });
+    }
+  } catch (error) {
+    console.error('Error fetching product(s):', error);
+    throw new Error('Failed to fetch product(s). Please try again.');
   }
 };
 

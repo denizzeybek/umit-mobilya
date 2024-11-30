@@ -3,6 +3,7 @@
 const express = require('express');
 const {
   getAllProducts,
+  getProductById,
   createProduct,
   deleteProduct,
   filterProducts,
@@ -13,6 +14,9 @@ const router = express.Router();
 
 // Tüm ürünleri listeleme
 router.get('/', getAllProducts);
+
+// ürün detayı
+router.get('/:id', getProductById);
 
 // Ürünleri adıyla filtreleme
 router.get('/filter', filterProducts);
