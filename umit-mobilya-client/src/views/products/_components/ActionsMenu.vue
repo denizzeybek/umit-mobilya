@@ -12,7 +12,7 @@
     <div class="card flex justify-center">
       <Menu ref="menu" :model="items" class="w-full md:w-60" :popup="true">
         <template #item="{ item, props }">
-          <a v-ripple class="flex items-center" v-bind="props.action">
+          <a v-ripple class="flex items-center" v-bind="props.action" @click="item.method()">
             <span :class="item.icon" />
             <span >{{ item.label }}</span>
           </a>
@@ -24,9 +24,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import { useProductsStore } from '@/stores/products';
 
+const productsStore = useProductsStore();
 const router = useRouter();
+const route = useRoute();
 
 const menu = ref();
 
@@ -45,6 +48,10 @@ const items = ref([
       {
         label: 'Delete',
         icon: 'pi pi-trash',
+        method: async () => {
+          await productsStore.remove(route.params.id.toString());
+          router.push('/products');
+        },
       },
     ],
   },

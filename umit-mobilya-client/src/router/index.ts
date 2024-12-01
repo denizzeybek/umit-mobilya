@@ -21,10 +21,14 @@ router.beforeEach(async (to, _, next) => {
 
   if (token && !usersStore.isAuthenticated) {
     try {
-      await usersStore.fetchUser(token)
+      await usersStore.fetchUser(token);
     } catch (error: any) {
-      console.error(error)
+      console.error(error);
     }
+  }
+
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }
 
   if (requiresAuth) {

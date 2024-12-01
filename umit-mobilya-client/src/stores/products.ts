@@ -53,6 +53,18 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           });
       });
     },
+    async remove(id: string) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`/products/${id}`)
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
     setCurrentProductBasket(modules: IProductModule[]) {
       this.currentProductBasket = modules;
       this.currentProductTotal = {
