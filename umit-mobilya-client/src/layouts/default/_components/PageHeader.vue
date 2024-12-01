@@ -164,7 +164,7 @@ const items = computed(() => {
     },
     {
       label: 'Products',
-      route: { name: ERouteNames.Products },
+      route: { name: ERouteNames.ProductsList },
     },
     ...(!usersStore.isAuthenticated
       ? [

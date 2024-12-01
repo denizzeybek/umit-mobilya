@@ -50,7 +50,7 @@ const navItems = ref<IModel[]>([
   {
     label: 'Companies',
     icon: 'pi pi-building',
-    routeName: ERouteNames.Products,
+    routeName: ERouteNames.ProductsList,
   },
   
 ]);

@@ -1,23 +1,44 @@
 <template>
-  <div class="flex flex-col gap-2 relative" v-click-outside="handleOutsideClick">
+  <div
+    class="flex flex-col gap-2 relative"
+    v-click-outside="handleOutsideClick"
+  >
     <label :for="id">{{ label }}</label>
-    <InputText
-      v-model="value as unknown as string"
-      :id="id"
-      :data-error="!!errorMessage"
-      :data-valid="isValid"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :unstyled="unstyled"
-      class="w-full"
-      :invalid="!!errorMessage"
-      :list="list"
-      @focus="list ? (showOptions = true) : (showOptions = false)"
-      @input="filterOptions"
-      :class="[customClass]"
-      v-on="listeners"
-      v-bind="primeProps"
-    />
+    <div class="flex items-center">
+      <Button
+        v-if="showAdjustmentButtons"
+        @click="adjustInput(-1)"
+        icon="pi pi-minus"
+        outlined
+        severity="secondary"
+        class="!min-w-[40px]"
+      />
+      <InputText
+        v-model="value as unknown as string"
+        :id="id"
+        :data-error="!!errorMessage"
+        :data-valid="isValid"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :unstyled="unstyled"
+        class="w-full"
+        :invalid="!!errorMessage"
+        :list="list"
+        @focus="list ? (showOptions = true) : (showOptions = false)"
+        @input="filterOptions"
+        :class="[customClass]"
+        v-on="listeners"
+        v-bind="primeProps"
+      />
+      <Button
+        v-if="showAdjustmentButtons"
+        @click="adjustInput(1)"
+        icon="pi pi-plus"
+        outlined
+        severity="secondary"
+        class="!min-w-[40px]"
+      />
+    </div>
     <slot name="dataList" />
     <ul
       v-if="showOptions"
@@ -31,12 +52,23 @@
       >
         {{ option }}
       </li>
-      <div v-if="!filteredOptions.length" class="px-3 py-2 gap-4 w-full flex flex-col">
+      <div
+        v-if="!filteredOptions.length"
+        class="px-3 py-2 gap-4 w-full flex flex-col"
+      >
         <FText innerText="No option found" />
-        <Button @click="addNewOption" label="Add" icon="pi pi-plus" class="flex-1" outlined/>
+        <Button
+          @click="addNewOption"
+          label="Add"
+          icon="pi pi-plus"
+          class="flex-1"
+          outlined
+        />
       </div>
     </ul>
-    <small :id="`${id}-help`" class="p-error text-red-500">{{ errorMessage }}</small>
+    <small :id="`${id}-help`" class="p-error text-red-500">{{
+      errorMessage
+    }}</small>
   </div>
 </template>
 
@@ -61,6 +93,8 @@ interface IProps {
   disabled?: boolean;
   unstyled?: boolean;
   datalistOptions?: string[];
+  showAdjustmentButtons?: boolean;
+  isReturnNumber?: boolean;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -68,6 +102,8 @@ const props = withDefaults(defineProps<IProps>(), {
   disabled: false,
   placeholder: '',
   unstyled: false,
+  showAdjustmentButtons: false,
+  isReturnNumber: false,
 });
 
 interface IEmits {
@@ -88,7 +124,9 @@ const {
   validateOnValueUpdate: false,
   syncVModel: true,
 });
-const errorMessage = computed(() => (props.errorMessage ? props.errorMessage : vError.value));
+const errorMessage = computed(() =>
+  props.errorMessage ? props.errorMessage : vError.value,
+);
 
 const filterOptions = () => {
   const filter = (value.value as string)?.toLowerCase();
@@ -98,7 +136,7 @@ const filterOptions = () => {
 };
 
 const selectOption = (option: string) => {
-  value.value = option;
+  value.value = props.isReturnNumber ? Number(option) : option;
   showOptions.value = false;
 };
 
@@ -113,6 +151,13 @@ const handleOutsideClick = () => {
   if (!isFocused.value) {
     showOptions.value = false;
   }
+};
+
+const adjustInput = (data: number) => {
+  const currentValue = Number(value.value);
+  const newValue = currentValue + data;
+  if (newValue < 0) return;
+  value.value = props.isReturnNumber ? newValue : newValue.toString();
 };
 
 const listeners = {

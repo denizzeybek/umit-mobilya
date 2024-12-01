@@ -46,7 +46,7 @@ const submitHandler = handleSubmit(async (values) => {
   try {
     const payload = values as { email: string; password: string };
     await authStore.login(payload);
-    router.push({ name: ERouteNames.Products });
+    router.push({ name: ERouteNames.ProductsList });
     showSuccessMessage('Logged in!');
   } catch (error: any) {
     showErrorMessage(error as any);

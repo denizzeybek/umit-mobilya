@@ -35,10 +35,19 @@
                       <div class="text-lg font-medium mt-2 uppercase">
                         {{ item?.value?.name }}
                       </div>
+
+                      <div class="text-lg font-medium mt-2 uppercase">
+                        {{ `${item?.value?.price} ${item?.value?.currency}` }}
+                      </div>
                     </div>
                   </div>
                   <div class="flex flex-col md:items-end gap-8 max-w-fit">
-                    <FInputNumber :name="`modules[${idx}].quantity`" />
+                    <FInput
+                      :name="`modules[${idx}].quantity`"
+                      :showAdjustmentButtons="true"
+                      :isReturnNumber="true"
+                      :disabled="true"
+                    />
                   </div>
                 </div>
               </div>
@@ -56,6 +65,7 @@ import { useProductsStore } from '@/stores/products';
 import { useFieldArray, useForm } from 'vee-validate';
 import { string, object, array, number } from 'yup';
 import { useFToast } from '@/composables/useFToast';
+import { set } from '@vueuse/core';
 
 const productsStore = useProductsStore();
 const { showSuccessMessage, showErrorMessage } = useFToast();
@@ -64,10 +74,7 @@ const validationSchema = object({
   modules: array()
     .of(
       object().shape({
-        name: string().optional(),
-        imageUrl: string().optional(),
-        category: string().optional(),
-        quantity: number().required(),
+        quantity: number().required().label('Quantity'),
       }),
     )
     .strict()
@@ -82,21 +89,21 @@ const { fields } = useFieldArray<any>('modules');
 const [modules] = defineField('modules');
 
 const getInitialFormData = computed(() => {
-  console.log(
-    'productsStore.currentProduct?.modules ',
-    productsStore.currentProduct?.modules,
-  );
   return productsStore.currentProduct?.modules?.map((module) => ({
     name: module.name,
     imageUrl: module.imageUrl,
     category: module.category,
     quantity: module.quantity,
+    price: module?.price,
+    currency: module?.currency,
   }));
 });
 
 const submitHandler = handleSubmit(async (values) => {
   try {
     console.log('values ', values);
+    const modules = values.modules?.filter((module) => module.quantity > 0);
+    productsStore.setCurrentProductBasket(modules);
     showSuccessMessage('Module updated!');
   } catch (error: any) {
     showErrorMessage(error as any);
@@ -108,7 +115,7 @@ watch(
   () => {
     submitHandler();
   },
-  { immediate: false },
+  { immediate: false, deep: true },
 );
 
 onMounted(() => {

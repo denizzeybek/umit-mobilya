@@ -3,7 +3,7 @@ import { ERouteNames } from '@/router/routeNames.enum';
 import DefaultLayout from '@/layouts/default/DefaultLayout.vue';
 
 import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
-import Products from '@/views/products/_views/Products.vue';
+import ProductsList from '@/views/products/_views/ProductsList.vue';
 import ProductDetails from '@/views/products/_views/ProductDetails.vue';
 
 import Login from '@/views/auth/Login.vue';
@@ -41,12 +41,12 @@ const routes: RouteRecordRaw[] = [
       // required AUTH
       {
         path: '/products',
-        name: ERouteNames.Products,
-        component: Products,
+        name: ERouteNames.ProductsList,
+        component: ProductsList,
         meta: {
           requiresUnAuth: true,
-          title: ERouteNames.Products,
-          name: ERouteNames.Products,
+          title: ERouteNames.ProductsList,
+          name: ERouteNames.ProductsList,
         },
       },
       {
