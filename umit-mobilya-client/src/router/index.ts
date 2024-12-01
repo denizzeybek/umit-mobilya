@@ -1,5 +1,4 @@
 import { EStorageKeys } from '@/constants/storageKeys';
-import { useAuthStore } from '@/stores/auth';
 import { useUsersStore } from '@/stores/users';
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
@@ -13,9 +12,9 @@ const router = createRouter({
 });
 
 // GUARD
-router.beforeEach(async (to, _, next) => {
+router.beforeEach(async (to, from, next) => {
   const usersStore = useUsersStore();
-  const authStore = useAuthStore();
+
   let token = localStorage.getItem(EStorageKeys.TOKEN);
   const { requiresAuth, requiresUnAuth, isPublic } = to.meta;
 

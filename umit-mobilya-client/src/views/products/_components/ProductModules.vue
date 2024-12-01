@@ -101,7 +101,6 @@ const getInitialFormData = computed(() => {
 
 const submitHandler = handleSubmit(async (values) => {
   try {
-    console.log('values ', values);
     const modules = values.modules?.filter((module) => module.quantity > 0);
     productsStore.setCurrentProductBasket(modules);
     showSuccessMessage('Module updated!');

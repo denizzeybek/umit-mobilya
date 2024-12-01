@@ -8,7 +8,7 @@ import type {
 
 interface State {
   list: IProduct[];
-  currentProduct?: IProduct;
+  currentProduct: IProduct;
   currentProductBasket: IProductModule[];
   currentProductTotal: {
     price: number;
@@ -19,7 +19,7 @@ interface State {
 export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
   state: (): State => ({
     list: [],
-    currentProduct: undefined,
+    currentProduct: {} as IProduct,
     currentProductBasket: [],
     currentProductTotal: {
       price: 0,
@@ -75,5 +75,12 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
         currency: this.currentProductBasket[0].currency,
       };
     },
+    resetBasket() {
+      this.currentProductBasket = [];
+      this.currentProductTotal = {
+        price: 0,
+        currency: '',
+      };
+    }
   },
 });

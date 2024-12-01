@@ -6,11 +6,11 @@
     <template #details>
       <div class="flex flex-col gap-4">
         <ProductCarousel />
-        <ProductModules v-if="productsStore.currentProduct?.modules?.length" />
+        <ProductModules v-if="hasModules" />
       </div>
     </template>
     <template #basket>
-      <ProductBasket />
+      <ProductBasket :hasModules="hasModules" />
     </template>
   </ProductDetailLayout>
 </template>
@@ -22,11 +22,15 @@ import ProductBasket from '@/views/products/_components/ProductBasket.vue';
 import ProductCarousel from '@/views/products/_components/ProductCarousel.vue';
 import ProductHeader from '@/views/products/_components/ProductHeader.vue';
 import ProductModules from '@/views/products/_components/ProductModules.vue';
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useProductsStore } from '@/stores/products';
 
 const productsStore = useProductsStore();
 const route = useRoute();
+
+const hasModules = computed(
+  () => productsStore?.currentProduct?.modules?.length > 0,
+);
 
 onMounted(async () => {
   await productsStore.find(route.params.id?.toString());
