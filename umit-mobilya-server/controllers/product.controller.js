@@ -193,8 +193,6 @@ exports.updateProduct = async (req, res) => {
 exports.updateProductModules = async (req, res) => {
   const { id } = req.params; // Ürün ID'sini al
   const { modules } = req.body; // Yeni modüller dizisini al
-  console.log('id ', id)
-  console.log('modules ', modules)
 
   try {
     // Ürünü ID ile bul
