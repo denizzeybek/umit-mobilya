@@ -29,6 +29,27 @@ const getProducts = async (payload) => {
 
     const products = await Product.find(query).populate('modules.productId');
     const newProduct = products.map((product) => {
+      const modules = product.modules.map((module) => {
+        return {
+          _id: module.productId._id,
+          name: module.productId.name,
+          price: module.productId.price,
+          currency: module.productId.currency,
+          imageUrl: module.productId.imageUrl,
+          quantity: module.quantity,
+          sizes: module.productId.sizes,
+          description: module.productId.description,
+          category: module.productId.category,
+        };
+      });
+
+      // Calculate total price: product price + sum of module prices
+      const moduleTotalPrice = modules.reduce((sum, module) => {
+        return sum + (module.price || 0) * (module.quantity || 1);
+      }, 0);
+
+      const totalPrice = (product.price || 0) + moduleTotalPrice;
+
       return {
         _id: product._id,
         name: product.name,
@@ -39,24 +60,18 @@ const getProducts = async (payload) => {
         description: product.description,
         category: product.category,
         quantity: product.quantity,
-        modules: product.modules.map((module) => {
-          return {
-            _id: module.productId._id,
-            name: module.productId.name,
-            price: module.productId.price,
-            currency: module.productId.currency,
-            imageUrl: module.productId.imageUrl,
-            quantity: module.quantity,
-            sizes: module.productId.sizes,
-            description: module.productId.description,
-            category: module.productId.category,
-          };
-        }),
+        modules,
+        totalPrice, // Add totalPrice field
       };
     });
+
     return newProduct;
-  } catch (error) {}
+  } catch (error) {
+    console.error('Error in getProducts:', error);
+    throw new Error('Failed to fetch products');
+  }
 };
+
 
 // Tüm ürünleri listeleme
 exports.getAllProducts = async (req, res) => {

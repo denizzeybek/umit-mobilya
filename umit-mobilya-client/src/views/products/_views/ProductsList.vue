@@ -28,7 +28,7 @@
         </template>
         <template #title>{{ product?.name?.toUpperCase() }}</template>
         <template #subtitle>{{
-          `${product?.price} ${product?.currency}`
+          `${product?.totalPrice} ${product?.currency}`
         }}</template>
         <template #content>
           <p class="m-0">

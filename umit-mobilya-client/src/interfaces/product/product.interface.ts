@@ -14,6 +14,7 @@ export interface IProduct {
   _id: string;
   name: string;
   price: number;
+  totalPrice: number;
   currency: string;
   imageUrl: string;
   sizes: string;
