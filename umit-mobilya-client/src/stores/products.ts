@@ -1,7 +1,11 @@
 import { EStoreNames } from '@/stores/storeNames.enum';
 import axios from 'axios';
 import { defineStore } from 'pinia';
-import type { IProductAddDTO, IProductRemoveModuleDTO, IProductUpdateModuleDTO } from '@/interfaces/product/product.interface';
+import type {
+  IProductDTO,
+  IProductRemoveModuleDTO,
+  IProductUpdateModuleDTO,
+} from '@/interfaces/product/product.interface';
 
 import type {
   IProduct,
@@ -55,7 +59,7 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           });
       });
     },
-    async create(payload: IProductAddDTO) {
+    async create(payload: IProductDTO) {
       return new Promise((resolve, reject) => {
         axios
           .post('/products', payload)
@@ -72,6 +76,18 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
       return new Promise((resolve, reject) => {
         axios
           .delete(`/products/${id}`)
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    async update(id: string, payload: IProductDTO) {
+      return new Promise((resolve, reject) => {
+        axios
+          .put(`/products/${id}`, payload)
           .then((response) => {
             resolve(response);
           })

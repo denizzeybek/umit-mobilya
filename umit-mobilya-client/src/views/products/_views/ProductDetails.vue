@@ -1,12 +1,15 @@
 <template>
   <ProductDetailLayout>
     <template #breadcrumb>
-      <ProductHeader @handleUpdateModal="isUpdateModalOpen=true"/>
+      <ProductHeader
+        @handleUpdateModal="showUpdateModal = true"
+        @handleUpdateProduct="showProductModal = true"
+      />
     </template>
     <template #details>
       <div class="flex flex-col gap-4">
         <ProductCarousel />
-        <ProductModules v-if="hasModules" :key="updateKey"/>
+        <ProductModules v-if="hasModules" :key="updateKey" />
       </div>
     </template>
     <template #basket>
@@ -14,43 +17,56 @@
     </template>
   </ProductDetailLayout>
   <UpdateModulesModal
-    v-if="isUpdateModalOpen"
-    v-model:open="isUpdateModalOpen"
+    v-if="showUpdateModal"
+    v-model:open="showUpdateModal"
+  />
+  <ProductModal
+    v-if="showProductModal"
+    v-model:open="showProductModal"
+    @fetchProducts="fetchAll"
+    :data="productsStore.currentProduct"
   />
 </template>
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+import { useProductsStore } from '@/stores/products';
+import { computed, onMounted, ref, watch } from 'vue';
 import ProductDetailLayout from '@/layouts/product/ProductDetailLayout.vue';
 import ProductBasket from '@/views/products/_components/ProductBasket.vue';
 import ProductCarousel from '@/views/products/_components/ProductCarousel.vue';
 import ProductHeader from '@/views/products/_components/ProductHeader.vue';
 import ProductModules from '@/views/products/_components/ProductModules.vue';
+import ProductModal from '@/views/products/_modals/ProductModal.vue';
 import UpdateModulesModal from '@/views/products/_modals/UpdateModulesModal.vue';
-import { computed, onMounted, ref, watch } from 'vue';
-import { useProductsStore } from '@/stores/products';
 
 const productsStore = useProductsStore();
 const route = useRoute();
 
-const isUpdateModalOpen = ref(false);
+const showProductModal = ref(false);
+const showUpdateModal = ref(false);
 const updateKey = ref(0);
 
 const hasModules = computed(
   () => productsStore?.currentProduct?.modules?.length > 0,
 );
 
-const fetchProductsList = async () => {
+const fetchProducts = async () => {
   await productsStore.fetch();
 };
+
 const fetchProduct = async () => {
   await productsStore.find(route.params.id?.toString());
   updateKey.value++;
 };
 
+const fetchAll = async () => {
+  await fetchProducts();
+  await fetchProduct();
+};
 
 watch(
-  isUpdateModalOpen,
+  showUpdateModal,
   (newVal, oldVal) => {
     if (oldVal === true && newVal === false) {
       fetchProduct();
@@ -59,9 +75,8 @@ watch(
   { immediate: true },
 );
 
-onMounted(async () => {
-  await fetchProductsList()
-  await fetchProduct()
+onMounted(() => {
+  fetchAll();
 });
 </script>
 

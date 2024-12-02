@@ -1,5 +1,5 @@
 [] add imageUrls for carousel
-[] add product
+[x] add product
 [x] add module
 [x] delete modules
 [] keep modules's quantity in DB when calculating current basket

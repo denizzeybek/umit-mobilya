@@ -36,7 +36,7 @@ export interface IProductRemoveModuleDTO {
   moduleId: string;
 }
 
-export interface IProductAddDTO {
+export interface IProductDTO {
   name: string;
   price: number;
   sizes: string;

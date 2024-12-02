@@ -103,7 +103,6 @@ const submitHandler = handleSubmit(async (values) => {
   try {
     const modules = values.modules?.filter((module) => module.quantity > 0);
     productsStore.setCurrentProductBasket(modules);
-    showSuccessMessage('Module updated!');
   } catch (error: any) {
     showErrorMessage(error?.response?.data?.message as any);
   }

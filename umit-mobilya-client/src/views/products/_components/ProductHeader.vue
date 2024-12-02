@@ -19,7 +19,7 @@ import { useUsersStore } from '@/stores/users';
 import { useProductsStore } from '@/stores/products';
 
 interface IEmits {
-  (event: 'handleUpdateModal'): void;
+  (event: 'handleUpdateProduct'): void;
   (event: 'handleUpdateModal'): void;
 }
 const emit = defineEmits<IEmits>();
@@ -33,6 +33,13 @@ const menuItems = ref([
   {
     label: 'Items',
     items: [
+      {
+        label: 'Update Product',
+        icon: 'pi pi-cog',
+        method: () => {
+          emit('handleUpdateProduct');
+        },
+      },
       {
         label: 'Update Modules',
         icon: 'pi pi-pencil',

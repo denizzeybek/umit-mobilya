@@ -73,7 +73,7 @@ import { useForm } from 'vee-validate';
 import { string, object, number } from 'yup';
 import { useFToast } from '@/composables/useFToast';
 import { useProductsStore } from '@/stores/products';
-import type { IProductAddDTO } from '@/interfaces/product/product.interface';
+import type { IProductDTO } from '@/interfaces/product/product.interface';
 
 interface IProps {
   data?: any;
@@ -133,9 +133,9 @@ const submitHandler = handleSubmit(async (values) => {
       description: values.description,
       category: values.category.value,
       // imageUrl: 'https://via.placeholder.com/150',
-      modules: [],
-    } as IProductAddDTO;
+    } as IProductDTO;
     if (isEditing.value) {
+      await productsStore.update(productsStore.currentProduct._id ,payload);
       showSuccessMessage('Product updated!');
     } else {
       await productsStore.create(payload);
@@ -157,7 +157,7 @@ const getInitialFormData = computed(() => {
       price: product.price,
       sizes: product.sizes,
       description: product.description,
-      category: { name: product.category, value: product.categoryId },
+      category: { name: product.category, value: product.category },
     }),
   };
 });

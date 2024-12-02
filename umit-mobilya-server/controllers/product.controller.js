@@ -132,6 +132,48 @@ exports.createProduct = async (req, res) => {
   }
 };
 
+// Ürün güncelleme
+exports.updateProduct = async (req, res) => {
+  const { id } = req.params; // Get product ID from the route parameter
+  const {
+    name,
+    price,
+    currency,
+    sizes,
+    description,
+    imageUrl,
+    quantity,
+    category,
+    modules,
+  } = req.body;
+
+  try {
+    // Find the product by ID
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Ürün bulunamadı' });
+    }
+
+    // Update the product fields
+    product.name = name ?? product.name;
+    product.price = price ?? product.price;
+    product.currency = currency ?? product.currency;
+    product.sizes = sizes ?? product.sizes;
+    product.description = description ?? product.description;
+    product.imageUrl = imageUrl ?? product.imageUrl;
+    product.quantity = quantity ?? product.quantity;
+    product.category = category ?? product.category;
+    // product.modules = modules ?? product.modules;
+
+    // Save the updated product
+    const updatedProduct = await product.save();
+
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 // Ürün silme
 exports.deleteProduct = async (req, res) => {
   try {
