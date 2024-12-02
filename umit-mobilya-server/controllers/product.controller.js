@@ -1,4 +1,5 @@
 // controllers/productController.js
+const mongoose = require('mongoose');
 
 const Product = require('../models/product.model');
 
@@ -188,40 +189,47 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-// ürün module quantity güncelleme
-exports.updateProductsModule = async (req, res) => {
-  const { id } = req.params; // Get product ID from the route parameter
-  const { moduleId, quantity } = req.body; // Get moduleId and quantity from the request body
+// Ürün modüllerini topluca güncelleme
+exports.updateProductModules = async (req, res) => {
+  const { id } = req.params; // Ürün ID'sini al
+  const { modules } = req.body; // Yeni modüller dizisini al
+  console.log('id ', id)
+  console.log('modules ', modules)
 
   try {
-    // Find the product by ID
+    // Ürünü ID ile bul
     const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ message: 'Ürün bulunamadı' });
     }
 
-    // Güncellenecek modülü bul
-    const moduleIndex = product.modules.findIndex(
-      (module) => module.productId.toString() === moduleId,
-    );
-
-    if (moduleIndex === -1) {
-      return res.status(404).json({ message: 'Modül bulunamadı' });
+    // Yeni modülleri doğrula (örneğin, her modülde productId ve quantity olmalı)
+    if (
+      !Array.isArray(modules) ||
+      modules.some(
+        (module) =>
+          !module.productId || !mongoose.Types.ObjectId.isValid(module.productId) || module.quantity == null
+      )
+    ) {
+      return res.status(400).json({ message: 'Geçersiz modül listesi' });
     }
 
-    // Modülün quantity'sini güncelle
-    product.modules[moduleIndex].quantity = quantity;
+    // Ürünün modüllerini güncelle
+    product.modules = modules.map((module) => ({
+      productId: module.productId,
+      quantity: module.quantity,
+    }));
 
-    // Save the updated product
+    // Güncellenmiş ürünü kaydet
     const updatedProduct = await product.save();
 
     res.status(200).json({
-      message: 'Modül başarıyla güncellendi',
+      message: 'Tüm modüller başarıyla güncellendi',
       product: updatedProduct,
     });
   } catch (error) {
-    console.error('Modül güncelleme hatası:', error);
-    res.status(500).json({ message: 'Modül güncellenirken bir hata oluştu' });
+    console.error('Modüller topluca güncelleme hatası:', error);
+    res.status(500).json({ message: 'Modüller güncellenirken bir hata oluştu' });
   }
 };
 

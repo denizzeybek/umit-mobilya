@@ -66,9 +66,12 @@ import { useProductsStore } from '@/stores/products';
 import { useFieldArray, useForm } from 'vee-validate';
 import { object, array, number } from 'yup';
 import { useFToast } from '@/composables/useFToast';
+import type { IProductModuleUpdateDTO } from '@/interfaces/product/product.interface';
+import { useRoute } from 'vue-router';
 
 const productsStore = useProductsStore();
 const { showSuccessMessage, showErrorMessage } = useFToast();
+const route = useRoute();
 
 const validationSchema = object({
   modules: array()
@@ -96,6 +99,7 @@ const getInitialFormData = computed(() => {
     quantity: module.quantity,
     price: module?.price,
     currency: module?.currency,
+    id: module._id,
   }));
 });
 
@@ -120,10 +124,26 @@ const submitHandler = handleSubmit(async (values) => {
   }
 });
 
+const updateModules = async () => {
+  try {
+    const payload = {
+      modules: modules.value.map((module) => ({
+        productId: module.id,
+        quantity: module.quantity,
+      })),
+    } as IProductModuleUpdateDTO;
+    await productsStore.updateModule(productsStore.currentProduct._id, payload);
+    await productsStore.find(route.params.id?.toString());
+  } catch (error: any) {
+    showErrorMessage(error?.response?.data?.message as any);
+  }
+};
+
 watch(
   () => [modules.value],
   () => {
     submitHandler();
+    updateModules();
   },
   { immediate: false, deep: true },
 );

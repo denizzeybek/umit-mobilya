@@ -100,7 +100,7 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
     async updateModule(id: string, payload: IProductModuleUpdateDTO) {
       return new Promise((resolve, reject) => {
         axios
-          .put(`/products/update-module/${id}`, payload)
+          .put(`/products/update-modules/${id}`, payload)
           .then((response) => {
             resolve(response);
           })

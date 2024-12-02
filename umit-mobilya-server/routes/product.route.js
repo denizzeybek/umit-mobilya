@@ -10,7 +10,7 @@ const {
   addModule,
   removeModule,
   updateProduct,
-  updateProductsModule,
+  updateProductModules,
 } = require('../controllers/product.controller');
 const { requireAuth } = require('../middleware/auth.middleware');
 
@@ -32,7 +32,7 @@ router.post('/', requireAuth, createProduct);
 router.put('/:id', requireAuth, updateProduct);
 
 // Ürün module quantity güncelleme
-router.put('/update-module/:id', requireAuth, updateProductsModule);
+router.put('/update-modules/:id', requireAuth, updateProductModules);
 
 // Ürün silme
 router.delete('/:id', requireAuth, deleteProduct);

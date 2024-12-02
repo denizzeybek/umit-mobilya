@@ -50,6 +50,8 @@ export interface IProductDTO {
 }
 
 export interface IProductModuleUpdateDTO {
-  productId: string;
-  quantity: number;
+  modules: {
+    productId: string;
+    quantity: number;
+  }[];
 }
