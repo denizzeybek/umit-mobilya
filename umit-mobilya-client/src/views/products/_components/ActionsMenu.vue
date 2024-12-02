@@ -12,9 +12,14 @@
     <div class="card flex justify-center">
       <Menu ref="menu" :model="items" class="w-full md:w-60" :popup="true">
         <template #item="{ item, props }">
-          <a v-ripple class="flex items-center" v-bind="props.action" @click="item.method()">
+          <a
+            v-ripple
+            class="flex items-center"
+            v-bind="props.action"
+            @click="item.method()"
+          >
             <span :class="item.icon" />
-            <span >{{ item.label }}</span>
+            <span>{{ item.label }}</span>
           </a>
         </template>
       </Menu>
@@ -26,6 +31,11 @@
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useProductsStore } from '@/stores/products';
+
+interface IEmits {
+  (event: 'handleUpdateModal'): void;
+}
+const emit = defineEmits<IEmits>();
 
 const productsStore = useProductsStore();
 const router = useRouter();
@@ -44,6 +54,9 @@ const items = ref([
       {
         label: 'Update Modules',
         icon: 'pi pi-pencil',
+        method: () => {
+          emit('handleUpdateModal');
+        },
       },
       {
         label: 'Delete',

@@ -3,7 +3,7 @@
     <template #content>
       <div class="flex justify-between items-center">
         <Breadcrumb :home="home" :model="items" />
-        <ActionsMenu v-if="usersStore.isAuthenticated" />
+        <ActionsMenu v-if="usersStore.isAuthenticated" @handleUpdateModal="emit('handleUpdateModal')"/>
       </div>
     </template>
   </Card>
@@ -13,6 +13,11 @@
 import { computed } from 'vue';
 import { useUsersStore } from '@/stores/users';
 import ActionsMenu from './ActionsMenu.vue';
+
+interface IEmits {
+  (event: 'handleUpdateModal'): void;
+}
+const emit = defineEmits<IEmits>();
 
 const usersStore = useUsersStore();
 

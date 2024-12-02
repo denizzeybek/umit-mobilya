@@ -68,7 +68,7 @@ const submitHandler = handleSubmit(async (values) => {
   try {
     showSuccessMessage('Registered!');
   } catch (error: any) {
-    showErrorMessage(error as any);
+    showErrorMessage(error?.response?.data?.message as any);
   }
 });
 </script>

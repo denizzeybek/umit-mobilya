@@ -17,7 +17,7 @@
               <img
                 :src="slotProps.data.image"
                 alt="product-detail"
-                class="w-full rounded lg:h-[530px]"
+                class="w-full rounded-md lg:h-[530px]"
               />
             </div>
           </div>

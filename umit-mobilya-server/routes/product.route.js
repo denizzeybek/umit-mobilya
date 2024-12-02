@@ -7,6 +7,8 @@ const {
   createProduct,
   deleteProduct,
   filterProducts,
+  addModule,
+  removeModule,
 } = require('../controllers/product.controller');
 const { requireAuth } = require('../middleware/auth.middleware');
 
@@ -26,5 +28,11 @@ router.post('/', requireAuth, createProduct);
 
 // Ürün silme
 router.delete('/:id', requireAuth, deleteProduct);
+
+// module ekleme
+router.post('/add-module', requireAuth, addModule);
+
+// module silme
+router.delete('/remove-module/:productId/:moduleId', requireAuth, removeModule);
 
 module.exports = router;

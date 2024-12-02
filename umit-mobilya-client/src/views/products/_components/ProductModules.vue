@@ -1,7 +1,7 @@
 <template>
   <Card>
     <template #content>
-      <DataView :value="fields" dataKey="modules">
+      <DataView :value="fields" dataKey="_id">
         <template #list="slotProps">
           <div class="flex flex-col">
             <div v-for="(item, idx) in slotProps.items" :key="idx">
@@ -14,7 +14,7 @@
               >
                 <div class="md:w-40 relative">
                   <img
-                    class="block xl:block mx-auto rounded w-full"
+                    class="block xl:block mx-auto rounded-md w-full sm:w-80"
                     :src="item?.value?.imageUrl"
                     :alt="item?.value?.name"
                   />
@@ -47,6 +47,7 @@
                       :showAdjustmentButtons="true"
                       :isReturnNumber="true"
                       :disabled="true"
+                      customClass="!w-11"
                     />
                   </div>
                 </div>
@@ -63,9 +64,8 @@
 import { computed, watch, onMounted } from 'vue';
 import { useProductsStore } from '@/stores/products';
 import { useFieldArray, useForm } from 'vee-validate';
-import { string, object, array, number } from 'yup';
+import { object, array, number } from 'yup';
 import { useFToast } from '@/composables/useFToast';
-import { set } from '@vueuse/core';
 
 const productsStore = useProductsStore();
 const { showSuccessMessage, showErrorMessage } = useFToast();
@@ -105,7 +105,7 @@ const submitHandler = handleSubmit(async (values) => {
     productsStore.setCurrentProductBasket(modules);
     showSuccessMessage('Module updated!');
   } catch (error: any) {
-    showErrorMessage(error as any);
+    showErrorMessage(error?.response?.data?.message as any);
   }
 });
 

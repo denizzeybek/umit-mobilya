@@ -22,3 +22,16 @@ export interface IProduct {
   quantity: number;
   modules: IProductModule[];
 }
+
+export interface IProductUpdateModuleDTO {
+  productId: string;
+  module: {
+    productId: string;
+    quantity?: number;
+  };
+}
+
+export interface IProductRemoveModuleDTO {
+  productId: string;
+  moduleId: string;
+}

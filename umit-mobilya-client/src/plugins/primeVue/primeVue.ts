@@ -49,7 +49,9 @@ import Chart from 'primevue/chart';
 import Carousel from 'primevue/carousel';
 import Toolbar from 'primevue/toolbar';
 import DataView from 'primevue/dataview';
-
+import PickList from 'primevue/picklist';
+import Splitter from 'primevue/splitter';
+import SplitterPanel from 'primevue/splitterpanel';
 
 export default {
   install(app: App) {
@@ -64,6 +66,9 @@ export default {
     });
     app.use(ToastService);
 
+    app.component('Splitter', Splitter);
+    app.component('SplitterPanel', SplitterPanel);
+    app.component('PickList', PickList);
     app.component('DataView', DataView);
     app.component('Toolbar', Toolbar);
     app.component('Carousel', Carousel);

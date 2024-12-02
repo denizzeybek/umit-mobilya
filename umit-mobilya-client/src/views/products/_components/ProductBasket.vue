@@ -17,7 +17,7 @@
                 <img
                   :src="currentProduct?.imageUrl"
                   alt="perfume bottle image"
-                  class="xl:w-[140px] rounded-xl object-cover"
+                  class=" w-full sm:w-80 rounded-md object-cover"
                 />
               </div>
               <div class="flex items-start justify-between w-full max-w-sm">

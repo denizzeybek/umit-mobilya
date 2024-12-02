@@ -162,3 +162,72 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.addModule = async (req, res) => {
+  try {
+    const { productId, module } = req.body; // Gelen modül: { productId, quantity }
+
+    if (productId.toString() === module.productId) {
+      return res.status(400).json({ message: 'Aynı ürünü ekleyemezsiniz' });
+    }
+
+    // Ürünü bul
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Ürün bulunamadı' });
+    }
+
+    // Modül zaten var mı kontrol et
+    const existingModule = product.modules.find(
+      (m) => m.productId.toString() === module.productId,
+    );
+    if (existingModule) {
+      return res.status(404).json({ message: 'Bu modül zaten eklenmiş' });
+    }
+
+    // Yeni modülü ekle
+    product.modules.push(module);
+
+    // Güncellenmiş ürünü kaydet
+    await product.save();
+
+    res.status(200).json({ message: 'Modül başarıyla eklendi', product });
+  } catch (error) {
+    console.error('Modül ekleme hatası:', error);
+    res.status(500).json({ message: 'Modül eklenirken bir hata oluştu' });
+  }
+};
+
+exports.removeModule = async (req, res) => {
+  try {
+    // Ürün ve modül ID'leri
+    const { productId, moduleId } = req.params;
+
+    // Ürünü bul
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Ürün bulunamadı' });
+    }
+
+    // Modülü ürünün modules dizisinden çıkar
+    const initialModuleCount = product.modules.length;
+    product.modules = product.modules.filter(
+      (m) => m.productId.toString() !== moduleId,
+    );
+
+    // Eğer modül bulunamadıysa hata döndür
+    if (product.modules.length === initialModuleCount) {
+      return res.status(404).json({
+        message: 'Bu modül ürün içinde bulunamadı veya zaten kaldırılmış',
+      });
+    }
+
+    // Güncellenmiş ürünü kaydet
+    await product.save();
+
+    res.status(200).json({ message: 'Modül başarıyla kaldırıldı', product });
+  } catch (error) {
+    console.error('Modül kaldırma hatası:', error);
+    res.status(500).json({ message: 'Modül kaldırılırken bir hata oluştu' });
+  }
+};

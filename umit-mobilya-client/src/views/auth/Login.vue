@@ -49,7 +49,7 @@ const submitHandler = handleSubmit(async (values) => {
     router.push({ name: ERouteNames.ProductsList });
     showSuccessMessage('Logged in!');
   } catch (error: any) {
-    showErrorMessage(error as any);
+    showErrorMessage(error?.response?.data?.message as any);
   }
 });
 </script>
