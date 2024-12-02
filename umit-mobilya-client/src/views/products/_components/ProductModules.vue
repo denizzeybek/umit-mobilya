@@ -102,7 +102,19 @@ const getInitialFormData = computed(() => {
 const submitHandler = handleSubmit(async (values) => {
   try {
     const modules = values.modules?.filter((module) => module.quantity > 0);
-    productsStore.setCurrentProductBasket(modules);
+    const currentProduct = productsStore.currentProduct;
+    const product = [
+      {
+        name: currentProduct.name,
+        imageUrl: currentProduct.imageUrl,
+        category: currentProduct.category,
+        quantity: currentProduct.quantity,
+        price: currentProduct.price,
+        currency: currentProduct.currency,
+      },
+    ];
+    const payload = [...product, ...modules];
+    productsStore.setCurrentProductBasket(payload);
   } catch (error: any) {
     showErrorMessage(error?.response?.data?.message as any);
   }

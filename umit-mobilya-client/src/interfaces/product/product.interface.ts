@@ -48,3 +48,8 @@ export interface IProductDTO {
     quantity: number;
   }[];
 }
+
+export interface IProductModuleUpdateDTO {
+  productId: string;
+  quantity: number;
+}

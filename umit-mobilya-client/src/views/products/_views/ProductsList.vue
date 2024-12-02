@@ -1,16 +1,12 @@
 <template>
   <div class="flex flex-col gap-4">
-    <Card>
-      <template #content>
-        <div class="w-full flex justify-end">
-          <Button
-            v-if="usersStore.isAuthenticated"
-            label="Add Product"
-            @click="showProductModal = true"
-          />
-        </div>
-      </template>
-    </Card>
+    <div class="w-full flex justify-end">
+      <Button
+        v-if="usersStore.isAuthenticated"
+        label="Add Product"
+        @click="showProductModal = true"
+      />
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
       <Card
         v-for="(product, idx) in productList"

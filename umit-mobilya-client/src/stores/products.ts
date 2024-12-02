@@ -3,6 +3,7 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 import type {
   IProductDTO,
+  IProductModuleUpdateDTO,
   IProductRemoveModuleDTO,
   IProductUpdateModuleDTO,
 } from '@/interfaces/product/product.interface';
@@ -96,6 +97,18 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           });
       });
     },
+    async updateModule(id: string, payload: IProductModuleUpdateDTO) {
+      return new Promise((resolve, reject) => {
+        axios
+          .put(`/products/update-module/${id}`, payload)
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
     async addModule(payload: IProductUpdateModuleDTO) {
       return new Promise((resolve, reject) => {
         axios
@@ -121,7 +134,10 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           });
       });
     },
-    setCurrentProductBasket(modules: IProductModule[]) {
+    async setCurrentProductBasket(
+      modules: IProductModule[],
+    ) {
+      // update:{ productId: string, updateModule: IProductModuleUpdateDTO },
       this.currentProductBasket = modules;
       this.currentProductTotal = {
         price: this.currentProductBasket.reduce(
@@ -130,6 +146,7 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
         ),
         currency: this.currentProductBasket[0].currency,
       };
+      // await this.updateModule(update.productId, update.updateModule);
     },
     resetBasket() {
       this.currentProductBasket = [];

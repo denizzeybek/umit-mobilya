@@ -72,7 +72,6 @@ const getProducts = async (payload) => {
   }
 };
 
-
 // Tüm ürünleri listeleme
 exports.getAllProducts = async (req, res) => {
   try {
@@ -186,6 +185,43 @@ exports.updateProduct = async (req, res) => {
     res.status(200).json(updatedProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+// ürün module quantity güncelleme
+exports.updateProductsModule = async (req, res) => {
+  const { id } = req.params; // Get product ID from the route parameter
+  const { moduleId, quantity } = req.body; // Get moduleId and quantity from the request body
+
+  try {
+    // Find the product by ID
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Ürün bulunamadı' });
+    }
+
+    // Güncellenecek modülü bul
+    const moduleIndex = product.modules.findIndex(
+      (module) => module.productId.toString() === moduleId,
+    );
+
+    if (moduleIndex === -1) {
+      return res.status(404).json({ message: 'Modül bulunamadı' });
+    }
+
+    // Modülün quantity'sini güncelle
+    product.modules[moduleIndex].quantity = quantity;
+
+    // Save the updated product
+    const updatedProduct = await product.save();
+
+    res.status(200).json({
+      message: 'Modül başarıyla güncellendi',
+      product: updatedProduct,
+    });
+  } catch (error) {
+    console.error('Modül güncelleme hatası:', error);
+    res.status(500).json({ message: 'Modül güncellenirken bir hata oluştu' });
   }
 };
 
