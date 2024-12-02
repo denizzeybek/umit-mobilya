@@ -17,7 +17,7 @@
                 <img
                   :src="currentProduct?.imageUrl"
                   alt="perfume bottle image"
-                  class=" w-full sm:w-80 rounded-md object-cover"
+                  class="w-full sm:w-80 rounded-md object-cover"
                 />
               </div>
               <div class="flex items-start justify-between w-full max-w-sm">
@@ -48,7 +48,9 @@
                 :keey="idx"
                 class="flex items-center justify-between w-full mb-6"
               >
-                <p class="font-normal text-xl leading-8 text-gray-400">
+                <p
+                  class="uppercase w-[80px] font-normal text-xl leading-8 text-gray-400"
+                >
                   {{ product.name }}
                 </p>
                 <p class="font-normal text-xl leading-8 text-gray-400">

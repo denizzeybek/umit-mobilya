@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActionsMenu: typeof import('./src/components/ui/global/ActionsMenu.vue')['default']
     Avatar: typeof import('./src/components/ui/global/Avatar.vue')['default']
     Badge: typeof import('primevue/badge')['default']
     Breadcrumb: typeof import('primevue/breadcrumb')['default']
@@ -19,6 +20,7 @@ declare module 'vue' {
     Dialog: typeof import('primevue/dialog')['default']
     EmailList: typeof import('./src/components/ui/global/EmailList.vue')['default']
     ErrorToast: typeof import('./src/components/ui/global/ErrorToast.vue')['default']
+    FileUpload: typeof import('primevue/fileupload')['default']
     IconField: typeof import('primevue/iconfield')['default']
     Input: typeof import('./src/components/ui/global/Input.vue')['default']
     InputIcon: typeof import('primevue/inputicon')['default']

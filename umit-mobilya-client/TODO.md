@@ -1,6 +1,7 @@
 [] add imageUrls for carousel
 [] add product
-[] add module
-[] update product's modules
+[x] add module
+[x] delete modules
+[] keep modules's quantity in DB when calculating current basket
 [] list, add, delete, update categories
 [] add s3 image uploda

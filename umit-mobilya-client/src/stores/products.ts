@@ -1,7 +1,7 @@
 import { EStoreNames } from '@/stores/storeNames.enum';
 import axios from 'axios';
 import { defineStore } from 'pinia';
-import type { IProductRemoveModuleDTO, IProductUpdateModuleDTO } from '@/interfaces/product/product.interface';
+import type { IProductAddDTO, IProductRemoveModuleDTO, IProductUpdateModuleDTO } from '@/interfaces/product/product.interface';
 
 import type {
   IProduct,
@@ -48,6 +48,19 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           .get(`/products/${id}`)
           .then((response) => {
             this.currentProduct = response as unknown as IProduct;
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    async create(payload: IProductAddDTO) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post('/products', payload)
+          .then((response) => {
+            this.list = response as unknown as IProduct[];
             resolve(response);
           })
           .catch((error) => {

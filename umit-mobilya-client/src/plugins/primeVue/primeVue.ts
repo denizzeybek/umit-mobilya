@@ -33,7 +33,6 @@ import Message from 'primevue/message';
 import Breadcrumb from 'primevue/breadcrumb';
 import TreeTable from 'primevue/treetable'
 import Dialog from 'primevue/dialog';
-import FileUpload from 'primevue/fileupload';
 import Divider from 'primevue/divider';
 import Skeleton from 'primevue/skeleton';
 import DatePicker from 'primevue/datepicker';
@@ -52,6 +51,8 @@ import DataView from 'primevue/dataview';
 import PickList from 'primevue/picklist';
 import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
+import FileUpload from 'primevue/fileupload';
+
 
 export default {
   install(app: App) {

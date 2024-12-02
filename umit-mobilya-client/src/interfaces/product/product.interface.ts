@@ -35,3 +35,15 @@ export interface IProductRemoveModuleDTO {
   productId: string;
   moduleId: string;
 }
+
+export interface IProductAddDTO {
+  name: string;
+  price: number;
+  sizes: string;
+  description: string;
+  category: string;
+  modules?: {
+    productId: string;
+    quantity: number;
+  }[];
+}
