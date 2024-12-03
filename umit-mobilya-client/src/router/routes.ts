@@ -7,6 +7,7 @@ import ProductsList from '@/views/products/_views/ProductsList.vue';
 import ProductDetails from '@/views/products/_views/ProductDetails.vue';
 
 import Login from '@/views/auth/Login.vue';
+import CategoriesList from '@/views/categories/_views/CategoriesList.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -57,6 +58,16 @@ const routes: RouteRecordRaw[] = [
           requiresUnAuth: true,
           title: ERouteNames.ProductDetails,
           name: ERouteNames.ProductDetails,
+        },
+      },
+      {
+        path: '/categories',
+        name: ERouteNames.CategoriesList,
+        component: CategoriesList,
+        meta: {
+          requiresAuth: true,
+          title: ERouteNames.CategoriesList,
+          name: ERouteNames.CategoriesList,
         },
       },
     ],

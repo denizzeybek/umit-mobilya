@@ -15,6 +15,8 @@ declare module 'vue' {
     Card: typeof import('primevue/card')['default']
     Carousel: typeof import('primevue/carousel')['default']
     Checkbox: typeof import('./src/components/ui/global/Checkbox.vue')['default']
+    Column: typeof import('primevue/column')['default']
+    DataTable: typeof import('primevue/datatable')['default']
     DataView: typeof import('primevue/dataview')['default']
     DateTimePicker: typeof import('./src/components/ui/global/DateTimePicker.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
