@@ -52,6 +52,7 @@ import PickList from 'primevue/picklist';
 import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 import FileUpload from 'primevue/fileupload';
+import Galleria from 'primevue/galleria';
 
 
 export default {
@@ -67,6 +68,7 @@ export default {
     });
     app.use(ToastService);
 
+    app.component('Galleria', Galleria);
     app.component('Splitter', Splitter);
     app.component('SplitterPanel', SplitterPanel);
     app.component('PickList', PickList);

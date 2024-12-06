@@ -23,6 +23,7 @@ declare module 'vue' {
     EmailList: typeof import('./src/components/ui/global/EmailList.vue')['default']
     ErrorToast: typeof import('./src/components/ui/global/ErrorToast.vue')['default']
     FileUpload: typeof import('primevue/fileupload')['default']
+    Galleria: typeof import('primevue/galleria')['default']
     IconField: typeof import('primevue/iconfield')['default']
     Input: typeof import('./src/components/ui/global/Input.vue')['default']
     InputIcon: typeof import('primevue/inputicon')['default']

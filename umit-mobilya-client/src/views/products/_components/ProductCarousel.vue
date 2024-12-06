@@ -1,7 +1,27 @@
 <template>
   <Card>
     <template #content>
-      <Carousel
+      <Galleria
+        :value="productImages"
+        :responsiveOptions="responsiveOptions"
+        :numVisible="5"
+      >
+        <template #item="slotProps">
+          <img
+            :src="slotProps.item.image"
+            alt="slotProps.item.alt"
+            style="width: 100%"
+          />
+        </template>
+        <template #thumbnail="slotProps">
+          <img
+            :src="slotProps.item.image"
+            alt="slotProps.item.alt"
+          />
+        </template>
+      </Galleria>
+
+      <!-- <Carousel
         :value="productImages"
         :numVisible="1"
         :numScroll="1"
@@ -22,7 +42,7 @@
             </div>
           </div>
         </template>
-      </Carousel>
+      </Carousel> -->
     </template>
   </Card>
 </template>
@@ -47,22 +67,18 @@ const responsiveOptions = ref([
   {
     breakpoint: '1400px',
     numVisible: 2,
-    numScroll: 1,
   },
   {
     breakpoint: '1199px',
     numVisible: 3,
-    numScroll: 1,
   },
   {
     breakpoint: '767px',
     numVisible: 2,
-    numScroll: 1,
   },
   {
     breakpoint: '575px',
     numVisible: 1,
-    numScroll: 1,
   },
 ]);
 </script>
