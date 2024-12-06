@@ -43,6 +43,7 @@ import { useFToast } from '@/composables/useFToast';
 import ModuleItem from './ModuleItem.vue';
 import { EModuleItemButtonType } from '@/views/products/_etc/enums/EModuleItemButtonType';
 import type {
+  IProductFilterDTO,
   IProductRemoveModuleDTO,
   IProductUpdateModuleDTO,
 } from '@/interfaces/product/product.interface';
@@ -104,7 +105,11 @@ const onModuleButtonClick = async (event) => {
 
 const filterProducts = async () => {
   try {
-    await productsStore.filter({ category: selectedFilter.value.value });
+    const payload = {} as IProductFilterDTO;
+    if (selectedFilter.value.value) {
+      payload.category = selectedFilter.value.value;
+    }
+    await productsStore.filter(payload);
   } catch (error: any) {
     showErrorMessage(error?.response?.data?.message as any);
   }
