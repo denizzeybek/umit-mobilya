@@ -8,9 +8,9 @@
   >
     <Splitter class="lg:h-full" layout="horizontal">
       <SplitterPanel class="flex flex-col gap-2 p-2 !overflow-y-auto">
-        <template v-for="(module, idx) in productsList" :key="idx">
+        <template v-for="(product, idx) in productsList" :key="idx">
           <ModuleItem
-            :module="module"
+            :module="product"
             :type="EModuleItemButtonType.ADD"
             @handleModuleButtonClick="onModuleButtonClick($event)"
           />

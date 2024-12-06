@@ -47,6 +47,19 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           });
       });
     },
+    async filter(payload: any) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get('/products/filter', payload)
+          .then((response) => {
+            this.list = response as unknown as IProduct[];
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
     async find(id: string) {
       return new Promise((resolve, reject) => {
         axios

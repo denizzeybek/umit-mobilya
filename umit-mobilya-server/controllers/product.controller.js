@@ -1,6 +1,5 @@
 // controllers/productController.js
 const mongoose = require('mongoose');
-
 const Product = require('../models/product.model');
 
 const getProducts = async (payload) => {
@@ -9,24 +8,23 @@ const getProducts = async (payload) => {
     const { id, name, category, dynamicQuery } = payload || {};
     const query = {};
 
-    // Build the query object
     if (id) {
-      query._id = id; // Find product by exact ID
+      query._id = id;
     }
 
     if (name) {
       query.name = new RegExp(name, 'i');
     }
-    if (category) {
-      query.category = new RegExp(category, 'i');
-    }
+    // if (category) {
+    //   query.category = new RegExp(category, 'i');
+    // }
 
-    if (dynamicQuery) {
-      query.$or = [
-        { name: new RegExp(dynamicQuery, 'i') }, // Case-insensitive search for 'name'
-        { category: new RegExp(dynamicQuery, 'i') }, // Case-insensitive search for 'category'
-      ];
-    }
+    // if (dynamicQuery) {
+    //   query.$or = [
+    //     { name: new RegExp(dynamicQuery, 'i') }, // Case-insensitive search for 'name'
+    //     // { category: new RegExp(dynamicQuery, 'i') }, // Case-insensitive search for 'category'
+    //   ];
+    // }
 
     const products = await Product.find(query)
       .populate({
@@ -290,6 +288,8 @@ exports.addModule = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Ürün bulunamadı' });
     }
+
+    console.log('product ', product)
 
     // Modül zaten var mı kontrol et
     const existingModule = product.modules.find(
