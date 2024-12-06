@@ -8,6 +8,14 @@
   >
     <Splitter class="lg:h-full" layout="horizontal">
       <SplitterPanel class="flex flex-col gap-2 p-2 !overflow-y-auto">
+        <div class="flex justify-end">
+          <FSelect
+            name="filterCategory"
+            placeholder="Choose Category Name"
+            :options="categoryTypeOptions"
+            v-model="selectedFilter"
+          />
+        </div>
         <template v-for="(product, idx) in productsList" :key="idx">
           <ModuleItem
             :module="product"
@@ -30,22 +38,42 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useFToast } from '@/composables/useFToast';
 import ModuleItem from './ModuleItem.vue';
 import { EModuleItemButtonType } from '@/views/products/_etc/enums/EModuleItemButtonType';
-import type { IProductRemoveModuleDTO, IProductUpdateModuleDTO } from '@/interfaces/product/product.interface';
+import type {
+  IProductRemoveModuleDTO,
+  IProductUpdateModuleDTO,
+} from '@/interfaces/product/product.interface';
 import { useProductsStore } from '@/stores/products';
 import { useRoute } from 'vue-router';
+import { useCategoriesStore } from '@/stores/categories';
+import { watch } from '@vue/reactivity';
 
 const route = useRoute();
 const productsStore = useProductsStore();
+const categoriesStore = useCategoriesStore();
 
 const open = defineModel<boolean>('open');
 const { showSuccessMessage, showErrorMessage } = useFToast();
 
+const selectedFilter = ref({
+  name: 'All Categories',
+  value: null,
+});
+
 const productsList = computed(() => productsStore.list);
 const modules = computed(() => productsStore.currentProduct?.modules);
+
+const categoryTypeOptions = computed(() => {
+  const categoriesList = categoriesStore.list?.map((category) => ({
+    name: category.name,
+    value: category._id,
+  }));
+
+  return [{ name: 'All Categories', value: null }, ...categoriesList];
+});
 
 const onModuleButtonClick = async (event) => {
   try {
@@ -63,7 +91,7 @@ const onModuleButtonClick = async (event) => {
     } else {
       const payload = {
         productId: route.params.id,
-        moduleId: id
+        moduleId: id,
       } as IProductRemoveModuleDTO;
       await productsStore.removeModule(payload);
       showSuccessMessage('Module removed successfully');
@@ -73,4 +101,18 @@ const onModuleButtonClick = async (event) => {
     showErrorMessage(error?.response?.data?.message as any);
   }
 };
+
+const filterProducts = async () => {
+  try {
+    await productsStore.filter({ category: selectedFilter.value.value });
+  } catch (error: any) {
+    showErrorMessage(error?.response?.data?.message as any);
+  }
+};
+
+watch(selectedFilter, filterProducts, { immediate: true });
+
+onMounted(async () => {
+  await categoriesStore.fetch();
+});
 </script>

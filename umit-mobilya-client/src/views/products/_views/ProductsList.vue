@@ -1,13 +1,24 @@
 <template>
   <div class="flex flex-col gap-4">
-    <div class="w-full flex justify-end">
+    <div class="flex justify-end items-center gap-2">
+      <FSelect
+        name="filterCategory"
+        placeholder="Choose Category Name"
+        :options="categoryTypeOptions"
+        v-model="selectedFilter"
+        class="!h-full"
+      />
+      <FInput name="filterName" v-model="typedName" placeholder="Enter Product Name"/>
       <Button
         v-if="usersStore.isAuthenticated"
         label="Add Product"
         @click="showProductModal = true"
       />
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+    <div
+      v-if="productList?.length"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full"
+    >
       <Card
         v-for="(product, idx) in productList"
         :key="idx"
@@ -27,39 +38,78 @@
         </template>
       </Card>
     </div>
+    <div v-else class="flex justify-center items-center h-96">
+      <Card class="flex items-center justify-center">
+        <template #content>
+          <span class="text-2xl">No products found</span>
+        </template>
+      </Card>
+    </div>
   </div>
   <ProductModal
     v-if="showProductModal"
     v-model:open="showProductModal"
-    @fetchProducts="fetchProducts"
+    @fetchProducts="filterProducts"
   />
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref } from 'vue';
+import { onMounted, computed, ref, watch } from 'vue';
 import { useProductsStore } from '@/stores/products';
 import { ERouteNames } from '@/router/routeNames.enum';
 import { useRouter } from 'vue-router';
 import { useUsersStore } from '@/stores/users';
 import ProductModal from '@/views/products/_modals/ProductModal.vue';
 import ProductItemContent from '../_components/ProductItemContent.vue';
+import { useCategoriesStore } from '@/stores/categories';
+import { useFToast } from '@/composables/useFToast';
+import type { IProductFilterDTO } from '@/interfaces/product/product.interface';
 
 const usersStore = useUsersStore();
+const categoriesStore = useCategoriesStore();
 const productsStore = useProductsStore();
 const router = useRouter();
+const { showErrorMessage } = useFToast();
 
 const showProductModal = ref(false);
+const selectedFilter = ref({
+  name: 'All Categories',
+  value: null,
+});
+const typedName = ref();
 
 const productList = computed(() => {
   return productsStore.list;
 });
 
-const fetchProducts = async () => {
-  await productsStore.fetch();
+const categoryTypeOptions = computed(() => {
+  const categoriesList = categoriesStore.list?.map((category) => ({
+    name: category.name,
+    value: category._id,
+  }));
+
+  return [{ name: 'All Categories', value: null }, ...categoriesList];
+});
+
+const filterProducts = async () => {
+  try {
+    const payload = {} as IProductFilterDTO;
+    if (typedName.value) {
+      payload.name = typedName.value;
+    }
+    if (selectedFilter.value.value) {
+      payload.category = selectedFilter.value.value;
+    }
+    await productsStore.filter(payload);
+  } catch (error: any) {
+    showErrorMessage(error?.response?.data?.message as any);
+  }
 };
 
-onMounted(() => {
-  fetchProducts();
+watch([selectedFilter, typedName], filterProducts, { immediate: true });
+
+onMounted(async () => {
+  await categoriesStore.fetch();
 });
 </script>
 

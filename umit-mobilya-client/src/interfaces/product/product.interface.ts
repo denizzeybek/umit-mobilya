@@ -58,3 +58,8 @@ export interface IProductModuleUpdateDTO {
     quantity: number;
   }[];
 }
+
+export interface IProductFilterDTO {
+  category?: string;
+  name?: string;
+}

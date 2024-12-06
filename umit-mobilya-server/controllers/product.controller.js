@@ -5,7 +5,7 @@ const Product = require('../models/product.model');
 const getProducts = async (payload) => {
   try {
     // Create a query object
-    const { id, name, category, dynamicQuery } = payload || {};
+    const { id, name, category } = payload || {};
     const query = {};
 
     if (id) {
@@ -15,17 +15,10 @@ const getProducts = async (payload) => {
     if (name) {
       query.name = new RegExp(name, 'i');
     }
-    // if (category) {
-    //   query.category = new RegExp(category, 'i');
-    // }
 
-    // if (dynamicQuery) {
-    //   query.$or = [
-    //     { name: new RegExp(dynamicQuery, 'i') }, // Case-insensitive search for 'name'
-    //     // { category: new RegExp(dynamicQuery, 'i') }, // Case-insensitive search for 'category'
-    //   ];
-    // }
-
+    if (category) {
+      query.category = category; // Match by exact category._id
+    }
     const products = await Product.find(query)
       .populate({
         path: 'modules.productId',
@@ -106,10 +99,10 @@ exports.getProductById = async (req, res) => {
 exports.filterProducts = async (req, res) => {
   try {
     // Get the 'name' query parameter from the request
-    const { name, category, dynamicQuery } = req.body;
+    const { name, category } = req.body;
 
     // Call getProducts with the name filter
-    const products = await getProducts({ name, category, dynamicQuery });
+    const products = await getProducts({ name: name, category: category });
 
     res.status(200).json(products);
   } catch (error) {
@@ -288,8 +281,6 @@ exports.addModule = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Ürün bulunamadı' });
     }
-
-    console.log('product ', product)
 
     // Modül zaten var mı kontrol et
     const existingModule = product.modules.find(

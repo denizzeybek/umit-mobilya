@@ -3,6 +3,7 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 import type {
   IProductDTO,
+  IProductFilterDTO,
   IProductModuleUpdateDTO,
   IProductRemoveModuleDTO,
   IProductUpdateModuleDTO,
@@ -47,10 +48,10 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           });
       });
     },
-    async filter(payload: any) {
+    async filter(payload: IProductFilterDTO) {
       return new Promise((resolve, reject) => {
         axios
-          .get('/products/filter', payload)
+          .post('/products/filter', payload)
           .then((response) => {
             this.list = response as unknown as IProduct[];
             resolve(response);

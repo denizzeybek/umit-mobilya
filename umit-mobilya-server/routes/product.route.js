@@ -23,7 +23,7 @@ router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 
 // Ürünleri adıyla filtreleme
-router.get('/filter', filterProducts);
+router.post('/filter', filterProducts);
 
 // Yeni ürün ekleme
 router.post('/', requireAuth, createProduct);
