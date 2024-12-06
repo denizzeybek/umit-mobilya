@@ -16,16 +16,19 @@
           :rows="20"
           :rowsPerPageOptions="[5, 10, 20, 50]"
         >
-        <template #header>
-                <div class="flex justify-end">
-                    <IconField>
-                        <InputIcon>
-                            <i class="pi pi-search" />
-                        </InputIcon>
-                        <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
-                    </IconField>
-                </div>
-            </template>
+          <template #header>
+            <div class="flex justify-end">
+              <IconField>
+                <InputIcon>
+                  <i class="pi pi-search" />
+                </InputIcon>
+                <InputText
+                  v-model="filters['global'].value"
+                  placeholder="Keyword Search"
+                />
+              </IconField>
+            </div>
+          </template>
           <Column field="name" header="Name"> </Column>
           <!-- <Column field="createdAt" header="Created At"> </Column>
           <Column header="Actions">
@@ -69,8 +72,8 @@ defineProps<IProps>();
 
 const showCategoryModal = ref(false);
 const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 });
 
 const categoriesStore = useCategoriesStore();
