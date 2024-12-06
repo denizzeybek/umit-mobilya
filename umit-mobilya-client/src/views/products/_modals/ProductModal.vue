@@ -73,7 +73,9 @@ import { useForm } from 'vee-validate';
 import { string, object, number } from 'yup';
 import { useFToast } from '@/composables/useFToast';
 import { useProductsStore } from '@/stores/products';
+import { useCategoriesStore } from '@/stores/categories';
 import type { IProductDTO } from '@/interfaces/product/product.interface';
+
 
 interface IProps {
   data?: any;
@@ -87,17 +89,19 @@ const emit = defineEmits<IEmits>();
 
 const { showSuccessMessage, showErrorMessage } = useFToast();
 const productsStore = useProductsStore();
+const categoriesStore = useCategoriesStore();
 
 const open = defineModel<boolean>('open');
 const fileupload = ref();
 
 const isEditing = computed(() => !!props.data);
 
-const categoryTypeOptions = computed(() => [
-  { name: 'Modular', value: 'modular' },
-  { name: 'Table', value: 'table' },
-  { name: 'Kitchen', value: 'kitchen' },
-]);
+const categoryTypeOptions = computed(() => {
+  return categoriesStore.list?.map((category) => ({
+    name: category.name,
+    value: category._id,
+  }));
+});
 
 const validationSchema = object({
   name: string().required().label('Name'),
@@ -157,12 +161,13 @@ const getInitialFormData = computed(() => {
       price: product.price,
       sizes: product.sizes,
       description: product.description,
-      category: { name: product.category, value: product.category },
+      category: { name: product.category?.name, value: product.category?._id },
     }),
   };
 });
 
-onMounted(() => {
+onMounted(async () => {
+  await categoriesStore.fetch();
   resetForm({
     values: getInitialFormData.value,
   });

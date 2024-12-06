@@ -20,23 +20,7 @@
                   class="w-full sm:w-80 rounded-md object-cover"
                 />
               </div>
-              <div class="flex items-start justify-between w-full max-w-sm">
-                <div class="">
-                  <h5
-                    class="font-semibold uppercase text-xl leading-8 text-black max-[550px]:text-center"
-                  >
-                    {{ currentProduct?.name }}
-                  </h5>
-                  <p
-                    class="font-normal text-lg leading-8 uppercase text-gray-500 my-2 min-[550px]:my-3 max-[550px]:text-center"
-                  >
-                    {{ currentProduct?.description }}
-                  </p>
-                </div>
-                <Tag>
-                  <span class="uppercase">{{ currentProduct?.category }}</span>
-                </Tag>
-              </div>
+              <ProductItemContent :product="currentProduct" />
             </div>
           </div>
           <div
@@ -54,7 +38,9 @@
                   {{ product.name }}
                 </p>
                 <p class="font-normal text-xl leading-8 text-gray-400">
-                  {{ product.quantity }}
+                  {{
+                    `${product.quantity} x ${product.price} ${product.currency}`
+                  }}
                 </p>
                 <h6 class="font-semibold text-xl leading-8 text-gray-900">
                   {{
@@ -92,6 +78,7 @@
 <script setup lang="ts">
 import { useProductsStore } from '@/stores/products';
 import { computed } from 'vue';
+import ProductItemContent from './ProductItemContent.vue';
 
 interface IProps {
   hasModules: boolean;

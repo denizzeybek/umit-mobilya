@@ -3,7 +3,7 @@
     v-model:visible="open"
     modal
     header="Update Modules"
-    class="!bg-f-secondary-purple !w-full lg:h-2/4"
+    class="!bg-f-secondary-purple !w-full lg:h-3/4"
     :style="{ width: '50rem' }"
   >
     <Splitter class="lg:h-full" layout="horizontal">

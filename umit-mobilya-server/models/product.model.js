@@ -26,7 +26,8 @@ const productSchema = new mongoose.Schema({
     type: String,
   },
   category: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category', // Referencing the Category model
   },
   quantity: {
     type: Number,
@@ -37,11 +38,11 @@ const productSchema = new mongoose.Schema({
       productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
-        required: true
+        required: true,
       },
       quantity: {
         type: Number,
-        default: 1, // Her modül için farklı quantity
+        default: 1,
       },
     },
   ],

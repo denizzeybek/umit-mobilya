@@ -1,3 +1,5 @@
+import type { ICategory } from "../category/category.interface";
+
 export interface IProductModule {
   _id: string;
   name: string;
@@ -7,7 +9,8 @@ export interface IProductModule {
   quantity: number;
   sizes: string;
   description: string;
-  category: string;
+  totalPrice?: number;
+  category: ICategory;
 }
 
 export interface IProduct {
@@ -19,7 +22,7 @@ export interface IProduct {
   imageUrl: string;
   sizes: string;
   description: string;
-  category: string;
+  category: ICategory;
   quantity: number;
   modules: IProductModule[];
 }
@@ -42,7 +45,7 @@ export interface IProductDTO {
   price: number;
   sizes: string;
   description: string;
-  category: string;
+  category: ICategory;
   modules?: {
     productId: string;
     quantity: number;

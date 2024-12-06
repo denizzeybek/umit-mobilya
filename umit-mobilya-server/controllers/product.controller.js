@@ -28,7 +28,13 @@ const getProducts = async (payload) => {
       ];
     }
 
-    const products = await Product.find(query).populate('modules.productId');
+    const products = await Product.find(query)
+      .populate({
+        path: 'modules.productId',
+        populate: { path: 'category' }, // modules.productId.category'yi populate et
+      })
+      .populate('category');
+
     const newProduct = products.map((product) => {
       const modules = product.modules.map((module) => {
         return {
@@ -115,31 +121,36 @@ exports.filterProducts = async (req, res) => {
 
 // Yeni ürün ekleme
 exports.createProduct = async (req, res) => {
-  const {
-    name,
-    price,
-    currency,
-    sizes,
-    description,
-    imageUrl,
-    quantity,
-    category,
-    modules,
-  } = req.body;
-
-  const product = new Product({
-    name,
-    price,
-    currency,
-    sizes,
-    description,
-    imageUrl,
-    category,
-    quantity,
-    modules,
-  });
-
   try {
+    const {
+      name,
+      price,
+      currency,
+      sizes,
+      description,
+      imageUrl,
+      quantity,
+      category,
+      modules,
+    } = req.body;
+
+    // Validate category existence
+    const categoryExists = await mongoose.model('Category').findById(category);
+    if (!categoryExists) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    const product = new Product({
+      name,
+      price,
+      currency,
+      sizes,
+      description,
+      imageUrl,
+      category,
+      quantity,
+      modules,
+    });
     const newProduct = await product.save();
     res.status(201).json(newProduct);
   } catch (error) {
@@ -206,7 +217,9 @@ exports.updateProductModules = async (req, res) => {
       !Array.isArray(modules) ||
       modules.some(
         (module) =>
-          !module.productId || !mongoose.Types.ObjectId.isValid(module.productId) || module.quantity == null
+          !module.productId ||
+          !mongoose.Types.ObjectId.isValid(module.productId) ||
+          module.quantity == null,
       )
     ) {
       return res.status(400).json({ message: 'Geçersiz modül listesi' });
@@ -227,7 +240,9 @@ exports.updateProductModules = async (req, res) => {
     });
   } catch (error) {
     console.error('Modüller topluca güncelleme hatası:', error);
-    res.status(500).json({ message: 'Modüller güncellenirken bir hata oluştu' });
+    res
+      .status(500)
+      .json({ message: 'Modüller güncellenirken bir hata oluştu' });
   }
 };
 

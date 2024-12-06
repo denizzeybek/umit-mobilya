@@ -22,25 +22,7 @@
                 <div
                   class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6"
                 >
-                  <div
-                    class="flex flex-row md:flex-col justify-between items-start gap-2"
-                  >
-                    <div>
-                      <Tag>
-                        <span class="uppercase">{{
-                          item?.value?.category
-                        }}</span>
-                      </Tag>
-
-                      <div class="text-lg font-medium mt-2 uppercase">
-                        {{ item?.value?.name }}
-                      </div>
-
-                      <div class="text-lg font-medium mt-2 uppercase">
-                        {{ `${item?.value?.price} ${item?.value?.currency}` }}
-                      </div>
-                    </div>
-                  </div>
+                  <ProductItemContent :product="item.value" />
                   <div class="flex flex-col md:items-end gap-8 max-w-fit">
                     <FInput
                       :name="`modules[${idx}].quantity`"
@@ -68,9 +50,10 @@ import { object, array, number } from 'yup';
 import { useFToast } from '@/composables/useFToast';
 import type { IProductModuleUpdateDTO } from '@/interfaces/product/product.interface';
 import { useRoute } from 'vue-router';
+import ProductItemContent from './ProductItemContent.vue';
 
 const productsStore = useProductsStore();
-const { showSuccessMessage, showErrorMessage } = useFToast();
+const { showErrorMessage } = useFToast();
 const route = useRoute();
 
 const validationSchema = object({
@@ -92,15 +75,18 @@ const { fields } = useFieldArray<any>('modules');
 const [modules] = defineField('modules');
 
 const getInitialFormData = computed(() => {
-  return productsStore.currentProduct?.modules?.map((module) => ({
-    name: module.name,
-    imageUrl: module.imageUrl,
-    category: module.category,
-    quantity: module.quantity,
-    price: module?.price,
-    currency: module?.currency,
-    id: module._id,
-  }));
+  return productsStore.currentProduct?.modules?.map((module) => {
+    return {
+      name: module.name,
+      imageUrl: module.imageUrl,
+      category: module.category,
+      quantity: module.quantity,
+      price: module?.price,
+      sizes: module?.sizes,
+      currency: module?.currency,
+      id: module._id,
+    };
+  });
 });
 
 const submitHandler = handleSubmit(async (values) => {
@@ -142,6 +128,7 @@ const updateModules = async () => {
 watch(
   () => [modules.value],
   () => {
+    if (!productsStore.currentProduct?.modules?.length) return;
     submitHandler();
     updateModules();
   },

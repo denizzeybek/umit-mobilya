@@ -22,14 +22,8 @@
         <template #header>
           <img :src="product.imageUrl" alt="product image" />
         </template>
-        <template #title>{{ product?.name?.toUpperCase() }}</template>
-        <template #subtitle>{{
-          `${product?.totalPrice} ${product?.currency}`
-        }}</template>
         <template #content>
-          <p class="m-0">
-            {{ product?.sizes }}
-          </p>
+          <ProductItemContent :product="product" />
         </template>
       </Card>
     </div>
@@ -48,6 +42,7 @@ import { ERouteNames } from '@/router/routeNames.enum';
 import { useRouter } from 'vue-router';
 import { useUsersStore } from '@/stores/users';
 import ProductModal from '@/views/products/_modals/ProductModal.vue';
+import ProductItemContent from '../_components/ProductItemContent.vue';
 
 const usersStore = useUsersStore();
 const productsStore = useProductsStore();
