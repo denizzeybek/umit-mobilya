@@ -1,6 +1,8 @@
 // routes/productRoutes.js
 
 const express = require('express');
+const multer = require('multer');
+
 const {
   getAllProducts,
   getProductById,
@@ -26,7 +28,9 @@ router.get('/:id', getProductById);
 router.post('/filter', filterProducts);
 
 // Yeni ürün ekleme
-router.post('/', requireAuth, createProduct);
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+router.post('/', requireAuth, upload.single('image'), createProduct);
 
 // Ürün güncelleme
 router.put('/:id', requireAuth, updateProduct);

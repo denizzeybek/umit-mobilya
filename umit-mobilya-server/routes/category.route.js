@@ -13,10 +13,10 @@ const { requireAuth } = require('../middleware/auth.middleware');
 const router = express.Router();
 
 // Tüm ürünleri listeleme
-router.get('/', requireAuth, getCategories);
+router.get('/', getCategories);
 
 // Ürünleri adıyla filtreleme
-router.get('/filter', requireAuth, filterCategories);
+router.get('/filter', filterCategories);
 
 // Yeni ürün ekleme
 router.post('/', requireAuth, createCategory);

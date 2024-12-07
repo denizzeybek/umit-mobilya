@@ -7,7 +7,7 @@ const connectDB = require('./configs/database');  // Veritabanı bağlantısın�
 const routes = require('./routes');   
 const cookieParser = require('cookie-parser');
 
-// Çevresel değişkenleri yükleyin
+// env file yükleyin
 dotenv.config();
 
 // Express uygulaması başlat

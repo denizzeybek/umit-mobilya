@@ -46,6 +46,7 @@ export interface IProductDTO {
   sizes: string;
   description: string;
   category: ICategory;
+  image: any;
   modules?: {
     productId: string;
     quantity: number;

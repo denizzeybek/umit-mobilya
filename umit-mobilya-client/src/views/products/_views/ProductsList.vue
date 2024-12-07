@@ -14,6 +14,11 @@
         label="Add Product"
         @click="showProductModal = true"
       />
+      <Button
+        v-if="usersStore.isAuthenticated"
+        label="Add Image"
+        @click="showProductImageModal = true"
+      />
     </div>
     <div
       v-if="productList?.length"
@@ -51,6 +56,10 @@
     v-model:open="showProductModal"
     @fetchProducts="filterProducts"
   />
+  <ProductImage
+    v-if="showProductImageModal"
+    v-model:open="showProductImageModal"
+  />
 </template>
 
 <script setup lang="ts">
@@ -60,6 +69,7 @@ import { ERouteNames } from '@/router/routeNames.enum';
 import { useRouter } from 'vue-router';
 import { useUsersStore } from '@/stores/users';
 import ProductModal from '@/views/products/_modals/ProductModal.vue';
+import ProductImage from '@/views/products/_modals/ProductImage.vue';
 import ProductItemContent from '../_components/ProductItemContent.vue';
 import { useCategoriesStore } from '@/stores/categories';
 import { useFToast } from '@/composables/useFToast';
@@ -71,6 +81,7 @@ const productsStore = useProductsStore();
 const router = useRouter();
 const { showErrorMessage } = useFToast();
 
+const showProductImageModal = ref(false);
 const showProductModal = ref(false);
 const selectedFilter = ref({
   name: 'All Categories',

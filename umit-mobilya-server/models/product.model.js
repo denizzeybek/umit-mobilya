@@ -15,8 +15,10 @@ const productSchema = new mongoose.Schema({
     default: 'TRY',
   },
   imageUrl: {
-    type: String,
-    default: 'https://picsum.photos/536/354',
+    type: String
+  },
+  imageName: {
+    type: String
   },
   sizes: {
     type: String,

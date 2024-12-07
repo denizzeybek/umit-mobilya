@@ -36,6 +36,7 @@ declare module 'vue' {
     PickList: typeof import('primevue/picklist')['default']
     ProfileBadge: typeof import('./src/components/ui/local/ProfileBadge.vue')['default']
     ProfileMenu: typeof import('./src/components/ui/local/ProfileMenu.vue')['default']
+    ProgressBar: typeof import('primevue/progressbar')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/ui/global/Select.vue')['default']

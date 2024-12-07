@@ -75,9 +75,42 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
       });
     },
     async create(payload: IProductDTO) {
+      const { name, image, price, sizes, description, category } = payload;
       return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('image', image);
+        formData.append('price', price.toString());
+        formData.append('sizes', sizes);
+        formData.append('description', description);
+        formData.append('category', category.toString());
+
         axios
-          .post('/products', payload)
+          .post('/products', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    async createImage(payload: any) {
+      return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('image', payload.image);
+        formData.append('caption', payload.caption);
+
+        axios
+          .post('/products/image', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
           .then((response) => {
             resolve(response);
           })
@@ -147,9 +180,7 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           });
       });
     },
-    async setCurrentProductBasket(
-      modules: IProductModule[],
-    ) {
+    async setCurrentProductBasket(modules: IProductModule[]) {
       // update:{ productId: string, updateModule: IProductModuleUpdateDTO },
       this.currentProductBasket = modules;
       this.currentProductTotal = {

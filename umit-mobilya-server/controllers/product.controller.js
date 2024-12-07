@@ -1,74 +1,94 @@
 // controllers/productController.js
 const mongoose = require('mongoose');
 const Product = require('../models/product.model');
+const crypto = require('crypto');
+const sharp = require('sharp');
+const dotenv = require('dotenv');
+
+const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+
+dotenv.config(); // En üstte olmalı!
 
 const getProducts = async (payload) => {
   try {
-    // Create a query object
+    // Build query object from payload
     const { id, name, category } = payload || {};
-    const query = {};
+    const query = {
+      ...(id && { _id: id }),
+      ...(name && { name: new RegExp(name, 'i') }),
+      ...(category && { category }),
+    };
 
-    if (id) {
-      query._id = id;
-    }
-
-    if (name) {
-      query.name = new RegExp(name, 'i');
-    }
-
-    if (category) {
-      query.category = category; // Match by exact category._id
-    }
+    // Fetch products with necessary population
     const products = await Product.find(query)
       .populate({
         path: 'modules.productId',
-        populate: { path: 'category' }, // modules.productId.category'yi populate et
+        populate: { path: 'category' },
       })
       .populate('category');
 
-    const newProduct = products.map((product) => {
-      const modules = product.modules.map((module) => {
+    // Helper function to generate signed URLs
+    const generateImageUrl = async (key) => {
+      if (!key) return null;
+      const params = { Bucket: process.env.BUCKET_NAME, Key: key };
+      const command = new GetObjectCommand(params);
+      return await getSignedUrl(s3, command, { expiresIn: 3600 });
+    };
+
+    // Process products and modules
+    const result = await Promise.all(
+      products.map(async (product) => {
+        const imageUrl = await generateImageUrl(product.imageName);
+
+        const modules = await Promise.all(
+          product.modules.map(async (module) => {
+            const moduleImageUrl = await generateImageUrl(module.productId?.imageName);
+
+            return {
+              _id: module.productId?._id,
+              name: module.productId?.name,
+              price: module.productId?.price,
+              currency: module.productId?.currency,
+              imageUrl: moduleImageUrl,
+              quantity: module.quantity,
+              sizes: module.productId?.sizes,
+              description: module.productId?.description,
+              category: module.productId?.category,
+            };
+          })
+        );
+
+        // Calculate total price
+        const moduleTotalPrice = modules.reduce(
+          (sum, module) => sum + (module.price || 0) * (module.quantity || 1),
+          0
+        );
+        const totalPrice = (product.price || 0) + moduleTotalPrice;
+
         return {
-          _id: module.productId._id,
-          name: module.productId.name,
-          price: module.productId.price,
-          currency: module.productId.currency,
-          imageUrl: module.productId.imageUrl,
-          quantity: module.quantity,
-          sizes: module.productId.sizes,
-          description: module.productId.description,
-          category: module.productId.category,
+          _id: product._id,
+          name: product.name,
+          price: product.price,
+          currency: product.currency,
+          imageUrl,
+          sizes: product.sizes,
+          description: product.description,
+          category: product.category,
+          quantity: product.quantity,
+          modules,
+          totalPrice,
         };
-      });
+      })
+    );
 
-      // Calculate total price: product price + sum of module prices
-      const moduleTotalPrice = modules.reduce((sum, module) => {
-        return sum + (module.price || 0) * (module.quantity || 1);
-      }, 0);
-
-      const totalPrice = (product.price || 0) + moduleTotalPrice;
-
-      return {
-        _id: product._id,
-        name: product.name,
-        price: product.price,
-        currency: product.currency,
-        imageUrl: product.imageUrl,
-        sizes: product.sizes,
-        description: product.description,
-        category: product.category,
-        quantity: product.quantity,
-        modules,
-        totalPrice, // Add totalPrice field
-      };
-    });
-
-    return newProduct;
+    return result;
   } catch (error) {
     console.error('Error in getProducts:', error);
     throw new Error('Failed to fetch products');
   }
 };
+
 
 // Tüm ürünleri listeleme
 exports.getAllProducts = async (req, res) => {
@@ -110,16 +130,47 @@ exports.filterProducts = async (req, res) => {
   }
 };
 
+const randomImageName = (bytes = 32) => {
+  return crypto.randomBytes(bytes).toString('hex');
+};
+
 // Yeni ürün ekleme
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.ACCESS_KEY;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey,
+  },
+  region: bucketRegion,
+});
+
 exports.createProduct = async (req, res) => {
   try {
+    const buffer = await sharp(req.file.buffer)
+      .resize({ height: 600, width: 900, fit: 'inside' })
+      .toBuffer();
+
+    const imageName = randomImageName();
+
+    const command = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: imageName,
+      Body: buffer,
+      ContentType: req.file.mimetype,
+    });
+
+    await s3.send(command);
+
     const {
       name,
       price,
       currency,
       sizes,
       description,
-      imageUrl,
       quantity,
       category,
       modules,
@@ -133,11 +184,11 @@ exports.createProduct = async (req, res) => {
 
     const product = new Product({
       name,
-      price,
+      price: Number(price),
       currency,
       sizes,
       description,
-      imageUrl,
+      imageName,
       category,
       quantity,
       modules,

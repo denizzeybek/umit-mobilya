@@ -8,14 +8,7 @@
   >
     <form class="flex flex-col gap-6" @submit="submitHandler">
       <div class="flex justify-center gap-4 flex-1">
-        <FileUpload
-          ref="fileupload"
-          mode="basic"
-          name="demo[]"
-          accept="image/*"
-          :maxFileSize="1000000"
-          :customUpload="true"
-        />
+        <input type="file" accept="image/*" @change="fileSelected" />
       </div>
       <div class="flex gap-4 flex-1">
         <FInput
@@ -75,7 +68,7 @@ import { useFToast } from '@/composables/useFToast';
 import { useProductsStore } from '@/stores/products';
 import { useCategoriesStore } from '@/stores/categories';
 import type { IProductDTO } from '@/interfaces/product/product.interface';
-
+import UploadImages from './UploadImages.vue';
 
 interface IProps {
   data?: any;
@@ -87,12 +80,12 @@ interface IEmits {
 }
 const emit = defineEmits<IEmits>();
 
-const { showSuccessMessage, showErrorMessage } = useFToast();
 const productsStore = useProductsStore();
 const categoriesStore = useCategoriesStore();
+const { showSuccessMessage, showErrorMessage } = useFToast();
 
 const open = defineModel<boolean>('open');
-const fileupload = ref();
+const selectedFile = ref<File | null>(null);
 
 const isEditing = computed(() => !!props.data);
 
@@ -126,19 +119,28 @@ const handleClose = () => {
   open.value = false;
 };
 
+// Dosya seçimi event handler'ı
+const fileSelected = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  console.log('input.files ', input.files);
+  if (input.files && input.files[0]) {
+    selectedFile.value = input.files[0];
+    console.log('Selected file:', selectedFile.value);
+  }
+};
+
 const submitHandler = handleSubmit(async (values) => {
   try {
-    const files = fileupload.value.files;
-    // console.log('files ', files);
     const payload = {
       name: values.name,
       price: values.price,
       sizes: values.sizes,
       description: values.description,
       category: values.category.value,
-      // imageUrl: 'https://via.placeholder.com/150',
+      image: selectedFile.value,
     } as IProductDTO;
     if (isEditing.value) {
+      delete payload.image;
       await productsStore.update(productsStore.currentProduct._id ,payload);
       showSuccessMessage('Product updated!');
     } else {
