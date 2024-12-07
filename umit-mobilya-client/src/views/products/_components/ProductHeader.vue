@@ -34,14 +34,14 @@ const menuItems = ref([
     label: 'Items',
     items: [
       {
-        label: 'Update Product',
+        label: 'Edit Product',
         icon: 'pi pi-cog',
         method: () => {
           emit('handleUpdateProduct');
         },
       },
       {
-        label: 'Update Modules',
+        label: 'Edit Modules',
         icon: 'pi pi-pencil',
         method: () => {
           emit('handleUpdateModal');

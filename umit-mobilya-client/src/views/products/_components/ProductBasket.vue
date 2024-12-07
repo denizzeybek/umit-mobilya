@@ -2,14 +2,10 @@
   <Card>
     <template #content>
       <section class="relative">
-        <div class="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto">
-          <div class="flex justify-center">
-            <FText as="h2" innerText="Shopping Cart" />
-          </div>
-
-          <div
-            class="grid grid-cols-1 min-[550px]:gap-6 border-t border-gray-200 py-6"
-          >
+        <div
+          class="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto flex flex-col gap-4"
+        >
+          <div class="grid grid-cols-1 min-[550px]:gap-6 rounded-xl py-6">
             <div
               class="flex items-center flex-col min-[550px]:flex-row gap-3 min-[550px]:gap-6 w-full max-xl:justify-center max-xl:max-w-xl max-xl:mx-auto"
             >

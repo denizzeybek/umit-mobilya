@@ -122,10 +122,8 @@ const handleClose = () => {
 // Dosya seçimi event handler'ı
 const fileSelected = (event: Event) => {
   const input = event.target as HTMLInputElement;
-  console.log('input.files ', input.files);
   if (input.files && input.files[0]) {
     selectedFile.value = input.files[0];
-    console.log('Selected file:', selectedFile.value);
   }
 };
 

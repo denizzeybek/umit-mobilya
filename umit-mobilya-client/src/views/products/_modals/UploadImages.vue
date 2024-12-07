@@ -170,7 +170,6 @@ const onSelectedFiles = (event) => {
   files.value.forEach((file) => {
     totalSize.value += parseInt(formatSize(file.size));
   });
-  console.log('files.value ', files.value)
   model.value = files.value;
 };
 
