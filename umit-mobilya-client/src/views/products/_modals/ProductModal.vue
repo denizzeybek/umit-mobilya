@@ -7,7 +7,7 @@
     :style="{ width: '50rem' }"
   >
     <form class="flex flex-col gap-6" @submit="submitHandler">
-      <div class="flex justify-center gap-4 flex-1">
+      <div v-if="!isEditing" class="flex justify-center gap-4 flex-1">
         <input type="file" accept="image/*" @change="fileSelected" />
       </div>
       <div class="flex gap-4 flex-1">

@@ -56,7 +56,7 @@ const menuItems = ref([
         },
       },
       {
-        label: 'Delete',
+        label: 'Delete Product',
         icon: 'pi pi-trash',
         method: async () => {
           await productsStore.remove(route.params.id.toString());

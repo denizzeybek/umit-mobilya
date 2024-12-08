@@ -17,6 +17,7 @@
           <img
             :src="slotProps.item"
             alt="slotProps.item.alt"
+            class="!max-h-[100px]"
           />
         </template>
       </Galleria>
@@ -54,14 +55,6 @@ import { useProductsStore } from '@/stores/products';
 const productsStore = useProductsStore();
 
 const productImages = computed(() => {
-  // const imageList = [];
-  // for (let i = 0; i < 5; i++) {
-  //   imageList.push({
-  //     image: productsStore.currentProduct?.imageUrl,
-  //   });
-  // }
-  console.log('productsStore.currentProduct?.imageListUrls ', productsStore.currentProduct?.imageListUrls)
-
   return productsStore.currentProduct?.imageListUrls;
 });
 
