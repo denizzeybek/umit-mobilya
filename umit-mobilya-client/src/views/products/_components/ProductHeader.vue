@@ -21,6 +21,7 @@ import { useProductsStore } from '@/stores/products';
 interface IEmits {
   (event: 'handleUpdateProduct'): void;
   (event: 'handleUpdateModal'): void;
+  (event: 'handleImagesModal'): void;
 }
 const emit = defineEmits<IEmits>();
 
@@ -45,6 +46,13 @@ const menuItems = ref([
         icon: 'pi pi-pencil',
         method: () => {
           emit('handleUpdateModal');
+        },
+      },
+      {
+        label: 'Add Images List',
+        icon: 'pi pi-plus',
+        method: () => {
+          emit('handleImagesModal');
         },
       },
       {

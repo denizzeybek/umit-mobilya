@@ -68,7 +68,6 @@ import { useFToast } from '@/composables/useFToast';
 import { useProductsStore } from '@/stores/products';
 import { useCategoriesStore } from '@/stores/categories';
 import type { IProductDTO } from '@/interfaces/product/product.interface';
-import UploadImages from './UploadImages.vue';
 
 interface IProps {
   data?: any;

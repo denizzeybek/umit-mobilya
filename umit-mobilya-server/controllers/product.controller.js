@@ -5,7 +5,11 @@ const crypto = require('crypto');
 const sharp = require('sharp');
 const dotenv = require('dotenv');
 
-const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 dotenv.config(); // En üstte olmalı!
@@ -40,10 +44,17 @@ const getProducts = async (payload) => {
     const result = await Promise.all(
       products.map(async (product) => {
         const imageUrl = await generateImageUrl(product.imageName);
+        const imageListUrls = await Promise.all(
+          product.imageNameList.map(async (imageName) => {
+            return await generateImageUrl(imageName); // await the async function
+          })
+        );
 
         const modules = await Promise.all(
           product.modules.map(async (module) => {
-            const moduleImageUrl = await generateImageUrl(module.productId?.imageName);
+            const moduleImageUrl = await generateImageUrl(
+              module.productId?.imageName,
+            );
 
             return {
               _id: module.productId?._id,
@@ -56,13 +67,13 @@ const getProducts = async (payload) => {
               description: module.productId?.description,
               category: module.productId?.category,
             };
-          })
+          }),
         );
 
         // Calculate total price
         const moduleTotalPrice = modules.reduce(
           (sum, module) => sum + (module.price || 0) * (module.quantity || 1),
-          0
+          0,
         );
         const totalPrice = (product.price || 0) + moduleTotalPrice;
 
@@ -72,14 +83,16 @@ const getProducts = async (payload) => {
           price: product.price,
           currency: product.currency,
           imageUrl,
+          imageListUrls,
           sizes: product.sizes,
           description: product.description,
           category: product.category,
           quantity: product.quantity,
           modules,
           totalPrice,
+          imageNameList: product.imageNameList,
         };
-      })
+      }),
     );
 
     return result;
@@ -88,7 +101,6 @@ const getProducts = async (payload) => {
     throw new Error('Failed to fetch products');
   }
 };
-
 
 // Tüm ürünleri listeleme
 exports.getAllProducts = async (req, res) => {
@@ -192,11 +204,75 @@ exports.createProduct = async (req, res) => {
       category,
       quantity,
       modules,
+      imageNameList: [],
     });
     const newProduct = await product.save();
     res.status(201).json(newProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+exports.uploadMultipleImages = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(400).json({ message: 'Ürün bulunamadı' });
+    }
+    // Ensure files are uploaded
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: 'No files uploaded' });
+    }
+
+    // Process and upload each file
+    const imageUploadPromises = req.files.map(async (file) => {
+      console.log('file ', file);
+      // Resize and format image
+      const buffer = await sharp(file.buffer)
+        .resize({ height: 600, width: 900, fit: 'inside' })
+        .toBuffer()
+        .catch((error) => {
+          console.error('Error processing image with sharp:', error);
+          throw error;
+        });
+
+      const imageName = randomImageName();
+
+      // Upload image to S3
+      const command = new PutObjectCommand({
+        Bucket: bucketName,
+        Key: imageName,
+        Body: buffer,
+        ContentType: file.mimetype,
+      });
+
+      await s3.send(command);
+
+      return imageName; // Return uploaded image name
+    });
+
+    // Wait for all images to be uploaded
+    const newImageNames = await Promise.all(imageUploadPromises);
+
+    // Update the product's imageNameList
+    if (!Array.isArray(product.imageNameList)) {
+      product.imageNameList = []; // Initialize as an empty array
+    }
+    product.imageNameList = [...product.imageNameList, ...newImageNames];
+    await product.save();
+
+    res.status(200).json({
+      message: 'Product images updated successfully',
+      imageNameList: product.imageNameList,
+    });
+  } catch (error) {
+    console.error('Error updating product images:', error);
+    res.status(500).json({
+      message: 'Failed to update product images',
+      error: error.message,
+    });
   }
 };
 
@@ -212,7 +288,6 @@ exports.updateProduct = async (req, res) => {
     imageUrl,
     quantity,
     category,
-    modules,
   } = req.body;
 
   try {

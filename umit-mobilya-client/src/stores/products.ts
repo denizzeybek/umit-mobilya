@@ -99,14 +99,18 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
           });
       });
     },
-    async createImage(payload: any) {
+    async createImages(payload: any) {
       return new Promise((resolve, reject) => {
         const formData = new FormData();
-        formData.append('image', payload.image);
-        formData.append('caption', payload.caption);
+
+        if (payload.images) {
+          Array.from(payload.images).forEach((image: any) => {
+            formData.append('image', image); // Append each image
+          });
+        }
 
         axios
-          .post('/products/image', formData, {
+          .put(`/products/create-images/${payload.id}`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },

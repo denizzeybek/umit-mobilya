@@ -8,14 +8,14 @@
       >
         <template #item="slotProps">
           <img
-            :src="slotProps.item.image"
+            :src="slotProps.item"
             alt="slotProps.item.alt"
             style="width: 100%"
           />
         </template>
         <template #thumbnail="slotProps">
           <img
-            :src="slotProps.item.image"
+            :src="slotProps.item"
             alt="slotProps.item.alt"
           />
         </template>
@@ -54,13 +54,15 @@ import { useProductsStore } from '@/stores/products';
 const productsStore = useProductsStore();
 
 const productImages = computed(() => {
-  const imageList = [];
-  for (let i = 0; i < 5; i++) {
-    imageList.push({
-      image: productsStore.currentProduct?.imageUrl,
-    });
-  }
-  return imageList;
+  // const imageList = [];
+  // for (let i = 0; i < 5; i++) {
+  //   imageList.push({
+  //     image: productsStore.currentProduct?.imageUrl,
+  //   });
+  // }
+  console.log('productsStore.currentProduct?.imageListUrls ', productsStore.currentProduct?.imageListUrls)
+
+  return productsStore.currentProduct?.imageListUrls;
 });
 
 const responsiveOptions = ref([

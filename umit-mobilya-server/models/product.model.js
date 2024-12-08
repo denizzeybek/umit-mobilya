@@ -15,18 +15,24 @@ const productSchema = new mongoose.Schema({
     default: 'TRY',
   },
   imageUrl: {
-    type: String
+    type: String,
   },
   imageName: {
-    type: String
+    type: String,
   },
   sizes: {
     type: String,
     required: true,
   },
+
   description: {
     type: String,
   },
+  imageNameList: [
+    {
+      type: String, // Just the names of images
+    },
+  ],
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category', // Referencing the Category model

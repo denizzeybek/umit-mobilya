@@ -13,6 +13,7 @@ const {
   removeModule,
   updateProduct,
   updateProductModules,
+  uploadMultipleImages,
 } = require('../controllers/product.controller');
 const { requireAuth } = require('../middleware/auth.middleware');
 
@@ -31,6 +32,10 @@ router.post('/filter', filterProducts);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 router.post('/', requireAuth, upload.single('image'), createProduct);
+
+// Ürün image list ekleme
+// router.put('/create-images/:id', requireAuth, upload.single('images'),  uploadMultipleImages);
+router.put('/create-images/:id', requireAuth, upload.array('image', 20),  uploadMultipleImages);
 
 // Ürün güncelleme
 router.put('/:id', requireAuth, updateProduct);

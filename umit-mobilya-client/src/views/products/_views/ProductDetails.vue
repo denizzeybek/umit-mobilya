@@ -4,6 +4,7 @@
       <ProductHeader
         @handleUpdateModal="showUpdateModal = true"
         @handleUpdateProduct="showProductModal = true"
+        @handleImagesModal="showProductImagesModal = true"
       />
     </template>
     <template #details>
@@ -23,8 +24,13 @@
   <ProductModal
     v-if="showProductModal"
     v-model:open="showProductModal"
-    @fetchProducts="fetchAll"
     :data="productsStore.currentProduct"
+    @fetchProducts="fetchAll"
+  />
+  <ProductImagesModal
+    v-if="showProductImagesModal"
+    v-model:open="showProductImagesModal"
+    @fetchProducts="fetchAll"
   />
 </template>
 
@@ -38,12 +44,14 @@ import ProductCarousel from '@/views/products/_components/ProductCarousel.vue';
 import ProductHeader from '@/views/products/_components/ProductHeader.vue';
 import ProductModules from '@/views/products/_components/ProductModules.vue';
 import ProductModal from '@/views/products/_modals/ProductModal.vue';
+import ProductImagesModal from '@/views/products/_modals/ProductImagesModal.vue';
 import UpdateModulesModal from '@/views/products/_modals/UpdateModulesModal.vue';
 
 const productsStore = useProductsStore();
 const route = useRoute();
 
 const showProductModal = ref(false);
+const showProductImagesModal = ref(false);
 const showUpdateModal = ref(false);
 const updateKey = ref(0);
 
