@@ -69,7 +69,6 @@ import MegaMenu from 'primevue/megamenu';
 import { ERouteNames } from '@/router/routeNames.enum';
 import { useUsersStore } from '@/stores/users';
 import { useAuthStore } from '@/stores/auth';
-import CategoriesList from '@/views/categories/_views/CategoriesList.vue';
 
 const authStore = useAuthStore();
 const usersStore = useUsersStore();

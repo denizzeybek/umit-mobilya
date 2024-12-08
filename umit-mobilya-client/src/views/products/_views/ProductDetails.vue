@@ -9,7 +9,7 @@
     </template>
     <template #details>
       <div class="flex flex-col gap-4">
-        <ProductCarousel />
+        <ProductGalleria />
         <ProductModules v-if="hasModules" :key="updateKey" />
       </div>
     </template>
@@ -40,7 +40,7 @@ import { useProductsStore } from '@/stores/products';
 import { computed, onMounted, ref, watch } from 'vue';
 import ProductDetailLayout from '@/layouts/product/ProductDetailLayout.vue';
 import ProductBasket from '@/views/products/_components/ProductBasket.vue';
-import ProductCarousel from '@/views/products/_components/ProductCarousel.vue';
+import ProductGalleria from '@/views/products/_components/ProductGalleria.vue';
 import ProductHeader from '@/views/products/_components/ProductHeader.vue';
 import ProductModules from '@/views/products/_components/ProductModules.vue';
 import ProductModal from '@/views/products/_modals/ProductModal.vue';

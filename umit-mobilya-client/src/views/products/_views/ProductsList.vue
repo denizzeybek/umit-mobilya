@@ -8,7 +8,11 @@
         v-model="selectedFilter"
         class="!h-full"
       />
-      <FInput name="filterName" v-model="typedName" placeholder="Enter Product Name"/>
+      <FInput
+        name="filterName"
+        v-model="typedName"
+        placeholder="Enter Product Name"
+      />
       <Button
         v-if="usersStore.isAuthenticated"
         label="Add Product"
@@ -21,7 +25,7 @@
     >
       <Card
         v-for="(product, idx) in productList"
-        :key="idx"
+        :key="product._id"
         @click="
           router.push({
             name: ERouteNames.ProductDetails,
@@ -31,7 +35,19 @@
         class="cursor-pointer"
       >
         <template #header>
-          <img :src="product.imageUrl" alt="product image" />
+          <Skeleton
+            v-if="imageLoadingStates[product._id]"
+            width="328px"
+            height="180px"
+          />
+          <img
+            v-else
+            :src="product.imageUrl"
+            class="w-full max-h-[180px]"
+            alt="product image"
+            @load="handleImageLoad(product._id)"
+            @error="handleImageError(product._id)"
+          />
         </template>
         <template #content>
           <ProductItemContent :product="product" />
@@ -71,12 +87,25 @@ const productsStore = useProductsStore();
 const router = useRouter();
 const { showErrorMessage } = useFToast();
 
+const isLoading = ref(false);
 const showProductModal = ref(false);
 const selectedFilter = ref({
   name: 'All Categories',
   value: null,
 });
 const typedName = ref();
+
+// Her ürün için yükleme durumlarını takip etmek için bir obje
+const imageLoadingStates = ref<Record<string, boolean>>({});
+
+// Resim yüklenirken skeleton gösterimi için
+const handleImageLoad = (id: string) => {
+  imageLoadingStates.value[id] = false; // Yükleme tamamlandı
+};
+
+const handleImageError = (id: string) => {
+  imageLoadingStates.value[id] = false; // Hata durumunda da skeleton kaldırılır
+};
 
 const productList = computed(() => {
   return productsStore.list;
@@ -93,6 +122,7 @@ const categoryTypeOptions = computed(() => {
 
 const filterProducts = async () => {
   try {
+    isLoading.value = true;
     const payload = {} as IProductFilterDTO;
     if (typedName.value) {
       payload.name = typedName.value;
@@ -101,6 +131,15 @@ const filterProducts = async () => {
       payload.category = selectedFilter.value.value;
     }
     await productsStore.filter(payload);
+
+    // Ürünler yüklendikten sonra tüm ürünler için yükleme durumunu true olarak ayarla
+    productsStore.list?.forEach((product) => {
+      imageLoadingStates.value[product._id!] = true;
+    });
+
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 750);
   } catch (error: any) {
     showErrorMessage(error?.response?.data?.message as any);
   }
@@ -110,7 +149,8 @@ watch([selectedFilter, typedName], filterProducts, { immediate: true });
 
 onMounted(async () => {
   await categoriesStore.fetch();
+  productsStore.list?.forEach((product) => {
+    imageLoadingStates.value[product._id!] = true;
+  });
 });
 </script>
-
-<style scoped></style>

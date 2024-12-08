@@ -21,29 +21,6 @@
           />
         </template>
       </Galleria>
-
-      <!-- <Carousel
-        :value="productImages"
-        :numVisible="1"
-        :numScroll="1"
-        :responsiveOptions="responsiveOptions"
-        circular
-        :autoplayInterval="7000"
-      >
-        <template #item="slotProps">
-          <div
-            class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4"
-          >
-            <div class="relative mx-auto">
-              <img
-                :src="slotProps.data.image"
-                alt="product-detail"
-                class="w-full rounded-md lg:h-[530px]"
-              />
-            </div>
-          </div>
-        </template>
-      </Carousel> -->
     </template>
   </Card>
 </template>
@@ -55,7 +32,10 @@ import { useProductsStore } from '@/stores/products';
 const productsStore = useProductsStore();
 
 const productImages = computed(() => {
-  return productsStore.currentProduct?.imageListUrls;
+  return [
+    ...[productsStore.currentProduct?.imageUrl],
+    ...productsStore.currentProduct?.imageListUrls,
+  ] || [];
 });
 
 const responsiveOptions = ref([

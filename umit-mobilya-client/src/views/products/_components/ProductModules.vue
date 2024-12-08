@@ -51,10 +51,12 @@ import { useFToast } from '@/composables/useFToast';
 import type { IProductModuleUpdateDTO } from '@/interfaces/product/product.interface';
 import { useRoute } from 'vue-router';
 import ProductItemContent from './ProductItemContent.vue';
+import { useUsersStore } from '@/stores/users';
 
-const productsStore = useProductsStore();
 const { showErrorMessage } = useFToast();
 const route = useRoute();
+const usersStore = useUsersStore();
+const productsStore = useProductsStore();
 
 const validationSchema = object({
   modules: array()
@@ -112,6 +114,7 @@ const submitHandler = handleSubmit(async (values) => {
 
 const updateModules = async () => {
   try {
+    if (!usersStore.isAuthenticated) return;
     const payload = {
       modules: modules.value.map((module) => ({
         productId: module.id,
