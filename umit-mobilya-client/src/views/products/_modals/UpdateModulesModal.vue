@@ -8,12 +8,17 @@
   >
     <Splitter class="lg:h-full" layout="horizontal">
       <SplitterPanel class="flex flex-col gap-2 p-2 !overflow-y-auto">
-        <div class="flex justify-end">
+        <div class="flex justify-end gap-2">
           <FSelect
             name="filterCategory"
             placeholder="Choose Category Name"
             :options="categoryTypeOptions"
             v-model="selectedFilter"
+          />
+          <FInput
+            name="filterName"
+            v-model="typedName"
+            placeholder="Enter Product Name"
           />
         </div>
         <template v-for="(product, idx) in productsList" :key="idx">
@@ -59,6 +64,7 @@ const categoriesStore = useCategoriesStore();
 const open = defineModel<boolean>('open');
 const { showSuccessMessage, showErrorMessage } = useFToast();
 
+const typedName = ref();
 const selectedFilter = ref({
   name: 'All Categories',
   value: null,
@@ -106,6 +112,9 @@ const onModuleButtonClick = async (event) => {
 const filterProducts = async () => {
   try {
     const payload = {} as IProductFilterDTO;
+    if (typedName.value) {
+      payload.name = typedName.value;
+    }
     if (selectedFilter.value.value) {
       payload.category = selectedFilter.value.value;
     }
@@ -115,7 +124,7 @@ const filterProducts = async () => {
   }
 };
 
-watch(selectedFilter, filterProducts, { immediate: true });
+watch([selectedFilter, typedName], filterProducts, { immediate: true });
 
 onMounted(async () => {
   await categoriesStore.fetch();

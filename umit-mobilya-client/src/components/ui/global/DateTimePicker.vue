@@ -4,7 +4,8 @@
     <div class="flex items-center gap-1">
       <Button v-if="showPrevNextButtons" @click="handleWeek(EWeek.PREV)" type="button" icon="pi pi-angle-left" />
       <DatePicker
-        v-model="value as any"
+        :value="value"
+        @update:value="(newValue) => (value as any).value = newValue"
         :id="id"
         :data-error="!!errorMessage"
         :data-valid="isValid"

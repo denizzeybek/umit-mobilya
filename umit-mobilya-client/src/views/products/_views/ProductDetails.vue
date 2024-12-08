@@ -5,6 +5,7 @@
         @handleUpdateModal="showUpdateModal = true"
         @handleUpdateProduct="showProductModal = true"
         @handleImagesModal="showProductImagesModal = true"
+        @handleEditImagesModal="showProductEditImagesModal = true"
       />
     </template>
     <template #details>
@@ -17,10 +18,7 @@
       <ProductBasket :hasModules="hasModules" />
     </template>
   </ProductDetailLayout>
-  <UpdateModulesModal
-    v-if="showUpdateModal"
-    v-model:open="showUpdateModal"
-  />
+  <UpdateModulesModal v-if="showUpdateModal" v-model:open="showUpdateModal" />
   <ProductModal
     v-if="showProductModal"
     v-model:open="showProductModal"
@@ -30,6 +28,11 @@
   <ProductImagesModal
     v-if="showProductImagesModal"
     v-model:open="showProductImagesModal"
+    @fetchProducts="fetchAll"
+  />
+  <ProductEditImagesModal
+    v-if="showProductEditImagesModal"
+    v-model:open="showProductEditImagesModal"
     @fetchProducts="fetchAll"
   />
 </template>
@@ -46,6 +49,7 @@ import ProductModules from '@/views/products/_components/ProductModules.vue';
 import ProductModal from '@/views/products/_modals/ProductModal.vue';
 import ProductImagesModal from '@/views/products/_modals/ProductImagesModal.vue';
 import UpdateModulesModal from '@/views/products/_modals/UpdateModulesModal.vue';
+import ProductEditImagesModal from '@/views/products/_modals/ProductEditImagesModal.vue';
 
 const productsStore = useProductsStore();
 const route = useRoute();
@@ -53,6 +57,7 @@ const route = useRoute();
 const showProductModal = ref(false);
 const showProductImagesModal = ref(false);
 const showUpdateModal = ref(false);
+const showProductEditImagesModal = ref(false);
 const updateKey = ref(0);
 
 const hasModules = computed(

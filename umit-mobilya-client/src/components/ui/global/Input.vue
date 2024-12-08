@@ -14,7 +14,8 @@
         class="!min-w-[40px]"
       />
       <InputText
-        v-model="value as unknown as string"
+        :value="value"
+        @update:value="(newValue) => (value as any).value = newValue"
         :id="id"
         :data-error="!!errorMessage"
         :data-valid="isValid"

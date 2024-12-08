@@ -1,4 +1,4 @@
-import type { ICategory } from "../category/category.interface";
+import type { ICategory } from '../category/category.interface';
 
 export interface IProductModule {
   _id: string;
@@ -20,6 +20,9 @@ export interface IProduct {
   totalPrice: number;
   currency: string;
   imageUrl: string;
+  imageUrlList?: string[];
+  imageName?: string;
+  imageNameList?: string[];
   sizes: string;
   description: string;
   category: ICategory;

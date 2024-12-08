@@ -14,6 +14,14 @@ const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 dotenv.config(); // En üstte olmalı!
 
+// Helper function to generate signed URLs
+const generateImageUrl = async (key) => {
+  if (!key) return null;
+  const params = { Bucket: process.env.BUCKET_NAME, Key: key };
+  const command = new GetObjectCommand(params);
+  return await getSignedUrl(s3, command, { expiresIn: 3600 });
+};
+
 const getProducts = async (payload) => {
   try {
     // Build query object from payload
@@ -32,22 +40,15 @@ const getProducts = async (payload) => {
       })
       .populate('category');
 
-    // Helper function to generate signed URLs
-    const generateImageUrl = async (key) => {
-      if (!key) return null;
-      const params = { Bucket: process.env.BUCKET_NAME, Key: key };
-      const command = new GetObjectCommand(params);
-      return await getSignedUrl(s3, command, { expiresIn: 3600 });
-    };
-
     // Process products and modules
     const result = await Promise.all(
       products.map(async (product) => {
-        const imageUrl = await generateImageUrl(product.imageName);
-        const imageListUrls = await Promise.all(
+        const imageName = product.imageName;
+        const imageUrl = await generateImageUrl(imageName);
+        const imageUrlList = await Promise.all(
           product.imageNameList.map(async (imageName) => {
             return await generateImageUrl(imageName); // await the async function
-          })
+          }),
         );
 
         const modules = await Promise.all(
@@ -82,8 +83,9 @@ const getProducts = async (payload) => {
           name: product.name,
           price: product.price,
           currency: product.currency,
+          imageName,
           imageUrl,
-          imageListUrls,
+          imageUrlList,
           sizes: product.sizes,
           description: product.description,
           category: product.category,

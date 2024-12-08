@@ -32,10 +32,12 @@ import { useProductsStore } from '@/stores/products';
 const productsStore = useProductsStore();
 
 const productImages = computed(() => {
-  return [
-    ...[productsStore.currentProduct?.imageUrl],
-    ...productsStore.currentProduct?.imageListUrls,
-  ] || [];
+  return (
+    [
+      ...[productsStore.currentProduct?.imageUrl],
+      ...productsStore.currentProduct?.imageUrlList,
+    ] || []
+  );
 });
 
 const responsiveOptions = ref([

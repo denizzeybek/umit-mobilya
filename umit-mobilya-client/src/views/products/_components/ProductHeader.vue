@@ -22,6 +22,7 @@ interface IEmits {
   (event: 'handleUpdateProduct'): void;
   (event: 'handleUpdateModal'): void;
   (event: 'handleImagesModal'): void;
+  (event: 'handleEditImagesModal'): void;
 }
 const emit = defineEmits<IEmits>();
 
@@ -53,6 +54,13 @@ const menuItems = ref([
         icon: 'pi pi-plus',
         method: () => {
           emit('handleImagesModal');
+        },
+      },
+      {
+        label: 'Edit Images List',
+        icon: 'pi pi-pencil',
+        method: () => {
+          emit('handleEditImagesModal');
         },
       },
       {
