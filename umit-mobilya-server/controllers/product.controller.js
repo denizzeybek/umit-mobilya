@@ -9,10 +9,24 @@ const {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
+  DeleteObjectCommand,
 } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 dotenv.config(); // En üstte olmalı!
+
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.ACCESS_KEY;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey,
+  },
+  region: bucketRegion,
+});
 
 // Helper function to generate signed URLs
 const generateImageUrl = async (key) => {
@@ -149,18 +163,6 @@ const randomImageName = (bytes = 32) => {
 };
 
 // Yeni ürün ekleme
-const bucketName = process.env.BUCKET_NAME;
-const bucketRegion = process.env.BUCKET_REGION;
-const accessKey = process.env.ACCESS_KEY;
-const secretAccessKey = process.env.SECRET_ACCESS_KEY;
-
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: accessKey,
-    secretAccessKey: secretAccessKey,
-  },
-  region: bucketRegion,
-});
 
 exports.createProduct = async (req, res) => {
   try {
@@ -168,7 +170,8 @@ exports.createProduct = async (req, res) => {
       .resize({ height: 600, width: 900, fit: 'inside' })
       .toBuffer();
 
-    const imageName = randomImageName();
+    const imageInitialName = req.file.originalname.split('.')[0];
+    const imageName = `${imageInitialName}-${randomImageName()}`;
 
     const command = new PutObjectCommand({
       Bucket: bucketName,
@@ -230,7 +233,6 @@ exports.uploadMultipleImages = async (req, res) => {
 
     // Process and upload each file
     const imageUploadPromises = req.files.map(async (file) => {
-      console.log('file ', file);
       // Resize and format image
       const buffer = await sharp(file.buffer)
         .resize({ height: 600, width: 900, fit: 'inside' })
@@ -240,7 +242,8 @@ exports.uploadMultipleImages = async (req, res) => {
           throw error;
         });
 
-      const imageName = randomImageName();
+      const imageInitialName = file.originalname.split('.')[0];
+      const imageName = `${imageInitialName}-${randomImageName()}`;
 
       // Upload image to S3
       const command = new PutObjectCommand({
@@ -391,6 +394,49 @@ exports.deleteProduct = async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
 
     res.json({ message: 'Ürün silindi' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.deleteImage = async (req, res) => {
+  try {
+    // Ürünü bulma
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Ürün bulunamadı' });
+    }
+
+    const { imageName } = req.body;
+    if (!imageName) {
+      return res
+        .status(400)
+        .json({ message: 'Silinecek görüntü adı belirtilmedi' });
+    }
+
+    const params = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: imageName,
+    };
+
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
+
+    const updatedImageNameList = product.imageNameList.filter(
+      (name) => name !== imageName,
+    );
+
+    if (updatedImageNameList.length === product.imageNameList.length) {
+      return res
+        .status(404)
+        .json({ message: 'Belirtilen görüntü adı bulunamadı' });
+    }
+
+    // Güncellenmiş listeyi kaydetme
+    product.imageNameList = updatedImageNameList;
+    await product.save();
+
+    res.json({ message: 'Görüntü başarıyla silindi' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

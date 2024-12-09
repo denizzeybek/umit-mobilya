@@ -14,6 +14,7 @@ const {
   updateProduct,
   updateProductModules,
   uploadMultipleImages,
+  deleteImage,
 } = require('../controllers/product.controller');
 const { requireAuth } = require('../middleware/auth.middleware');
 
@@ -45,6 +46,9 @@ router.put('/update-modules/:id', requireAuth, updateProductModules);
 
 // Ürün silme
 router.delete('/:id', requireAuth, deleteProduct);
+
+// delete image from s3
+router.post('/delete-image/:id', requireAuth, deleteImage);
 
 // module ekleme
 router.post('/add-module', requireAuth, addModule);

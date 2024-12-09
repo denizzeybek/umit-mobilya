@@ -2,6 +2,7 @@ import { EStoreNames } from '@/stores/storeNames.enum';
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import type {
+  IProductDeleteImageDTO,
   IProductDTO,
   IProductFilterDTO,
   IProductModuleUpdateDTO,
@@ -195,6 +196,19 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
         currency: this.currentProductBasket[0].currency,
       };
       // await this.updateModule(update.productId, update.updateModule);
+    },
+    async deleteImage(payload: IProductDeleteImageDTO) {
+      const { id, imageName } = payload;
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`/products/delete-image/${id}`, { imageName })
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
     },
     resetBasket() {
       this.currentProductBasket = [];

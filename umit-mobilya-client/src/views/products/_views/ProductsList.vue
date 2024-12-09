@@ -139,7 +139,7 @@ const filterProducts = async () => {
 
     setTimeout(() => {
       isLoading.value = false;
-    }, 750);
+    }, 200);
   } catch (error: any) {
     showErrorMessage(error?.response?.data?.message as any);
   }

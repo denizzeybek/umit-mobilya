@@ -50,19 +50,23 @@ const menuItems = ref([
         },
       },
       {
-        label: 'Add Images List',
+        label: 'Add Images to Gallery',
         icon: 'pi pi-plus',
         method: () => {
           emit('handleImagesModal');
         },
       },
-      {
-        label: 'Edit Images List',
-        icon: 'pi pi-pencil',
-        method: () => {
-          emit('handleEditImagesModal');
-        },
-      },
+      ...(productsStore.currentProduct?.imageUrlList?.length
+        ? [
+            {
+              label: 'Delete Image From Gallery',
+              icon: 'pi pi-trash',
+              method: () => {
+                emit('handleEditImagesModal');
+              },
+            },
+          ]
+        : []),
       {
         label: 'Delete Product',
         icon: 'pi pi-trash',

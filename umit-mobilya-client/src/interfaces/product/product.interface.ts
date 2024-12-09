@@ -67,3 +67,8 @@ export interface IProductFilterDTO {
   category?: string;
   name?: string;
 }
+
+export interface IProductDeleteImageDTO {
+  id: string;
+  imageName: string;
+}

@@ -33,8 +33,11 @@
 import { computed, onMounted } from 'vue';
 import { useFToast } from '@/composables/useFToast';
 import { useProductsStore } from '@/stores/products';
+import { useRoute } from 'vue-router';
+import type { IProductDeleteImageDTO } from '@/interfaces/product/product.interface';
 
 const productsStore = useProductsStore();
+const route = useRoute();
 
 const open = defineModel<boolean>('open');
 const { showSuccessMessage, showErrorMessage } = useFToast();
@@ -59,9 +62,17 @@ const imagesList = computed(() => {
   });
 });
 
-const removeImage = (name: string) => {
-  // productsStore.removeImage(name);
-  showSuccessMessage('Image removed successfully');
+const removeImage = async (imageName: string) => {
+  try {
+    const payload = {
+      id: route.params.id,
+      imageName,
+    } as IProductDeleteImageDTO;
+    await productsStore.deleteImage(payload);
+    await productsStore.find(route.params.id?.toString());
+    showSuccessMessage('Image removed successfully');
+  } catch (error) {
+    showErrorMessage('Failed to remove image');
+  }
 };
-
 </script>
