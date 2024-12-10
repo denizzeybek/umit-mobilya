@@ -52,7 +52,7 @@ const buttonProps = computed(() => {
   if (props.type === EModuleItemButtonType.ADD) {
     return {
       icon: 'pi pi-plus',
-      label: 'Add',
+      label: 'Ekle',
       severity: 'contrast',
       method: () => {
         emit('handleModuleButtonClick', {
@@ -64,7 +64,7 @@ const buttonProps = computed(() => {
   } else if (props.type === EModuleItemButtonType.REMOVE) {
     return {
       icon: 'pi pi-minus',
-      label: 'Remove',
+      label: 'Sil',
       severity: 'danger',
       method: () => {
         emit('handleModuleButtonClick', {

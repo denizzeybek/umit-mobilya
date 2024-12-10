@@ -60,7 +60,7 @@
         <FText innerText="No option found" />
         <Button
           @click="addNewOption"
-          label="Add"
+          label="Ekle"
           icon="pi pi-plus"
           class="flex-1"
           outlined

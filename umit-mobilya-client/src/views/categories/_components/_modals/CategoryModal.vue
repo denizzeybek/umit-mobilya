@@ -2,7 +2,7 @@
   <Dialog
     v-model:visible="open"
     modal
-    :header="isEditing ? 'Update category' : 'Add category'"
+    :header="isEditing ? 'Kategori Editle' : 'Kategori Ekle'"
     class="!bg-f-secondary-purple lg:!w-[700px] !w-full"
     :style="{ width: '50rem' }"
   >
@@ -10,9 +10,9 @@
       <div class="flex gap-4 flex-1">
         <FInput
           class="grow"
-          label="Name"
+          label="Categori Adı"
           name="name"
-          placeholder="Enter name"
+          placeholder="Kategori adı girin"
         />
       </div>
       <div class="flex w-50 justify-center">
@@ -20,7 +20,7 @@
           :disabled="isSubmitting"
           :loading="isSubmitting"
           type="submit"
-          label="Save"
+          label="Kaydet"
         />
       </div>
     </form>
@@ -28,9 +28,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useForm } from 'vee-validate';
-import { string, object, number } from 'yup';
+import { string, object } from 'yup';
 import { useFToast } from '@/composables/useFToast';
 import { useCategoriesStore } from '@/stores/categories';
 import type { ICategoryDTO } from '@/interfaces/category/category.interface';
@@ -53,7 +53,7 @@ const open = defineModel<boolean>('open');
 const isEditing = computed(() => !!props.data);
 
 const validationSchema = object({
-  name: string().required().label('Name'),
+  name: string().required().label('Kategori Adı'),
 });
 
 const { handleSubmit, isSubmitting, resetForm } = useForm({
@@ -72,10 +72,10 @@ const submitHandler = handleSubmit(async (values) => {
     } as ICategoryDTO;
     if (isEditing.value) {
       // await categoriesStore.update(productsStore.currentProduct._id ,payload);
-      showSuccessMessage('Product updated!');
+      showSuccessMessage('Ürün güncellendi!');
     } else {
       await categoriesStore.create(payload);
-      showSuccessMessage('Product created!');
+      showSuccessMessage('Ürün Eklendi!');
     }
 
     emit('fetchCategories');

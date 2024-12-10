@@ -33,7 +33,7 @@
           <Button
             class="!w-full"
             outlined
-            label="Add new"
+            label="Ekle"
             icon="pi pi-plus"
             @click.stop="emit('addList')"
             type="button"

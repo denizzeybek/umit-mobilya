@@ -3,7 +3,7 @@
     <div class="flex justify-end items-center gap-2">
       <FSelect
         name="filterCategory"
-        placeholder="Choose Category Name"
+        placeholder="Kategori Adı Seçin"
         :options="categoryTypeOptions"
         v-model="selectedFilter"
         class="!h-full"
@@ -11,11 +11,11 @@
       <FInput
         name="filterName"
         v-model="typedName"
-        placeholder="Enter Product Name"
+        placeholder="Ürün ismi girin"
       />
       <Button
         v-if="usersStore.isAuthenticated"
-        label="Add Product"
+        label="Ürün Ekle"
         @click="showProductModal = true"
       />
     </div>
@@ -90,7 +90,7 @@ const { showErrorMessage } = useFToast();
 const isLoading = ref(false);
 const showProductModal = ref(false);
 const selectedFilter = ref({
-  name: 'All Categories',
+  name: 'Tüm Categoriler',
   value: null,
 });
 const typedName = ref();
@@ -117,7 +117,7 @@ const categoryTypeOptions = computed(() => {
     value: category._id,
   }));
 
-  return [{ name: 'All Categories', value: null }, ...categoriesList];
+  return [{ name: 'Tüm Categoriler', value: null }, ...categoriesList];
 });
 
 const filterProducts = async () => {

@@ -36,21 +36,21 @@ const menuItems = ref([
     label: 'Items',
     items: [
       {
-        label: 'Edit Product',
+        label: 'Ürünü Güncelle',
         icon: 'pi pi-cog',
         method: () => {
           emit('handleUpdateProduct');
         },
       },
       {
-        label: 'Edit Modules',
+        label: 'Modülleri Güncelle',
         icon: 'pi pi-pencil',
         method: () => {
           emit('handleUpdateModal');
         },
       },
       {
-        label: 'Add Images to Gallery',
+        label: 'Galeriye Resim Ekle',
         icon: 'pi pi-plus',
         method: () => {
           emit('handleImagesModal');
@@ -59,7 +59,7 @@ const menuItems = ref([
       ...(productsStore.currentProduct?.imageUrlList?.length
         ? [
             {
-              label: 'Delete Image From Gallery',
+              label: 'Galeriyi Düzenle',
               icon: 'pi pi-trash',
               method: () => {
                 emit('handleEditImagesModal');
@@ -68,7 +68,7 @@ const menuItems = ref([
           ]
         : []),
       {
-        label: 'Delete Product',
+        label: 'Ürünü Sil',
         icon: 'pi pi-trash',
         method: async () => {
           await productsStore.remove(route.params.id.toString());
@@ -86,6 +86,6 @@ const home = computed(() => {
 });
 
 const items = computed(() => {
-  return [{ label: 'Products' }, { label: 'Product Detail' }];
+  return [{ label: 'Ürünler' }, { label: 'Ürün Detayı' }];
 });
 </script>

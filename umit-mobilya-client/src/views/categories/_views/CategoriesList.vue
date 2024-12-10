@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
     <div class="flex justify-end">
-      <Button label="Add New Category" @click="showCategoryModal = true" />
+      <Button label="Kategori Ekle" @click="showCategoryModal = true" />
     </div>
 
     <Card>
@@ -29,7 +29,7 @@
               </IconField>
             </div>
           </template>
-          <Column field="name" header="Name"> </Column>
+          <Column field="name" header="Kategori Adı"> </Column>
           <!-- <Column field="createdAt" header="Created At"> </Column>
           <Column header="Actions">
             <template #body="slotProps">

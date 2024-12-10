@@ -163,22 +163,22 @@ const items = computed(() => {
     //   ],
     // },
     {
-      label: 'Products',
+      label: 'Ürünler',
       route: { name: ERouteNames.ProductsList },
     },
     {
-      label: 'About',
+      label: 'Hakkımızda',
       route: { name: ERouteNames.About },
     },
     {
-      label: 'Contact',
+      label: 'İletişim',
       route: { name: ERouteNames.Contact },
     },
     ...(!usersStore.isAuthenticated
       ? [
           
           {
-            label: 'Login',
+            label: 'Giriş Yap',
             route: { name: ERouteNames.Login },
           },
         ]
@@ -186,11 +186,11 @@ const items = computed(() => {
     ...(usersStore.isAuthenticated
       ? [
       {
-            label: 'Categories',
+            label: 'Categoriler',
             route: { name: ERouteNames.CategoriesList },
           },
           {
-            label: 'Logout',
+            label: 'Çıkış Yap',
             route: { name: ERouteNames.Login },
             method: () => {
               authStore.logout();

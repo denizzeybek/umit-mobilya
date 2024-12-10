@@ -2,7 +2,7 @@
   <Dialog
     v-model:visible="open"
     modal
-    header="Add Images"
+    header="Resimleri Ekle"
     class="!bg-f-secondary-purple lg:!w-[700px] !w-full"
     :style="{ width: '50rem' }"
   >
@@ -70,7 +70,7 @@ const submitHandler = handleSubmit(async (values) => {
     };
 
     await productsStore.createImages(payload);
-    showSuccessMessage('Product images added!');
+    showSuccessMessage('Ürün Resmi Eklendi!');
 
     emit('fetchProducts');
     handleClose();

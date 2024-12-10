@@ -70,9 +70,9 @@ const removeImage = async (imageName: string) => {
     } as IProductDeleteImageDTO;
     await productsStore.deleteImage(payload);
     await productsStore.find(route.params.id?.toString());
-    showSuccessMessage('Image removed successfully');
+    showSuccessMessage('Resim Galeriden Kaldırıldı');
   } catch (error) {
-    showErrorMessage('Failed to remove image');
+    showErrorMessage('Resmi silerken hata oluştu');
   }
 };
 </script>

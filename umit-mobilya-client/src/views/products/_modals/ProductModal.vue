@@ -2,7 +2,7 @@
   <Dialog
     v-model:visible="open"
     modal
-    :header="isEditing ? 'Update product' : 'Add product'"
+    :header="isEditing ? 'Ürünü Güncelle' : 'Ürün Ekle'"
     class="!bg-f-secondary-purple lg:!w-[700px] !w-full"
     :style="{ width: '50rem' }"
   >
@@ -13,38 +13,38 @@
       <div class="flex gap-4 flex-1">
         <FInput
           class="grow"
-          label="Name"
+          label="Ürün adı"
           name="name"
-          placeholder="Enter name"
+          placeholder="Ürün ismi girin"
         />
         <FInput
           class="grow"
-          label="Price"
+          label="Fiyat"
           name="price"
-          placeholder="Enter price"
+          placeholder="Fiyat girin"
         />
       </div>
 
       <div class="flex gap-4 flex-1">
         <FInput
           class="grow"
-          label="Sizes"
+          label="Ebatlar"
           name="sizes"
-          placeholder="Enter sizes (150x200x180)"
+          placeholder="Ebat girin (150x200x180)"
         />
         <FInput
           class="grow"
-          label="Description"
+          label="Açıklama"
           name="description"
-          placeholder="Enter description"
+          placeholder="Açıklama girin"
         />
       </div>
       <div class="flex gap-4 flex-1">
         <FSelect
           class="grow"
-          label="Category"
+          label="Kategori"
           name="category"
-          placeholder="Select category"
+          placeholder="Kategori Seçin"
           :options="categoryTypeOptions"
         />
       </div>
@@ -53,7 +53,7 @@
           :disabled="isSubmitting"
           :loading="isSubmitting"
           type="submit"
-          label="Save"
+          label="Kaydet"
         />
       </div>
     </form>
@@ -96,17 +96,17 @@ const categoryTypeOptions = computed(() => {
 });
 
 const validationSchema = object({
-  name: string().required().label('Name'),
-  price: number().required().label('Price'),
-  sizes: string().required().label('Sizes'),
-  description: string().required().label('Description'),
+  name: string().required().label('Ürün adı'),
+  price: number().required().label('Fiyat'),
+  sizes: string().required().label('Ebatlar'),
+  description: string().required().label('Açıklama'),
   category: object()
     .shape({
-      name: string().label('Category'),
-      value: string().label('Category').required(),
+      name: string().label('Kategori'),
+      value: string().label('Kategori').required(),
     })
     .required()
-    .label('Category'),
+    .label('Kategori'),
 });
 
 const { handleSubmit, isSubmitting, resetForm, defineField } = useForm({
@@ -139,10 +139,10 @@ const submitHandler = handleSubmit(async (values) => {
     if (isEditing.value) {
       delete payload.image;
       await productsStore.update(productsStore.currentProduct._id ,payload);
-      showSuccessMessage('Product updated!');
+      showSuccessMessage('Ürün Güncellendi!');
     } else {
       await productsStore.create(payload);
-      showSuccessMessage('Product created!');
+      showSuccessMessage('Ürün eklendi!');
     }
 
     emit('fetchProducts');

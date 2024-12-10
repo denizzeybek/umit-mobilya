@@ -11,14 +11,14 @@
         <div class="flex justify-end gap-2">
           <FSelect
             name="filterCategory"
-            placeholder="Choose Category Name"
+            placeholder="Kategori Adı Seçin"
             :options="categoryTypeOptions"
             v-model="selectedFilter"
           />
           <FInput
             name="filterName"
             v-model="typedName"
-            placeholder="Enter Product Name"
+            placeholder="Ürün ismi girin"
           />
         </div>
         <template v-for="(product, idx) in productsList" :key="idx">
@@ -66,7 +66,7 @@ const { showSuccessMessage, showErrorMessage } = useFToast();
 
 const typedName = ref();
 const selectedFilter = ref({
-  name: 'All Categories',
+  name: 'Tüm Kategoriler',
   value: null,
 });
 
@@ -79,7 +79,7 @@ const categoryTypeOptions = computed(() => {
     value: category._id,
   }));
 
-  return [{ name: 'All Categories', value: null }, ...categoriesList];
+  return [{ name: 'Tüm Kategoriler', value: null }, ...categoriesList];
 });
 
 const onModuleButtonClick = async (event) => {
@@ -94,14 +94,14 @@ const onModuleButtonClick = async (event) => {
         },
       } as IProductUpdateModuleDTO;
       await productsStore.addModule(payload);
-      showSuccessMessage('Module added successfully');
+      showSuccessMessage('Modül Eklendi');
     } else {
       const payload = {
         productId: route.params.id,
         moduleId: id,
       } as IProductRemoveModuleDTO;
       await productsStore.removeModule(payload);
-      showSuccessMessage('Module removed successfully');
+      showSuccessMessage('Modül Kaldırıldı');
     }
     await productsStore.find(route.params.id?.toString());
   } catch (error: any) {
