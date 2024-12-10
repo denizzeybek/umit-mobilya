@@ -56,17 +56,14 @@ const menuItems = ref([
           emit('handleImagesModal');
         },
       },
-      ...(productsStore.currentProduct?.imageUrlList?.length
-        ? [
-            {
-              label: 'Galeriyi Düzenle',
-              icon: 'pi pi-trash',
-              method: () => {
-                emit('handleEditImagesModal');
-              },
-            },
-          ]
-        : []),
+
+      {
+        label: 'Galeriyi Düzenle',
+        icon: 'pi pi-pencil',
+        method: () => {
+          emit('handleEditImagesModal');
+        },
+      },
       {
         label: 'Ürünü Sil',
         icon: 'pi pi-trash',
