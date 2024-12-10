@@ -48,12 +48,12 @@ router.beforeEach(async (to, from, next) => {
 });
 
 // SET PAGE TITLE
-const DEFAULT_TITLE = 'FlexyTime';
+const DEFAULT_TITLE = 'Umit Mobilya';
 router.afterEach((to) => {
   nextTick(() => {
     document.title =
       typeof to.meta.title === 'string'
-        ? `${to.meta.title} - FlexyTime`
+        ? `${to.meta.title} - Umit Mobilya`
         : DEFAULT_TITLE;
   });
 });

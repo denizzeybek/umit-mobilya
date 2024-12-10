@@ -6,6 +6,8 @@ import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
 import ProductsList from '@/views/products/_views/ProductsList.vue';
 import ProductDetails from '@/views/products/_views/ProductDetails.vue';
 
+import About from '@/views/about/_views/About.vue';
+
 import Login from '@/views/auth/Login.vue';
 import CategoriesList from '@/views/categories/_views/CategoriesList.vue';
 
@@ -37,6 +39,16 @@ const routes: RouteRecordRaw[] = [
           requiresUnAuth: true,
           title: ERouteNames.Login,
           name: ERouteNames.Login,
+        },
+      },
+      {
+        path: '/about',
+        name: ERouteNames.About,
+        component: About,
+        meta: {
+          requiresUnAuth: true,
+          title: ERouteNames.About,
+          name: ERouteNames.About,
         },
       },
       // required AUTH
