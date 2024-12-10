@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative min-h-[20rem] left-0 right-0 -mx-9 flex flex-col items-center justify-center rounded-md text-white"
+    class="relative min-h-[20rem] left-0 right-0 -mx-2 -mx-9 flex flex-col items-center justify-center rounded-md text-white"
   >
     <div
       class="absolute inset-0 bg-cover bg-center blur-sm"

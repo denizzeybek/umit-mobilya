@@ -35,19 +35,18 @@
         class="cursor-pointer"
       >
         <template #header>
-          <Skeleton
+          <!-- <Skeleton
             v-if="imageLoadingStates[product._id]"
             width="328px"
             height="180px"
-          />
+          /> -->
           <img
-            v-else
             :src="product.imageUrl"
             class="w-full max-h-[180px]"
             alt="product image"
-            @load="handleImageLoad(product._id)"
-            @error="handleImageError(product._id)"
-          />
+            />
+            <!-- @load="handleImageLoad(product._id)"
+            @error="handleImageError(product._id)" -->
         </template>
         <template #content>
           <ProductItemContent :product="product" />
@@ -122,7 +121,7 @@ const categoryTypeOptions = computed(() => {
 
 const filterProducts = async () => {
   try {
-    isLoading.value = true;
+    // isLoading.value = true;
     const payload = {} as IProductFilterDTO;
     if (typedName.value) {
       payload.name = typedName.value;
@@ -133,13 +132,11 @@ const filterProducts = async () => {
     await productsStore.filter(payload);
 
     // Ürünler yüklendikten sonra tüm ürünler için yükleme durumunu true olarak ayarla
-    productsStore.list?.forEach((product) => {
-      imageLoadingStates.value[product._id!] = true;
-    });
+    // productsStore.list?.forEach((product) => {
+    //   imageLoadingStates.value[product._id!] = true;
+    // });
 
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 200);
+    isLoading.value = false;
   } catch (error: any) {
     showErrorMessage(error?.response?.data?.message as any);
   }

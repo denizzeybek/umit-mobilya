@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex-1 py-10 flex items-center bg-stone-500 text-white"
+    class="lg:flex-1 py-10 lg:flex lg:items-center bg-stone-500 text-white"
   >
     <Carousel
       :value="textList"

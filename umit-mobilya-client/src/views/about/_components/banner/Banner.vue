@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col left-0 right-0 -mx-9 relative">
+  <div class="flex flex-col left-0 right-0 -mx-2 lg:-mx-9 relative">
     <BannerImage />
     <div>
-      <div class="w-full flex">
+      <div class="w-full flex flex-col lg:flex-row">
         <BannerCarousel />
         <div class="flex-1 flex gap-4 px-12 py-10 bg-gray-200">
           <BannerContent />
@@ -10,8 +10,8 @@
       </div>
 
       <div class="bg-neutral-300 px-12 py-10 flex justify-center w-full gap-4">
-        <div class="w-1/2">
-          <BannerText :title="content.title" :text="content.text" center />
+        <div class="lg:w-1/2 !text-left">
+          <BannerText :title="content.title" :text="content.text" center/>
         </div>
       </div>
     </div>

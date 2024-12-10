@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex items-center justify-center py-20">
-    <div class="w-1/2 flex gap-12">
+    <div class="w-1/2 flex flex-col lg:flex-row gap-12">
       <template v-for="item in itemList">
         <BannerText
           :title="item.title"

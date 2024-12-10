@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex gap-4">
+  <div class="flex-1 flex flex-col lg:flex-row gap-4">
     <div v-for="(text, idx) in textList" :key="idx">
       <BannerText :title="text.title" :text="text.text" />
     </div>

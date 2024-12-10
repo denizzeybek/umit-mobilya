@@ -15,7 +15,7 @@
     </template>
   </Carousel>
   <div
-    class="bg-neutral-300 left-0 right-0 -mx-9 relative rounded-md flex-1 py-10"
+    class="bg-neutral-300 left-0 right-0 -mx-2 lg:-mx-9 relative rounded-md flex-1 py-10"
   >
     <Carousel
       :value="textList"
