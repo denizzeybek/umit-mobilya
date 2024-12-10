@@ -14,14 +14,15 @@
       />
     </template>
   </Carousel>
-  <div class="bg-stone-500 rounded-md text-white  w-full h-full">
+  <div
+    class="bg-neutral-300 left-0 right-0 -mx-9 relative rounded-md flex-1 py-10"
+  >
     <Carousel
       :value="textList"
       :numVisible="1"
       :numScroll="1"
       :responsiveOptions="responsiveOptions"
       :circular="true"
-      class="my-12"
     >
       <template #item="slotProps">
         <div class="flex justify-center w-full">
@@ -32,10 +33,12 @@
       </template>
     </Carousel>
   </div>
+  <Footer />
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import Footer from '@/views/about/_components/footer/Footer.vue';
 
 const images = ref([
   '/carousel/banyo.jpg',

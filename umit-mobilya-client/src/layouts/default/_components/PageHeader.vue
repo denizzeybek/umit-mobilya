@@ -170,6 +170,10 @@ const items = computed(() => {
       label: 'About',
       route: { name: ERouteNames.About },
     },
+    {
+      label: 'Contact',
+      route: { name: ERouteNames.Contact },
+    },
     ...(!usersStore.isAuthenticated
       ? [
           

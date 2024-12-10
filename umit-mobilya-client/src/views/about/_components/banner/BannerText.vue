@@ -9,6 +9,9 @@
     <div :class="center ? 'text-center' : 'text-left'" class="text-lg">
       {{ text }}
     </div>
+    <div v-if="subText" :class="center ? 'text-center' : 'text-left'" class="text-lg">
+      {{ subText }}
+    </div>
   </div>
 </template>
 
@@ -16,6 +19,7 @@
 interface IProps {
   title: string;
   text: string;
+  subText?: string;
   center?: boolean;
 }
 

@@ -10,4 +10,5 @@ export enum ERouteNames {
   Dashboard = 'Dashboard',
   CategoriesList = 'CategoriesList',
   About = 'About',
+  Contact = 'Contact',
 }
