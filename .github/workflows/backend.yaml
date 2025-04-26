@@ -8,13 +8,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    working-directory: umit-mobilya-server
 
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
 
     - name: Setup SSH Key
-      working-directory: umit-mobilya-server
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
