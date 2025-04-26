@@ -122,6 +122,7 @@ const getProducts = async (payload) => {
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await getProducts();
+    console.log('test be')
     res.status(201).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -35,7 +35,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/ui/global/Select.vue')['default']
-    Skeleton: typeof import('primevue/skeleton')['default']
     Splitter: typeof import('primevue/splitter')['default']
     SplitterPanel: typeof import('primevue/splitterpanel')['default']
     SuccessToast: typeof import('./src/components/ui/global/SuccessToast.vue')['default']

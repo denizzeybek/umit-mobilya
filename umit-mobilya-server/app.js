@@ -21,13 +21,27 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-// CORS'u aktif et
-app.use(cors());
 
 // Eğer belirli bir frontend domainine izin vermek istiyorsanız:
+const allowedOrigins = [
+  'http://localhost:3001', // Lokal geliştirme için
+  'http://umit-mobilya-client.s3-website-us-east-1.amazonaws.com', // Deploy edilen Vue uygulaması için (IP'n)
+  // Eğer ileride domain alırsan mesela:
+  // 'https://www.seninwebsiten.com'
+];
+
 app.use(cors({
-  origin: 'http://localhost:3001', // Frontend URL'niz buraya
-  credentials: true, // Cookie gibi yetkilendirme bilgilerini taşımak için
+  origin: function(origin, callback) {
+    // Eğer istek Postman gibi origin'siz geliyorsa da izin verelim
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS policy: This origin is not allowed.'));
+    }
+  },
+  credentials: true,
 }));
 
 
