@@ -35,4 +35,4 @@ jobs:
       - name: Deploy to S3
         working-directory: umit-mobilya-client
         run: |
-          aws s3 sync ./dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ --delete
+          aws s3 sync ./dist/ s3://"${{ secrets.S3_BUCKET_NAME }}"/ --delete
