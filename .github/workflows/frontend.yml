@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main # main branch'ine her push olduğunda tetiklenir
+      
 
 jobs:
   deploy:
