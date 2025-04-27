@@ -186,7 +186,7 @@ const items = computed(() => {
     ...(usersStore.isAuthenticated
       ? [
       {
-            label: 'Categoriler',
+            label: 'Kategoriler',
             route: { name: ERouteNames.CategoriesList },
           },
           {
