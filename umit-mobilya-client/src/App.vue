@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-console.log('test fe');
+console.log('test fe 2');
 </script>
 
 <style>
