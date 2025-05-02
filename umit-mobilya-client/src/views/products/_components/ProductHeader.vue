@@ -2,7 +2,18 @@
   <Card>
     <template #content>
       <div class="flex justify-between items-center">
-        <Breadcrumb :home="home" :model="items" />
+        <Breadcrumb :model="items">
+          <template #item="{ item }">
+            <a
+              @click="item?.goBack ? router.go(-1) : ''"
+              :class="[item?.goBack ? 'cursor-pointer' : '']"
+            >
+              <span class="text-surface-700 dark:text-surface-0">{{
+                item.label
+              }}</span>
+            </a>
+          </template>
+        </Breadcrumb>
         <FActionsMenu
           v-if="usersStore.isAuthenticated"
           :menuItems="menuItems"
@@ -83,6 +94,6 @@ const home = computed(() => {
 });
 
 const items = computed(() => {
-  return [{ label: 'Ürünler' }, { label: 'Ürün Detayı' }];
+  return [{ label: 'Ürünler', goBack: true }, { label: 'Ürün Detayı' }];
 });
 </script>

@@ -11,6 +11,7 @@ export interface IProductModule {
   description: string;
   totalPrice?: number;
   category: ICategory;
+  modules?: IProductModule[];
 }
 
 export interface IProduct {

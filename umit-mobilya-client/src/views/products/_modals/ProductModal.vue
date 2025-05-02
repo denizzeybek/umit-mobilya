@@ -46,7 +46,15 @@
           name="category"
           placeholder="Kategori Seçin"
           :options="categoryTypeOptions"
-        />
+        >
+          <template #customFooter>
+            <div class="p-4">
+              <Button class="!w-full" type="button" @click="showCategoryModal=true">
+                Kategori Ekle
+              </Button>
+            </div>
+          </template>
+        </FSelect>
       </div>
       <div class="flex w-50 justify-center">
         <Button
@@ -58,6 +66,11 @@
       </div>
     </form>
   </Dialog>
+  <CategoryModal
+    v-if="showCategoryModal"
+    v-model:open="showCategoryModal"
+    @fetchCategories="fetchCategories"
+  />
 </template>
 
 <script setup lang="ts">
@@ -68,6 +81,8 @@ import { useFToast } from '@/composables/useFToast';
 import { useProductsStore } from '@/stores/products';
 import { useCategoriesStore } from '@/stores/categories';
 import type { IProductDTO } from '@/interfaces/product/product.interface';
+import { useRoute } from 'vue-router';
+import CategoryModal from '@/views/categories/_components/_modals/CategoryModal.vue';
 
 interface IProps {
   data?: any;
@@ -79,11 +94,13 @@ interface IEmits {
 }
 const emit = defineEmits<IEmits>();
 
+const route = useRoute();
 const productsStore = useProductsStore();
 const categoriesStore = useCategoriesStore();
 const { showSuccessMessage, showErrorMessage } = useFToast();
 
 const open = defineModel<boolean>('open');
+const showCategoryModal = ref(false);
 const selectedFile = ref<File | null>(null);
 
 const isEditing = computed(() => !!props.data);
@@ -95,11 +112,17 @@ const categoryTypeOptions = computed(() => {
   }));
 });
 
+const currentCategory = computed(() => {
+  return categoryTypeOptions.value.find(
+    (category) => category.value === route?.query?.categoryId,
+  );
+});
+
 const validationSchema = object({
   name: string().required().label('Ürün adı'),
   price: number().required().label('Fiyat'),
-  sizes: string().required().label('Ebatlar'),
-  description: string().required().label('Açıklama'),
+  sizes: string().nullable().label('Ebatlar'),
+  description: string().nullable().label('Açıklama'),
   category: object()
     .shape({
       name: string().label('Kategori'),
@@ -131,14 +154,14 @@ const submitHandler = handleSubmit(async (values) => {
     const payload = {
       name: values.name,
       price: values.price,
-      sizes: values.sizes,
-      description: values.description,
+      sizes: values.sizes ?? '0',
+      description: values.description ?? '',
       category: values.category.value,
       image: selectedFile.value,
     } as IProductDTO;
     if (isEditing.value) {
       delete payload.image;
-      await productsStore.update(productsStore.currentProduct._id ,payload);
+      await productsStore.update(productsStore.currentProduct._id, payload);
       showSuccessMessage('Ürün Güncellendi!');
     } else {
       await productsStore.create(payload);
@@ -162,11 +185,19 @@ const getInitialFormData = computed(() => {
       description: product.description,
       category: { name: product.category?.name, value: product.category?._id },
     }),
+    ...(currentCategory.value &&
+      !product && {
+        category: currentCategory.value,
+      }),
   };
 });
 
-onMounted(async () => {
+const fetchCategories = async () => {
   await categoriesStore.fetch();
+};
+
+onMounted(async () => {
+  await fetchCategories();
   resetForm({
     values: getInitialFormData.value,
   });

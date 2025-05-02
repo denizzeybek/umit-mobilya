@@ -41,6 +41,7 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
         axios
           .get('/products')
           .then((response) => {
+            this.list = [];
             this.list = response as unknown as IProduct[];
             resolve(response);
           })
@@ -54,6 +55,7 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
         axios
           .post('/products/filter', payload)
           .then((response) => {
+            this.list = [];
             this.list = response as unknown as IProduct[];
             resolve(response);
           })

@@ -17,61 +17,40 @@
         </RouterLink>
       </template>
       <template #item="{ item }">
-        <a
-          v-if="item.root"
-          class="flex items-center cursor-pointer px-4 py-2 overflow-hidden relative font-semibold text-lg uppercase"
-          style="border-radius: 2rem"
+        <Button
+          v-if="item.root && !item?.items?.length"
+          severity="secondary"
+          :variant="isActive(item) ? undefined : 'text'"
+          @click="
+            item?.method && !item?.items?.length
+              ? item.method()
+              : router.push(item.route)
+          "
         >
           <span>{{ item.label }}</span>
-        </a>
-        <a
-          v-else-if="item?.method"
-          href="#"
-          @click="item.method"
-          class="flex items-center cursor-pointer px-4 py-2 overflow-hidden relative font-semibold text-lg uppercase"
+        </Button>
+        <Button
+          v-else
+          severity="secondary"
+          class="w-full"
+          :variant="isActive(item) ? undefined : 'text'"
+          @click="item?.method"
         >
           {{ item.label }}
-        </a>
-        <RouterLink
-          v-else-if="item?.route"
-          :to="item.route"
-          class="flex items-center cursor-pointer px-4 py-2 overflow-hidden relative font-semibold text-lg uppercase"
-        >
-          {{ item.label }}
-        </RouterLink>
-        <a
-          v-else-if="!item.image"
-          class="flex items-center p-4 cursor-pointer mb-2 gap-3"
-        >
-          <span
-            class="inline-flex items-center justify-center rounded-full bg-primary text-primary-contrast w-12 h-12"
-          >
-            <i :class="[item.icon, 'text-lg']"></i>
-          </span>
-          <span class="inline-flex flex-col gap-1">
-            <span class="font-bold text-lg">{{ item.label }}</span>
-            <span class="whitespace-nowrap">{{ item.subtext }}</span>
-          </span>
-        </a>
-        <div v-else class="flex flex-col items-start gap-4 p-2">
-          <img alt="megamenu-demo" :src="item.image" class="w-full" />
-          <span>{{ item.subtext }}</span>
-          <Button :label="item.label?.toString()" outlined />
-        </div>
+        </Button>
       </template>
     </MegaMenu>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import MegaMenu from 'primevue/megamenu';
 import { ERouteNames } from '@/router/routeNames.enum';
 import { useUsersStore } from '@/stores/users';
 import { useAuthStore } from '@/stores/auth';
-
-const authStore = useAuthStore();
-const usersStore = useUsersStore();
+import { useRoute, useRouter } from 'vue-router';
+import { useCategoriesStore } from '@/stores/categories';
 
 interface IEmits {
   (event: 'drawerChange', val: boolean): void;
@@ -79,120 +58,66 @@ interface IEmits {
 
 defineEmits<IEmits>();
 
+const authStore = useAuthStore();
+const usersStore = useUsersStore();
+const route = useRoute();
+const router = useRouter();
+const categoriesStore = useCategoriesStore();
+
+const categoryTypeOptions = computed(() => {
+  return categoriesStore.list?.map((category) => ({
+    label: category.name,
+    root: false,
+    route: { name: ERouteNames.ProductsList },
+    method: () => {
+      router.push({
+        name: ERouteNames.ProductsList,
+        query: { categoryId: category._id },
+      });
+    },
+  }));
+});
+
 const items = computed(() => {
   return [
-    // {
-    //   label: 'Company',
-    //   root: true,
-    //   items: [
-    //     [
-    //       {
-    //         items: [
-    //           {
-    //             label: 'Features',
-    //             icon: 'pi pi-list',
-    //             subtext: 'Subtext of item',
-    //           },
-    //           {
-    //             label: 'Customers',
-    //             icon: 'pi pi-users',
-    //             subtext: 'Subtext of item',
-    //           },
-    //           {
-    //             label: 'Case Studies',
-    //             icon: 'pi pi-file',
-    //             subtext: 'Subtext of item',
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //     [
-    //       {
-    //         items: [
-    //           {
-    //             label: 'Solutions',
-    //             icon: 'pi pi-shield',
-    //             subtext: 'Subtext of item',
-    //           },
-    //           {
-    //             label: 'Faq',
-    //             icon: 'pi pi-question',
-    //             subtext: 'Subtext of item',
-    //           },
-    //           {
-    //             label: 'Library',
-    //             icon: 'pi pi-search',
-    //             subtext: 'Subtext of item',
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //     [
-    //       {
-    //         items: [
-    //           {
-    //             label: 'Community',
-    //             icon: 'pi pi-comments',
-    //             subtext: 'Subtext of item',
-    //           },
-    //           {
-    //             label: 'Rewards',
-    //             icon: 'pi pi-star',
-    //             subtext: 'Subtext of item',
-    //           },
-    //           {
-    //             label: 'Investors',
-    //             icon: 'pi pi-globe',
-    //             subtext: 'Subtext of item',
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //     [
-    //       {
-    //         items: [
-    //           {
-    //             image:
-    //               'https://primefaces.org/cdn/primevue/images/uikit/uikit-system.png',
-    //             label: 'GET STARTED',
-    //             subtext: 'Build spectacular apps in no time.',
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //   ],
-    // },
     {
       label: 'Ürünler',
+      root: true,
       route: { name: ERouteNames.ProductsList },
+      items: [[{ items: [...categoryTypeOptions.value] }]],
     },
     {
       label: 'Hakkımızda',
+      root: true,
       route: { name: ERouteNames.About },
     },
     {
       label: 'İletişim',
+      root: true,
       route: { name: ERouteNames.Contact },
     },
     ...(!usersStore.isAuthenticated
       ? [
-          
           {
             label: 'Giriş Yap',
+            root: true,
             route: { name: ERouteNames.Login },
           },
         ]
       : []),
     ...(usersStore.isAuthenticated
       ? [
-      {
+          {
             label: 'Kategoriler',
+            root: true,
             route: { name: ERouteNames.CategoriesList },
           },
           {
             label: 'Çıkış Yap',
             route: { name: ERouteNames.Login },
+            root: true,
             method: () => {
+              console.log('here!!');
               authStore.logout();
             },
           },
@@ -200,4 +125,26 @@ const items = computed(() => {
       : []),
   ];
 });
+
+const isActive = (item) => {
+  return route.name === item.route.name;
+};
+
+onMounted(async () => {
+  await categoriesStore.fetch();
+});
 </script>
+
+<style>
+.p-megamenu-overlay {
+  min-width: fit-content !important;
+  left: unset !important;
+}
+.p-megamenu-submenu-label {
+  padding: 0 !important;
+}
+
+.p-megamenu-item-content:hover {
+  background: transparent !important;
+}
+</style>

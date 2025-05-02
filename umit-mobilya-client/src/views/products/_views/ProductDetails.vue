@@ -9,13 +9,15 @@
       />
     </template>
     <template #details>
-      <div class="flex flex-col gap-4">
+      <Skeleton v-if="isLoading" width="100%" height="615px"></Skeleton>
+      <div v-else class="flex flex-col gap-4">
         <ProductGalleria />
         <ProductModules v-if="hasModules" :key="updateKey" />
       </div>
     </template>
     <template #basket>
-      <ProductBasket :hasModules="hasModules" />
+      <Skeleton v-if="isLoading" width="100%" height="615px"></Skeleton>
+      <ProductBasket v-else :hasModules="hasModules" />
     </template>
   </ProductDetailLayout>
   <UpdateModulesModal v-if="showUpdateModal" v-model:open="showUpdateModal" />
@@ -59,6 +61,7 @@ const showProductImagesModal = ref(false);
 const showUpdateModal = ref(false);
 const showProductEditImagesModal = ref(false);
 const updateKey = ref(0);
+const isLoading = ref(false);
 
 const hasModules = computed(
   () => productsStore?.currentProduct?.modules?.length > 0,
@@ -74,8 +77,14 @@ const fetchProduct = async () => {
 };
 
 const fetchAll = async () => {
-  await fetchProducts();
-  await fetchProduct();
+  try {
+    isLoading.value = true;
+    await fetchProduct();
+    await fetchProducts();
+    isLoading.value = false;
+  } catch (e: any) {
+    console.error(e);
+  }
 };
 
 watch(

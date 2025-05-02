@@ -7,15 +7,14 @@
         >
           <div class="grid grid-cols-1 min-[550px]:gap-6 rounded-xl py-6">
             <div
+              :class="modules?.length ? '' : ''"
               class="flex items-center flex-col min-[550px]:flex-row gap-3 min-[550px]:gap-6 w-full max-xl:justify-center max-xl:max-w-xl max-xl:mx-auto"
             >
-              <div class="img-box">
-                <img
-                  :src="currentProduct?.imageUrl"
-                  alt="perfume bottle image"
-                  class="w-full sm:w-80 rounded-md object-cover"
-                />
-              </div>
+              <img
+                :src="currentProduct?.imageUrl"
+                alt="perfume bottle image"
+                class="w-auto h-[100px] rounded-md object-cover"
+              />
               <ProductItemContent :product="currentProduct" />
             </div>
           </div>
@@ -62,9 +61,6 @@
               </h6>
             </div>
           </div>
-          <div
-            class="flex items-center flex-col sm:flex-row justify-center gap-3 mt-8"
-          ></div>
         </div>
       </section>
     </template>
@@ -85,6 +81,7 @@ defineProps<IProps>();
 const productsStore = useProductsStore();
 
 const currentProduct = computed(() => productsStore.currentProduct);
+const modules = computed(() => productsStore.currentProduct?.modules);
 const products = computed(() => productsStore.currentProductBasket);
 const total = computed(
   () =>

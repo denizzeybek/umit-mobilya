@@ -6,9 +6,9 @@
       {{ product?.name }}
     </div>
     <div class="font-semibold text-black">
-      {{ `${product?.price} ${product?.currency}` }}
+      {{ productPrice }}
     </div>
-    <div class="font-normal text-f-light-black">
+    <div v-if="product.sizes !== '0'" class="font-normal text-f-light-black">
       {{ product?.sizes }}
     </div>
     <Tag>
@@ -18,13 +18,30 @@
 </template>
 
 <script setup lang="ts">
-import type { IProduct, IProductModule } from '@/interfaces/product/product.interface';
+import type {
+  IProduct,
+  IProductModule,
+} from '@/interfaces/product/product.interface';
+import { computed } from 'vue';
 
 interface IProps {
   product: IProduct | IProductModule;
 }
 
-defineProps<IProps>();
+const props = defineProps<IProps>();
+
+const productPrice = computed(() => {
+  const product = props.product;
+  let price = product?.price ?? 0;
+  if ((product?.modules as any)?.length) {
+    price =
+      product?.modules?.reduce(
+        (acc, module) => acc + Number(module.price) * Number(module.quantity),
+        0,
+      ) ?? 0;
+  }
+  return `${price} ${product?.currency}`;
+});
 </script>
 
 <style scoped></style>

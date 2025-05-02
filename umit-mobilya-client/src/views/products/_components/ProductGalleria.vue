@@ -2,25 +2,36 @@
   <Card>
     <template #content>
       <Galleria
+        v-if="productsStore.currentProduct?.imageUrlList?.length"
         :value="productImages"
         :responsiveOptions="responsiveOptions"
         :numVisible="5"
       >
         <template #item="slotProps">
-          <img
-            :src="slotProps.item"
-            alt="slotProps.item.alt"
-            style="width: 100%"
-          />
+          <div class="flex items-center justify-center">
+            <img
+              :src="slotProps.item"
+              alt="slotProps.item.alt"
+              class="w-auto h-[450px]"
+            />
+          </div>
         </template>
         <template #thumbnail="slotProps">
           <img
             :src="slotProps.item"
             alt="slotProps.item.alt"
-            class="!max-h-[100px]"
+            class="w-auto !h-[100px]"
           />
         </template>
       </Galleria>
+
+      <div v-else class="flex items-center justify-center">
+        <img
+          :src="productsStore.currentProduct?.imageUrl"
+          alt="slotProps.item.alt"
+          class="w-auto h-[450px]"
+        />
+      </div>
     </template>
   </Card>
 </template>
@@ -30,15 +41,6 @@ import { ref, computed } from 'vue';
 import { useProductsStore } from '@/stores/products';
 
 const productsStore = useProductsStore();
-
-const productImages = computed(() => {
-  return (
-    [
-      ...[productsStore.currentProduct?.imageUrl],
-      ...productsStore.currentProduct?.imageUrlList,
-    ] || []
-  );
-});
 
 const responsiveOptions = ref([
   {
@@ -58,4 +60,13 @@ const responsiveOptions = ref([
     numVisible: 1,
   },
 ]);
+
+const productImages = computed(() => {
+  return (
+    [
+      ...[productsStore.currentProduct?.imageUrl],
+      ...productsStore.currentProduct?.imageUrlList,
+    ] || []
+  );
+});
 </script>

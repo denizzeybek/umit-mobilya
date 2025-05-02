@@ -1,6 +1,7 @@
 import { EStoreNames } from '@/stores/storeNames.enum';
 import axios from 'axios';
 import { defineStore } from 'pinia';
+import { useAuthStore } from './auth';
 
 interface State {
   user?: any;
@@ -18,6 +19,7 @@ export const useUsersStore = defineStore(EStoreNames.COMMON_USERS, {
       this.isAuthenticated = payload?.user?._id ? true : false;
     },
     async fetchUser(token: string) {
+      const authStore = useAuthStore();
       return new Promise((resolve, reject) => {
         axios
           .get('/auth/me', {
@@ -30,6 +32,7 @@ export const useUsersStore = defineStore(EStoreNames.COMMON_USERS, {
             resolve(response);
           })
           .catch((error) => {
+            authStore.logout();
             reject(error);
           });
       });
