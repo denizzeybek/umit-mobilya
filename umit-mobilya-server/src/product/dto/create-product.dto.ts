@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsInt,
@@ -54,4 +55,25 @@ export class CreateProductDto {
   @IsInt()
   @Min(0)
   readonly quantity?: number;
+
+}
+
+/**
+ * The multipart body as the OpenAPI schema describes it — used only by
+ * `@ApiBody`, never as a `@Body()` parameter.
+ *
+ * It has to be a separate class. `image` carries no class-validator decorator
+ * (multer takes the file off the body long before validation runs), and with
+ * `target: ES2022` a declared field is materialised on every instance as
+ * `undefined`. Put it on the validated DTO and `forbidNonWhitelisted` rejects
+ * every create with "property image should not exist" — a 400 on a request
+ * that is perfectly correct.
+ */
+export class CreateProductBodyDto extends CreateProductDto {
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Main product image. Resized to fit 900x600 before upload.',
+  })
+  readonly image!: unknown;
 }

@@ -55,7 +55,10 @@ import { useUsersStore } from '@/stores/users';
 
 import ProductItemContent from './ProductItemContent.vue';
 
-import type { IProductModuleUpdateDTO } from '@/interfaces/product/product.interface';
+import type {
+  CategoryResponseDto,
+  ProductModuleResponseDto,
+} from '@/client';
 
 const { showErrorMessage } = useFToast();
 const route = useRoute();
@@ -77,7 +80,23 @@ const { handleSubmit, resetForm, defineField } = useForm({
   validationSchema,
 });
 
-const { fields } = useFieldArray<any>('modules');
+/*
+ * The row the form edits: a module flattened for display plus the id needed to
+ * send it back. vee-validate cannot infer it from the yup schema, which only
+ * describes `quantity`.
+ */
+interface IModuleRow {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  imageUrl: string | null;
+  quantity: number;
+  sizes?: string;
+  category?: CategoryResponseDto;
+}
+
+const { fields } = useFieldArray<IModuleRow>('modules');
 const [modules] = defineField('modules');
 
 const getInitialFormData = computed(() => {
@@ -95,40 +114,58 @@ const getInitialFormData = computed(() => {
   });
 });
 
-const submitHandler = handleSubmit(async (values) => {
-  try {
-    const modules = values.modules?.filter((module) => module.quantity > 0);
-    const currentProduct = productsStore.currentProduct;
-    const product = [
-      {
-        name: currentProduct.name,
-        imageUrl: currentProduct.imageUrl,
-        category: currentProduct.category,
-        quantity: currentProduct.quantity,
-        price: currentProduct.price,
-        currency: currentProduct.currency,
-      },
-    ];
-    const payload = [...product, ...modules];
-    productsStore.setCurrentProductBasket(payload);
-  } catch (error: any) {
-    showErrorMessage(error?.response?.data?.message as any);
-  }
+/*
+ * The basket is the base product plus every module with a quantity, both in
+ * the same shape, so the total is one reduce and ProductItemContent renders
+ * either without knowing which it got.
+ */
+const submitHandler = handleSubmit((values) => {
+  const currentProduct = productsStore.currentProduct;
+  if (!currentProduct) return;
+
+  const base: ProductModuleResponseDto = {
+    _id: currentProduct._id,
+    name: currentProduct.name,
+    price: currentProduct.price,
+    currency: currentProduct.currency,
+    imageUrl: currentProduct.imageUrl,
+    quantity: currentProduct.quantity,
+    sizes: currentProduct.sizes,
+    description: currentProduct.description,
+    category: currentProduct.category,
+  };
+
+  const rows = (values.modules ?? []) as IModuleRow[];
+  const selected: ProductModuleResponseDto[] = rows
+    .filter((module) => module.quantity > 0)
+    .map((module) => ({
+      _id: module.id,
+      name: module.name,
+      price: module.price,
+      currency: module.currency,
+      imageUrl: module.imageUrl,
+      quantity: module.quantity,
+      sizes: module.sizes,
+      category: module.category,
+    }));
+
+  productsStore.setCurrentProductBasket([base, ...selected]);
 });
 
 const updateModules = async () => {
+  const currentProduct = productsStore.currentProduct;
+  if (!usersStore.isAuthenticated || !currentProduct) return;
+
   try {
-    if (!usersStore.isAuthenticated) return;
-    const payload = {
-      modules: modules.value.map((module) => ({
+    await productsStore.updateModules(currentProduct._id, {
+      modules: (modules.value as IModuleRow[]).map((module) => ({
         productId: module.id,
         quantity: module.quantity,
       })),
-    } as IProductModuleUpdateDTO;
-    await productsStore.updateModule(productsStore.currentProduct._id, payload);
+    });
     await productsStore.find(route.params.id?.toString());
-  } catch (error: any) {
-    showErrorMessage(error?.response?.data?.message as any);
+  } catch (error) {
+    showErrorMessage(error);
   }
 };
 

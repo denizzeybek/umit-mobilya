@@ -65,19 +65,17 @@ const fileSelected = (event: Event) => {
 };
 
 const submitHandler = handleSubmit(async () => {
-  try {
-    const payload = {
-      id: productsStore.currentProduct._id,
-      images: selectedFile.value,
-    };
+  const currentProduct = productsStore.currentProduct;
+  if (!currentProduct || !selectedFile.value) return;
 
-    await productsStore.createImages(payload);
+  try {
+    await productsStore.createImages(currentProduct._id, selectedFile.value);
     showSuccessMessage('Ürün Resmi Eklendi!');
 
     emit('fetchProducts');
     handleClose();
-  } catch (error: any) {
-    showErrorMessage(error as any);
+  } catch (error) {
+    showErrorMessage(error);
   }
 });
 </script>

@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia';
 
-import axios from 'axios';
-
+import { CategoriesService } from '@/client';
 import { EStoreNames } from '@/stores/storeNames.enum';
 
 import type {
-  ICategory,
-  ICategoryDTO,
-} from '@/interfaces/category/category.interface';
+  CategoryResponseDto,
+  CreateCategoryDto,
+  FilterCategoryDto,
+  UpdateCategoryDto,
+} from '@/client';
 
 interface State {
-  list: ICategory[];
+  list: CategoryResponseDto[];
   loading: boolean;
   saving: boolean;
 }
@@ -22,22 +23,51 @@ export const useCategoriesStore = defineStore(EStoreNames.CATEGORIES, {
     saving: false,
   }),
   actions: {
-    async fetch(): Promise<ICategory[]> {
+    async fetch(): Promise<CategoryResponseDto[]> {
       this.loading = true;
       try {
-        const categories = await axios.get<ICategory[], ICategory[]>(
-          '/categories',
-        );
-        this.list = categories;
-        return categories;
+        this.list = await CategoriesService.categoryControllerFindAll();
+        return this.list;
       } finally {
         this.loading = false;
       }
     },
-    async create(payload: ICategoryDTO): Promise<ICategory> {
+
+    async filter(payload: FilterCategoryDto): Promise<CategoryResponseDto[]> {
+      this.loading = true;
+      try {
+        this.list = await CategoriesService.categoryControllerFilter(payload);
+        return this.list;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async create(payload: CreateCategoryDto): Promise<CategoryResponseDto> {
       this.saving = true;
       try {
-        return await axios.post<ICategory, ICategory>('/categories', payload);
+        return await CategoriesService.categoryControllerCreate(payload);
+      } finally {
+        this.saving = false;
+      }
+    },
+
+    async update(
+      id: string,
+      payload: UpdateCategoryDto,
+    ): Promise<CategoryResponseDto> {
+      this.saving = true;
+      try {
+        return await CategoriesService.categoryControllerUpdate(id, payload);
+      } finally {
+        this.saving = false;
+      }
+    },
+
+    async remove(id: string): Promise<void> {
+      this.saving = true;
+      try {
+        await CategoriesService.categoryControllerRemove(id);
       } finally {
         this.saving = false;
       }

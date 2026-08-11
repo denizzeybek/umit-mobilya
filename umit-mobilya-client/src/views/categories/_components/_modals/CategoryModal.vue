@@ -36,7 +36,7 @@ import { object,string } from 'yup';
 import { useFToast } from '@/composables/useFToast';
 import { useCategoriesStore } from '@/stores/categories';
 
-import type { ICategoryDTO } from '@/interfaces/category/category.interface';
+import type { CreateCategoryDto } from '@/client';
 
 interface IProps {
   data?: any;
@@ -71,7 +71,7 @@ const submitHandler = handleSubmit(async (values) => {
   try {
     const payload = {
       name: values.name,
-    } as ICategoryDTO;
+    } as CreateCategoryDto;
     if (isEditing.value) {
       // await categoriesStore.update(productsStore.currentProduct._id ,payload);
       showSuccessMessage('Ürün güncellendi!');

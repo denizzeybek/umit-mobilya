@@ -1,51 +1,40 @@
 import { computed } from 'vue';
 import { defineStore } from 'pinia';
 
-import axios from 'axios';
-
+import { AuthService } from '@/client';
 import { EStorageKeys } from '@/enums/storageKeys.enum';
 import { EStoreNames } from '@/stores/storeNames.enum';
 
 import { useUsersStore } from './users';
+
+import type { AuthResponseDto, LoginDto } from '@/client';
 
 export const useAuthStore = defineStore(EStoreNames.AUTH, () => {
   const usersStore = useUsersStore();
 
   const isAuth = computed(() => usersStore.isAuthenticated);
 
-  return {
-    isAuth,
-    setAuth(payload: any) {
-      const { authentication } = payload;
-      usersStore.setUser(payload);
-      if (authentication) {
-        localStorage.setItem(EStorageKeys.TOKEN, authentication.token);
-        localStorage.setItem(
-          EStorageKeys.USER,
-          JSON.stringify(authentication.user),
-        );
-      }
-    },
-    $reset() {
-      localStorage.removeItem(EStorageKeys.TOKEN);
-      localStorage.removeItem(EStorageKeys.USER);
-    },
-    async login(payload: { email: string; password: string }) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post('/auth/login', payload)
-          .then((response) => {
-            this.setAuth({ authentication: response, user: null });
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
-    logout() {
-      this.$reset();
-      usersStore.setUser(null);
-    },
-  };
+  /**
+   * Stores the token and resolves the user behind it.
+   *
+   * The login response carries the user id as a bare string, not a user
+   * object, so `isAuthenticated` cannot be set from it — the session is only
+   * complete once `fetchUser` has run.
+   */
+  async function login(payload: LoginDto): Promise<AuthResponseDto> {
+    const result = await AuthService.authControllerLogin(payload);
+
+    localStorage.setItem(EStorageKeys.TOKEN, result.token);
+    await usersStore.fetchUser();
+
+    return result;
+  }
+
+  function logout(): void {
+    localStorage.removeItem(EStorageKeys.TOKEN);
+    localStorage.removeItem(EStorageKeys.USER);
+    usersStore.setUser(null);
+  }
+
+  return { isAuth, login, logout };
 });

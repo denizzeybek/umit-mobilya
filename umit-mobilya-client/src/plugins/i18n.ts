@@ -1,7 +1,6 @@
 import { createI18n } from 'vue-i18n'
 
-import axios from 'axios'
-
+import { OpenAPI } from '@/client'
 import { changeDayjsLocale } from '@/helpers/date'
 import en from '@/locales/en.json'
 
@@ -24,7 +23,7 @@ export const setI18nLanguage = async (locale: Language) => {
   changeDayjsLocale(locale)
   await loadLocaleMessages(locale)
   ;(i18n.global.locale as unknown as any).value = locale
-  axios.defaults.headers.common['Accept-Language'] = locale
+  OpenAPI.HEADERS = { ...OpenAPI.HEADERS, 'Accept-Language': locale }
   document.querySelector('html')!.setAttribute('lang', locale)
 }
 

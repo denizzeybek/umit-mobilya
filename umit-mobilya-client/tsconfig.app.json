@@ -13,7 +13,6 @@
   "compilerOptions": {
     "jsx": "preserve",
     "composite": true,
-    "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

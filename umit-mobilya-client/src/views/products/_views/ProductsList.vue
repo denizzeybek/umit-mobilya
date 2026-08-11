@@ -45,7 +45,7 @@
         <template #header>
           <div class="flex items-center justify-center">
             <img
-              :src="product.imageUrl"
+              :src="product.imageUrl ?? undefined"
               class="w-auto h-[180px]"
               alt="product image"
             />
@@ -84,7 +84,6 @@ import ProductModal from '@/views/products/_modals/ProductModal.vue';
 
 import ProductItemContent from '../_components/ProductItemContent.vue';
 
-import type { IProductFilterDTO } from '@/interfaces/product/product.interface';
 
 const usersStore = useUsersStore();
 const categoriesStore = useCategoriesStore();
@@ -130,20 +129,16 @@ const pageTitle = computed(() => {
 const filterProducts = async () => {
   try {
     isLoading.value = true;
-    const payload = {} as IProductFilterDTO;
-    if (typedName.value) {
-      payload.name = typedName.value;
-    }
-    if (route.query.categoryId) {
-      payload.category = route.query.categoryId?.toString();
-    }
-    if (selectedFilter.value.value) {
-      payload.category = selectedFilter.value.value;
-    }
-    await productsStore.filter(payload);
+    const category =
+      selectedFilter.value.value || route.query.categoryId?.toString();
+
+    await productsStore.filter({
+      ...(typedName.value ? { name: typedName.value } : {}),
+      ...(category ? { category } : {}),
+    });
     isLoading.value = false;
-  } catch (error: any) {
-    showErrorMessage(error?.response?.data?.message as any);
+  } catch (error) {
+    showErrorMessage(error);
   }
 };
 

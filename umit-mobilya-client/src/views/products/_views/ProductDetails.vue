@@ -65,7 +65,7 @@ const updateKey = ref(0);
 const isLoading = ref(false);
 
 const hasModules = computed(
-  () => productsStore?.currentProduct?.modules?.length > 0,
+  () => (productsStore.currentProduct?.modules?.length ?? 0) > 0,
 );
 
 const fetchProducts = async () => {

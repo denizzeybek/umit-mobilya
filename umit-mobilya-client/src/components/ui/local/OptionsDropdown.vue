@@ -59,7 +59,7 @@ interface IEmits {
 
 const menu = ref();
 
-const toggle = (event) => {
+const toggle = (event: Event) => {
   menu.value.toggle(event);
 };
 

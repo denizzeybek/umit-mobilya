@@ -11,7 +11,7 @@
               class="flex items-center flex-col min-[550px]:flex-row gap-3 min-[550px]:gap-6 w-full max-xl:justify-center max-xl:max-w-xl max-xl:mx-auto"
             >
               <img
-                :src="currentProduct?.imageUrl"
+                :src="currentProduct?.imageUrl ?? undefined"
                 alt="perfume bottle image"
                 class="w-auto h-[100px] rounded-md object-cover"
               />

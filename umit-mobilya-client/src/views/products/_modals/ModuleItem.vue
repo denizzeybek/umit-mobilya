@@ -5,7 +5,7 @@
     <div class="md:w-40 relative">
       <img
         class="block xl:block mx-auto rounded-md w-full sm:w-80"
-        :src="module.imageUrl"
+        :src="module.imageUrl ?? undefined"
         :alt="module.name"
       />
     </div>
@@ -32,10 +32,10 @@ import { EModuleItemButtonType } from '@/views/products/_etc/enums/EModuleItemBu
 
 import ProductItemContent from '../_components/ProductItemContent.vue';
 
-import type { IProductModule } from '@/interfaces/product/product.interface';
+import type { ProductModuleResponseDto } from '@/client';
 
 interface IProps {
-  module: IProductModule;
+  module: ProductModuleResponseDto;
   type: EModuleItemButtonType;
 }
 
@@ -43,7 +43,7 @@ const props = defineProps<IProps>();
 
 const emit = defineEmits<IEmits>();
 
-interface IClickMethod {
+export interface IClickMethod {
   type: EModuleItemButtonType;
   id: string;
 }

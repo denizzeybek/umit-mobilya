@@ -1,225 +1,178 @@
 import { defineStore } from 'pinia';
 
-import axios from 'axios';
-
+import { ProductsService } from '@/client';
 import { EStoreNames } from '@/stores/storeNames.enum';
 
 import type {
-  IProductDeleteImageDTO,
-  IProductDTO,
-  IProductFilterDTO,
-  IProductModuleUpdateDTO,
-  IProductRemoveModuleDTO,
-  IProductUpdateModuleDTO,
-} from '@/interfaces/product/product.interface';
-import type {
-  IProduct,
-  IProductModule,
-} from '@/interfaces/product/product.interface';
+  AddModuleDto,
+  CreateProductBodyDto,
+  FilterProductDto,
+  ProductDocumentDto,
+  ProductModuleResponseDto,
+  ProductResponseDto,
+  UpdateModulesDto,
+  UpdateProductDto,
+} from '@/client';
 
 interface State {
-  list: IProduct[];
-  currentProduct: IProduct;
-  currentProductBasket: IProductModule[];
+  list: ProductResponseDto[];
+  currentProduct: ProductResponseDto | null;
+  currentProductBasket: ProductModuleResponseDto[];
   currentProductTotal: {
     price: number;
     currency: string;
   };
+  loading: boolean;
+  saving: boolean;
 }
 
 export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
   state: (): State => ({
     list: [],
-    currentProduct: {} as IProduct,
+    currentProduct: null,
     currentProductBasket: [],
     currentProductTotal: {
       price: 0,
       currency: '',
     },
+    loading: false,
+    saving: false,
   }),
   actions: {
-    async fetch() {
-      return new Promise((resolve, reject) => {
-        axios
-          .get('/products')
-          .then((response) => {
-            this.list = [];
-            this.list = response as unknown as IProduct[];
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+    async fetch(): Promise<ProductResponseDto[]> {
+      this.loading = true;
+      try {
+        this.list = await ProductsService.productControllerFindAll();
+        return this.list;
+      } finally {
+        this.loading = false;
+      }
     },
-    async filter(payload: IProductFilterDTO) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post('/products/filter', payload)
-          .then((response) => {
-            this.list = [];
-            this.list = response as unknown as IProduct[];
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
-    async find(id: string) {
-      return new Promise((resolve, reject) => {
-        axios
-          .get(`/products/${id}`)
-          .then((response) => {
-            this.currentProduct = response as unknown as IProduct;
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
-    async create(payload: IProductDTO) {
-      const { name, image, price, sizes, description, category } = payload;
-      return new Promise((resolve, reject) => {
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('image', image);
-        formData.append('price', price.toString());
-        formData.append('sizes', sizes);
-        formData.append('description', description);
-        formData.append('category', category.toString());
 
-        axios
-          .post('/products', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+    async filter(payload: FilterProductDto): Promise<ProductResponseDto[]> {
+      this.loading = true;
+      try {
+        this.list = await ProductsService.productControllerFilter(payload);
+        return this.list;
+      } finally {
+        this.loading = false;
+      }
     },
-    async createImages(payload: any) {
-      return new Promise((resolve, reject) => {
-        const formData = new FormData();
 
-        if (payload.images) {
-          Array.from(payload.images).forEach((image: any) => {
-            formData.append('image', image); // Append each image
-          });
-        }
+    async find(id: string): Promise<ProductResponseDto> {
+      this.loading = true;
+      try {
+        this.currentProduct =
+          await ProductsService.productControllerFindById(id);
+        return this.currentProduct;
+      } finally {
+        this.loading = false;
+      }
+    },
 
-        axios
-          .put(`/products/create-images/${payload.id}`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+    /**
+     * The image travels as multipart. `CreateProductBodyDto` types it as a
+     * `Blob`, and the generated client builds the FormData — the component only
+     * hands over the `File` it holds.
+     */
+    async create(payload: CreateProductBodyDto): Promise<ProductDocumentDto> {
+      this.saving = true;
+      try {
+        return await ProductsService.productControllerCreate(payload);
+      } finally {
+        this.saving = false;
+      }
     },
-    async remove(id: string) {
-      return new Promise((resolve, reject) => {
-        axios
-          .delete(`/products/${id}`)
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+
+    async update(
+      id: string,
+      payload: UpdateProductDto,
+    ): Promise<ProductDocumentDto> {
+      this.saving = true;
+      try {
+        return await ProductsService.productControllerUpdate(id, payload);
+      } finally {
+        this.saving = false;
+      }
     },
-    async update(id: string, payload: IProductDTO) {
-      return new Promise((resolve, reject) => {
-        axios
-          .put(`/products/${id}`, payload)
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+
+    async remove(id: string): Promise<void> {
+      this.saving = true;
+      try {
+        await ProductsService.productControllerRemove(id);
+      } finally {
+        this.saving = false;
+      }
     },
-    async updateModule(id: string, payload: IProductModuleUpdateDTO) {
-      return new Promise((resolve, reject) => {
-        axios
-          .put(`/products/update-modules/${id}`, payload)
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+
+    /**
+     * Every file goes up under the **singular** field name `image` — that is
+     * the server's contract, inherited from `upload.array('image', 20)`.
+     */
+    async createImages(id: string, images: FileList | File[]): Promise<void> {
+      this.saving = true;
+      try {
+        await ProductsService.productControllerUploadImages(id, {
+          image: Array.from(images),
+        });
+      } finally {
+        this.saving = false;
+      }
     },
-    async addModule(payload: IProductUpdateModuleDTO) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post(`/products/add-module`, payload)
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+
+    async deleteImage(id: string, imageName: string): Promise<void> {
+      this.saving = true;
+      try {
+        await ProductsService.productControllerDeleteImage(id, { imageName });
+      } finally {
+        this.saving = false;
+      }
     },
-    async removeModule(payload: IProductRemoveModuleDTO) {
-      const { productId, moduleId } = payload;
-      return new Promise((resolve, reject) => {
-        axios
-          .delete(`/products/remove-module/${productId}/${moduleId}`)
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+
+    async addModule(payload: AddModuleDto): Promise<void> {
+      this.saving = true;
+      try {
+        await ProductsService.productControllerAddModule(payload);
+      } finally {
+        this.saving = false;
+      }
     },
-    async setCurrentProductBasket(modules: IProductModule[]) {
-      // update:{ productId: string, updateModule: IProductModuleUpdateDTO },
+
+    async removeModule(productId: string, moduleId: string): Promise<void> {
+      this.saving = true;
+      try {
+        await ProductsService.productControllerRemoveModule(
+          productId,
+          moduleId,
+        );
+      } finally {
+        this.saving = false;
+      }
+    },
+
+    async updateModules(id: string, payload: UpdateModulesDto): Promise<void> {
+      this.saving = true;
+      try {
+        await ProductsService.productControllerUpdateModules(id, payload);
+      } finally {
+        this.saving = false;
+      }
+    },
+
+    setCurrentProductBasket(modules: ProductModuleResponseDto[]): void {
       this.currentProductBasket = modules;
       this.currentProductTotal = {
-        price: this.currentProductBasket.reduce(
-          (acc, module) => acc + Number(module.price) * Number(module.quantity),
+        price: modules.reduce(
+          (total, module) => total + module.price * module.quantity,
           0,
         ),
-        currency: this.currentProductBasket[0].currency,
+        currency: modules[0]?.currency ?? '',
       };
-      // await this.updateModule(update.productId, update.updateModule);
     },
-    async deleteImage(payload: IProductDeleteImageDTO) {
-      const { id, imageName } = payload;
-      return new Promise((resolve, reject) => {
-        axios
-          .post(`/products/delete-image/${id}`, { imageName })
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
-    resetBasket() {
+
+    resetBasket(): void {
       this.currentProductBasket = [];
-      this.currentProductTotal = {
-        price: 0,
-        currency: '',
-      };
+      this.currentProductTotal = { price: 0, currency: '' };
     },
   },
 });

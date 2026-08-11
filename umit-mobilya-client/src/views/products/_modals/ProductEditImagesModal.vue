@@ -41,7 +41,6 @@ import { useRoute } from 'vue-router';
 import { useFToast } from '@/composables/useFToast';
 import { useProductsStore } from '@/stores/products';
 
-import type { IProductDeleteImageDTO } from '@/interfaces/product/product.interface';
 
 const productsStore = useProductsStore();
 const route = useRoute();
@@ -71,12 +70,9 @@ const imagesList = computed(() => {
 
 const removeImage = async (imageName: string) => {
   try {
-    const payload = {
-      id: route.params.id,
-      imageName,
-    } as IProductDeleteImageDTO;
-    await productsStore.deleteImage(payload);
-    await productsStore.find(route.params.id?.toString());
+    const id = route.params.id?.toString() ?? '';
+    await productsStore.deleteImage(id, imageName);
+    await productsStore.find(id);
     showSuccessMessage('Resim Galeriden Kaldırıldı');
   } catch {
     showErrorMessage('Resmi silerken hata oluştu');

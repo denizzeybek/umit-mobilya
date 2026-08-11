@@ -321,7 +321,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProductDto"
+                "$ref": "#/components/schemas/CreateProductBodyDto"
               }
             }
           }
@@ -397,6 +397,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadImagesDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1009,9 +1019,14 @@
           }
         }
       },
-      "CreateProductDto": {
+      "CreateProductBodyDto": {
         "type": "object",
         "properties": {
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "description": "Main product image. Resized to fit 900x600 before upload."
+          },
           "name": {
             "type": "string",
             "description": "Display name in the catalogue.",
@@ -1046,6 +1061,7 @@
           }
         },
         "required": [
+          "image",
           "name",
           "price",
           "category"
@@ -1123,6 +1139,22 @@
           "quantity",
           "modules",
           "createdAt"
+        ]
+      },
+      "UploadImagesDto": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "description": "One or more gallery images, all under the field name `image`."
+          }
+        },
+        "required": [
+          "image"
         ]
       },
       "ImageListResponseDto": {

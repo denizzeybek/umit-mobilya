@@ -1,8 +1,6 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
-import axios from 'axios';
-
 import { EStorageKeys } from '@/enums/storageKeys.enum';
 import { useUsersStore } from '@/stores/users';
 
@@ -23,20 +21,14 @@ router.beforeEach(async (to, from, next) => {
 
   if (token && !usersStore.isAuthenticated) {
     try {
-      await usersStore.fetchUser(token);
+      await usersStore.fetchUser();
     } catch (error: any) {
       console.error(error);
     }
   }
 
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  }
-
   if (requiresAuth) {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
+    if (!token) {
       return next({
         name: ERouteNames.Dashboard,
       });

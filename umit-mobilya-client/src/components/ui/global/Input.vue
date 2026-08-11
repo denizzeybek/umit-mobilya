@@ -26,7 +26,7 @@
         :list="list"
         :class="[customClass]"
         v-bind="primeProps"
-        @update:value="(newValue) => (value as any).value = newValue"
+        @update:value="(newValue: string) => (value = newValue)"
         @focus="list ? (showOptions = true) : (showOptions = false)"
         @input="filterOptions"
         v-on="listeners"
@@ -122,7 +122,7 @@ const {
   value,
   handleBlur,
   handleChange,
-} = useField(() => props.name, undefined, {
+} = useField<string | number>(() => props.name, undefined, {
   validateOnValueUpdate: false,
   syncVModel: true,
 });
@@ -143,7 +143,7 @@ const selectOption = (option: string) => {
 };
 
 const addNewOption = () => {
-  const option = value.value as string;
+  const option = String(value.value);
   filteredOptions.value.push(option);
   emit('updateList', option);
   selectOption(option);

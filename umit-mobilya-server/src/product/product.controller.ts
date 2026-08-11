@@ -16,6 +16,7 @@ import {
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -25,7 +26,10 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { MessageResponseDto } from '../common/dto/message-response.dto';
 import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
-import { CreateProductDto } from './dto/create-product.dto';
+import {
+  CreateProductBodyDto,
+  CreateProductDto,
+} from './dto/create-product.dto';
 import { FilterProductDto } from './dto/filter-product.dto';
 import {
   AddModuleDto,
@@ -39,6 +43,7 @@ import {
   ProductResponseDto,
 } from './dto/product-response.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { UploadImagesDto } from './dto/upload-images.dto';
 import { ProductService } from './product.service';
 import type { ProductView } from './product.service';
 import type { ProductDocument } from './schemas/product.schema';
@@ -88,6 +93,7 @@ export class ProductController {
   @ApiCreatedResponse({ type: ProductDocumentDto })
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreateProductBodyDto })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
   async create(
@@ -108,6 +114,7 @@ export class ProductController {
   @ApiOkResponse({ type: ImageListResponseDto })
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadImagesDto })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FilesInterceptor('image', MAX_GALLERY_FILES))
   async uploadImages(

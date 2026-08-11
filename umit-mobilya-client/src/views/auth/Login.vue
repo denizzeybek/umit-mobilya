@@ -50,8 +50,8 @@ const submitHandler = handleSubmit(async (values) => {
     await authStore.login(payload);
     router.push({ name: ERouteNames.ProductsList });
     showSuccessMessage('Logged in!');
-  } catch (error: any) {
-    showErrorMessage(error?.response?.data?.message as any);
+  } catch (error) {
+    showErrorMessage(error);
   }
 });
 </script>

@@ -27,7 +27,7 @@
 
       <div v-else class="flex items-center justify-center">
         <img
-          :src="productsStore.currentProduct?.imageUrl"
+          :src="productsStore.currentProduct?.imageUrl ?? undefined"
           alt="slotProps.item.alt"
           class="w-auto h-[450px]"
         />

@@ -2,7 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type CreateProductDto = {
+export type CreateProductBodyDto = {
+    /**
+     * Main product image. Resized to fit 900x600 before upload.
+     */
+    image: Blob;
     /**
      * Display name in the catalogue.
      */

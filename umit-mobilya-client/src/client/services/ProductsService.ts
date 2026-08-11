@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AddModuleDto } from '../models/AddModuleDto';
-import type { CreateProductDto } from '../models/CreateProductDto';
+import type { CreateProductBodyDto } from '../models/CreateProductBodyDto';
 import type { DeleteImageDto } from '../models/DeleteImageDto';
 import type { FilterProductDto } from '../models/FilterProductDto';
 import type { ImageListResponseDto } from '../models/ImageListResponseDto';
@@ -13,6 +13,7 @@ import type { ProductEnvelopeDto } from '../models/ProductEnvelopeDto';
 import type { ProductResponseDto } from '../models/ProductResponseDto';
 import type { UpdateModulesDto } from '../models/UpdateModulesDto';
 import type { UpdateProductDto } from '../models/UpdateProductDto';
+import type { UploadImagesDto } from '../models/UploadImagesDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -39,7 +40,7 @@ export class ProductsService {
      * @throws ApiError
      */
     public static productControllerCreate(
-        formData: CreateProductDto,
+        formData: CreateProductBodyDto,
     ): CancelablePromise<ProductDocumentDto> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -74,11 +75,13 @@ export class ProductsService {
      * accepted — inherited from `upload.array('image', 20)`, and the frontend
      * appends every file under that one key.
      * @param id
+     * @param formData
      * @returns ImageListResponseDto
      * @throws ApiError
      */
     public static productControllerUploadImages(
         id: string,
+        formData: UploadImagesDto,
     ): CancelablePromise<ImageListResponseDto> {
         return __request(OpenAPI, {
             method: 'PUT',
@@ -86,6 +89,8 @@ export class ProductsService {
             path: {
                 'id': id,
             },
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**

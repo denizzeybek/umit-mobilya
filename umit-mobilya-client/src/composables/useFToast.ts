@@ -22,15 +22,25 @@ export const useFToast = () => {
     )
   }
 
+  /*
+   * Takes whatever a catch block caught. The generated API client rejects with
+   * an ApiError carrying the server's `{ statusCode, message, path }` body on
+   * `.body`, so that is checked first; a plain Error falls back to `.message`.
+   * Passing the error straight through is the only correct call — digging out
+   * `error.response.data.message` at the call site was an axios-ism, and it
+   * silently produced empty toasts once the client changed.
+   */
   const showErrorMessage = (
-    error: string | Error,
+    error: unknown,
     timeout: number = 3000,
     className?: HTMLAttributes['class']
   ) => {
-    let message = error
-    if (typeof error !== 'string') {
-      message = (error as any)?.body?.message ?? error?.message ?? 'Something went wrong!'
-    }
+    const message =
+      typeof error === 'string'
+        ? error
+        : ((error as { body?: { message?: string } })?.body?.message ??
+          (error as Error)?.message ??
+          'Something went wrong!')
     toast(
       {
         component: ErrorToast,

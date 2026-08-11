@@ -11,7 +11,7 @@ export type { AddModuleDto } from './models/AddModuleDto';
 export type { AuthResponseDto } from './models/AuthResponseDto';
 export type { CategoryResponseDto } from './models/CategoryResponseDto';
 export type { CreateCategoryDto } from './models/CreateCategoryDto';
-export type { CreateProductDto } from './models/CreateProductDto';
+export type { CreateProductBodyDto } from './models/CreateProductBodyDto';
 export type { DeleteImageDto } from './models/DeleteImageDto';
 export type { FilterCategoryDto } from './models/FilterCategoryDto';
 export type { FilterProductDto } from './models/FilterProductDto';
@@ -30,6 +30,7 @@ export type { StoredModuleDto } from './models/StoredModuleDto';
 export type { UpdateCategoryDto } from './models/UpdateCategoryDto';
 export type { UpdateModulesDto } from './models/UpdateModulesDto';
 export type { UpdateProductDto } from './models/UpdateProductDto';
+export type { UploadImagesDto } from './models/UploadImagesDto';
 
 export { AuthService } from './services/AuthService';
 export { CategoriesService } from './services/CategoriesService';

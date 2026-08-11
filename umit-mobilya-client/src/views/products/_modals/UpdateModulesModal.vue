@@ -59,11 +59,8 @@ import { EModuleItemButtonType } from '@/views/products/_etc/enums/EModuleItemBu
 
 import ModuleItem from './ModuleItem.vue';
 
-import type {
-  IProductFilterDTO,
-  IProductRemoveModuleDTO,
-  IProductUpdateModuleDTO,
-} from '@/interfaces/product/product.interface';
+import type { IClickMethod } from './ModuleItem.vue';
+
 
 interface IFilter {
   name: string;
@@ -108,47 +105,39 @@ const currentCategory = computed(() => {
   } as IFilter;
 });
 
-const onModuleButtonClick = async (event) => {
+const onModuleButtonClick = async (event: IClickMethod) => {
   try {
     const { type, id } = event;
+    const productId = route.params.id?.toString() ?? '';
+
     if (type === EModuleItemButtonType.ADD) {
-      const payload = {
-        productId: route.params.id,
-        module: {
-          productId: id,
-          quantity: 1,
-        },
-      } as IProductUpdateModuleDTO;
-      await productsStore.addModule(payload);
+      await productsStore.addModule({
+        productId,
+        module: { productId: id, quantity: 1 },
+      });
       showSuccessMessage('Modül Eklendi');
     } else {
-      const payload = {
-        productId: route.params.id,
-        moduleId: id,
-      } as IProductRemoveModuleDTO;
-      await productsStore.removeModule(payload);
+      await productsStore.removeModule(productId, id);
       showSuccessMessage('Modül Kaldırıldı');
     }
-    await productsStore.find(route.params.id?.toString());
-  } catch (error: any) {
-    showErrorMessage(error?.response?.data?.message as any);
+    await productsStore.find(productId);
+  } catch (error) {
+    showErrorMessage(error);
   }
 };
 
 const filterProducts = async () => {
   try {
     isLoading.value = true;
-    const payload = {} as IProductFilterDTO;
-    if (typedName.value) {
-      payload.name = typedName.value;
-    }
-    if (selectedFilter.value.value) {
-      payload.category = selectedFilter.value.value;
-    }
-    await productsStore.filter(payload);
+    await productsStore.filter({
+      ...(typedName.value ? { name: typedName.value } : {}),
+      ...(selectedFilter.value.value
+        ? { category: selectedFilter.value.value }
+        : {}),
+    });
     isLoading.value = false;
-  } catch (error: any) {
-    showErrorMessage(error?.response?.data?.message as any);
+  } catch (error) {
+    showErrorMessage(error);
   }
 };
 

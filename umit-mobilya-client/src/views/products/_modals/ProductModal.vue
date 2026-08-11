@@ -85,7 +85,6 @@ import { useCategoriesStore } from '@/stores/categories';
 import { useProductsStore } from '@/stores/products';
 import CategoryModal from '@/views/categories/_components/_modals/CategoryModal.vue';
 
-import type { IProductDTO } from '@/interfaces/product/product.interface';
 
 interface IProps {
   data?: any;
@@ -153,20 +152,26 @@ const fileSelected = (event: Event) => {
 
 const submitHandler = handleSubmit(async (values) => {
   try {
-    const payload = {
+    const fields = {
       name: values.name,
       price: values.price,
       sizes: values.sizes ?? '0',
       description: values.description ?? '',
       category: values.category.value,
-      image: selectedFile.value,
-    } as IProductDTO;
+    };
+
     if (isEditing.value) {
-      delete payload.image;
-      await productsStore.update(productsStore.currentProduct._id, payload);
+      /*
+       * The update endpoint takes JSON and has no `image` field — the image is
+       * only ever set on create or through the gallery endpoints.
+       */
+      const currentProduct = productsStore.currentProduct;
+      if (!currentProduct) return;
+      await productsStore.update(currentProduct._id, fields);
       showSuccessMessage('Ürün Güncellendi!');
     } else {
-      await productsStore.create(payload);
+      if (!selectedFile.value) return;
+      await productsStore.create({ ...fields, image: selectedFile.value });
       showSuccessMessage('Ürün eklendi!');
     }
 
