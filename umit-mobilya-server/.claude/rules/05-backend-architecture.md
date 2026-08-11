@@ -13,7 +13,7 @@ The Nest structure exists to split those responsibilities so each one can be tes
 | Domain | State | Order |
 |---|---|---|
 | `category` | **Ported** — `src/category/` | Done. Copy this shape for the rest. |
-| `auth` | Express (113 lines) | Migrate 2nd — guard/strategy pattern |
+| `auth` | **Ported** — `src/auth/` | Done. `JwtAuthGuard` lives here and is global. |
 | `product` | Express (532 lines) | Migrate 3rd — R2 and module logic, once the pattern is settled |
 
 `src/category/` is the reference implementation: `schemas/`, `dto/`, service,

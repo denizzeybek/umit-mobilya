@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
 import { Category, CategorySchema } from './schemas/category.schema';
@@ -13,7 +12,7 @@ import { Category, CategorySchema } from './schemas/category.schema';
     ]),
   ],
   controllers: [CategoryController],
-  providers: [CategoryService, JwtAuthGuard],
+  providers: [CategoryService],
   exports: [CategoryService],
 })
 export class CategoryModule {}

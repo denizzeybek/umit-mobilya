@@ -60,8 +60,8 @@ describe('Nest bootstrap with the legacy Express mount', () => {
     const paths = Object.keys(response.body.paths ?? {});
 
     expect(paths).toContain('/api/categories');
+    expect(paths).toContain('/api/auth/login');
     expect(paths).not.toContain('/api/products');
-    expect(paths).not.toContain('/api/auth/login');
   });
 
   it('rejects an origin that is absent from ALLOWED_ORIGINS without echoing it back', async () => {
