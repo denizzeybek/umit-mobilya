@@ -1,6 +1,6 @@
 # Rule 05 — Backend Architecture
 
-> Target is NestJS + TypeScript. Getting there is domain by domain, so at any moment part of this service is Nest and part is still Express. Know which half you are standing in before you write.
+> NestJS + TypeScript, all three domains ported. The rules below are what the port bought; keeping them is what stops the service sliding back.
 
 ## Why this rule exists
 
@@ -8,21 +8,20 @@ The Express version put everything in the controller: HTTP handling, business lo
 
 The Nest structure exists to split those responsibilities so each one can be tested alone. The migration is only worth its cost if we actually take that split — porting a 532-line controller into a 532-line Nest controller buys nothing.
 
-## Migration status
+## Structure
 
-| Domain | State | Order |
+`src/category/` is the reference domain — `schemas/`, `dto/`, service,
+controller, module, with a spec beside the service and the controller and the
+HTTP contract pinned in `test/characterization/`. Copy that shape.
+
+Shared pieces, reuse rather than reimplement:
+
+| Piece | Where | For |
 |---|---|---|
-| `category` | **Ported** — `src/category/` | Done. Copy this shape for the rest. |
-| `auth` | **Ported** — `src/auth/` | Done. `JwtAuthGuard` lives here and is global. |
-| `product` | Express (532 lines) | Migrate 3rd — R2 and module logic, once the pattern is settled |
-
-`src/category/` is the reference implementation: `schemas/`, `dto/`, service,
-controller, module — plus a spec beside the service and the controller, and the
-HTTP contract pinned in `test/characterization/`. `JwtAuthGuard`
-(`src/auth/guards/`) and `ParseObjectIdPipe` (`src/common/pipes/`) are shared;
-reuse them rather than writing a second copy.
-
-Both stacks run side by side during the move. That is expected, not a problem to fix early.
+| `JwtAuthGuard` | `src/auth/guards/` | Every mutating route. `AuthModule` is `@Global()`, so it resolves without an import. |
+| `ParseObjectIdPipe` | `src/common/pipes/` | Every `:id` param. Without it a malformed id reaches mongoose and surfaces as 500. |
+| `AllExceptionsFilter` | `src/common/filters/` | The single error body. |
+| `ObjectStorageService` | `src/storage/` | The only place that talks to R2. |
 
 ## Layers
 
@@ -33,7 +32,9 @@ Both stacks run side by side during the move. That is expected, not a problem to
 
 ## Do
 
-- Add a new domain as a full set: `module` + `controller` + `service` + `dto` + `schema`, then **register the module in `AppModule`**. This is the direct successor to the old `routes/index.js` mount step — a module that is not registered is silently dead, exactly like an unmounted router was.
+- Add a new domain as a full set: `module` + `controller` + `service` + `dto` + `schema`, then **register the module in `AppModule`**. A module that is not registered is silently dead — nothing errors, the routes just do not exist.
+- Declare specific routes before parameterised ones. Nest matches in declaration order, so `@Put('create-images/:id')` below `@Put(':id')` never runs.
+- Annotate a `@Body()` parameter with the DTO class itself. `Dto | undefined` makes Nest resolve the metatype to `Object` and the global `ValidationPipe` stops validating that endpoint without saying so. Use a default value when the body is optional.
 - Keep controllers thin enough that reading one tells you the whole HTTP surface of the domain.
 - Put shared behavior in a service and inject it. Do not import one controller from another.
 - Guard every mutating endpoint. The current rule, which must survive the port: `GET` endpoints are public, `POST`/`PUT`/`DELETE` sit behind auth. The deliberate exceptions today are the whole `auth` domain (`/signup`, `/login`, `/logout`, `/me`) and `POST /api/products/filter`, which uses a mutation verb to run a read. Anything else that ships unguarded is a security hole, not a shortcut.
@@ -41,8 +42,7 @@ Both stacks run side by side during the move. That is expected, not a problem to
 
 ## Don't
 
-- ❌ Add new endpoints to the old Express controllers. New surface goes to the Nest side even if the rest of that domain has not moved yet.
-- ❌ Port a controller by pasting it into a Nest controller. Split the logic into the service on the way in — that split is the point of the migration.
+- ❌ Put a query or an S3 call in a controller. That is what made the old 532-line controller untestable.
 - ❌ Query the database from a controller.
 - ❌ Forget the `AppModule` registration. Nothing errors; the routes just do not exist.
 - ❌ Reach into another domain's schema directly. Go through its service.
@@ -54,7 +54,8 @@ These held before the port and hold after it. They live in `product.controller.j
 - **MongoDB stores keys, never URLs.** `imageName` and `imageNameList[]` hold R2 object keys. Public URLs are derived at read time from `PUBLIC_BUCKET_URL`.
 - **Keys are built by `buildImageKey()`**, which slugifies the original filename and appends random hex. Keys end up inside public URLs, so they must be URL-safe — never build a key by hand.
 - **`generateImageUrl()` is synchronous** and just joins the public base with the encoded key. There is no signing and no expiry; the bucket is public. URLs are stable and may be cached.
-- **Deleting a record deletes the object.** `deleteProduct` and `deleteImage` both issue `DeleteObjectCommand`. A new delete path that skips this leaves orphaned objects that nothing will ever clean up.
+- **Deleting a record deletes the object**, and **membership is checked before anything is deleted**. A new delete path that skips either leaves orphaned objects, or destroys an object it did not own.
+- **Validate before you upload.** `create` checks the category exists first; the reverse order leaves an object in the bucket on every rejected request.
 - **Uploads stay in memory** — `multer.memoryStorage()` → `sharp` resize → `PutObjectCommand`. Nothing touches local disk.
 - Deletion failures are logged and swallowed so a storage outage cannot block a database delete. Keep that ordering.
 
@@ -62,4 +63,4 @@ These held before the port and hold after it. They live in `product.controller.j
 
 Allowed origins come from the `ALLOWED_ORIGINS` environment variable, comma-separated. Adding a deploy domain is a config change, not a code change — do not reintroduce a hardcoded array.
 
-Related: [[00-tdd-discipline]], [[06-validation-and-errors]].
+Related: [[00-tdd-discipline]], [[06-validation-and-errors]], [[07-config-and-secrets]].

@@ -1,19 +1,20 @@
 import type { INestApplication } from '@nestjs/common';
+import { getConnectionToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import jwt from 'jsonwebtoken';
+import type { Connection } from 'mongoose';
 
 import { AppModule } from '../src/app.module';
-import { mountLegacyExpress } from '../src/legacy/legacy-express';
 import { setupApp } from '../src/setup-app';
 
 /**
- * Boots the whole service the way `main.ts` does — Nest plus whatever is still
- * mounted from `routes/index.js`.
+ * Boots the whole service exactly the way `main.ts` does, so a spec can never
+ * exercise a differently-configured app than production runs.
  *
- * Characterization specs go through here rather than through a hand-built
- * Express app, so that porting a domain changes nothing in the spec: the same
- * request hits the legacy handler before the port and the Nest controller
- * after it. If the assertions still pass, the behaviour survived.
+ * Every characterization spec goes through here. During the migration that is
+ * what let the same assertions hit the legacy Express handler before a port
+ * and the Nest controller after it; now that the port is finished they keep
+ * guarding the contract those handlers agreed on.
  */
 export async function createTestApp(): Promise<INestApplication> {
   const moduleRef = await Test.createTestingModule({
@@ -22,8 +23,15 @@ export async function createTestApp(): Promise<INestApplication> {
 
   const app = moduleRef.createNestApplication();
   setupApp(app);
-  await mountLegacyExpress(app);
   await app.init();
+
+  /*
+   * Index builds are fired off asynchronously when a model is registered, so
+   * without this a spec can insert a duplicate email before the unique index
+   * exists and see 201 where 400 belongs — a failure that only shows up
+   * sometimes, which is the worst kind.
+   */
+  await app.get<Connection>(getConnectionToken()).syncIndexes();
 
   return app;
 }

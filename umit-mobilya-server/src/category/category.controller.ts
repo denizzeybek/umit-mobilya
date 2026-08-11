@@ -40,9 +40,9 @@ export class CategoryController {
    */
   @Get('filter')
   async filter(
-    @Body() dto: FilterCategoryDto | undefined,
+    @Body() dto: FilterCategoryDto = {},
   ): Promise<CategoryDocument[]> {
-    return this.categoryService.filter(dto ?? {});
+    return this.categoryService.filter(dto);
   }
 
   /** Creates a category. */

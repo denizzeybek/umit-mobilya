@@ -8,8 +8,8 @@ Index only. Every rule that governs code in `umit-mobilya-server/` is defined in
 
 | File | Covers |
 |---|---|
-| [`00-tdd-discipline.md`](.claude/rules/00-tdd-discipline.md) | Characterization cycle for the port, Red→Green→Refactor for new behaviour, hook enforcement |
-| [`05-backend-architecture.md`](.claude/rules/05-backend-architecture.md) | Controller/service/schema/DTO split, migration order, R2 object-storage rules, CORS |
+| [`00-tdd-discipline.md`](.claude/rules/00-tdd-discipline.md) | Red→Green→Refactor, the characterization suite, hook enforcement |
+| [`05-backend-architecture.md`](.claude/rules/05-backend-architecture.md) | Controller/service/schema/DTO split, R2 object-storage rules, CORS |
 | [`06-validation-and-errors.md`](.claude/rules/06-validation-and-errors.md) | DTOs + class-validator, global `ValidationPipe`, one error shape, JSDoc feeding the OpenAPI schema |
 | [`07-config-and-secrets.md`](.claude/rules/07-config-and-secrets.md) | `ConfigModule` validation at boot, the nine required variables, Railway dashboard |
 
@@ -17,19 +17,23 @@ Repo-wide rules that also apply here: [`comment-policy.md`](../.claude/rules/com
 [`done-checklist.md`](../.claude/rules/done-checklist.md),
 [`git-workflow.md`](../.claude/rules/git-workflow.md).
 
-## Migration state
+## Layout
 
-Moving from Express + CommonJS to **NestJS + TypeScript**, domain by domain:
-`category` → `auth` → `product`. Both stacks run side by side during the move.
+NestJS + TypeScript, single application. The Express/CommonJS version is gone —
+all three domains are ported and no `.js` source remains.
 
-| Domain | State |
-|---|---|
-| `category` | **NestJS** — `src/category/`, in the OpenAPI schema |
-| `auth` | **NestJS** — `src/auth/`, in the OpenAPI schema |
-| `product` | Express — 532 lines |
-
-New endpoints go to the Nest side even when the rest of their domain has not
-moved. Never add surface to the old Express controllers.
+```
+src/
+  main.ts            entry point; boots Nest and applies setup-app
+  setup-app.ts       body parsers, ValidationPipe, exception filter, CORS, Swagger
+  app.module.ts      ConfigModule + MongooseModule + the four feature modules
+  auth/              signup, login, logout, me — plus the global JwtAuthGuard
+  category/          the reference domain: schema, dto, service, controller
+  product/           the largest: R2 images, modules[] flattening
+  storage/           ObjectStorageService — the only place that talks to R2
+  common/            AllExceptionsFilter, ParseObjectIdPipe
+test/                shared harness + the characterization suite
+```
 
 ## Commands
 
@@ -39,29 +43,28 @@ yarn start        # node dist/main (PORT env, default 5000)
 yarn build        # nest build
 yarn type-check   # tsc --noEmit, strict
 yarn test         # jest
-node --check <f>  # syntax gate for the remaining .js files; also a PostToolUse hook
 ```
 
-`src/main.ts` is the entry point. It boots Nest, then mounts the not-yet-ported
-Express routers with `app.use()` — so both stacks answer on the same port and a
-domain is handed over by deleting its line from `routes/index.js`. Express
-middleware runs before Nest's router, so leaving that line in place means the
-old handler keeps shadowing the new controller with no error anywhere.
-
 Specs run against an in-memory mongod (`test/global-setup.ts`) with deliberately
-fake credentials (`test/setup-env.ts`). No spec can reach the real cluster or
-the real bucket.
+fake credentials (`test/setup-env.ts`), and `ConfigModule` skips `.env` when
+`NODE_ENV=test`. No spec can reach the real cluster or the real bucket.
 
 ## The five-second version
 
 - MongoDB stores object **keys** (`imageName`, `imageNameList[]`), never URLs.
-- `GET /api/products` and `/:id` return **201**. That is current behaviour and
-  the characterization specs pin it — do not "fix" it in isolation.
-- Mutating routes sit behind auth. The deliberate exceptions are the whole `auth`
-  domain and `POST /api/products/filter`, which uses a mutation verb to run a read.
+  `ObjectStorageService` composes public URLs at read time.
+- `GET /api/products` and `/:id` return **201**. Inherited behaviour, pinned by
+  the characterization suite — do not "fix" it in isolation.
+- Mutating routes sit behind `JwtAuthGuard`. The deliberate exceptions are the
+  whole `auth` domain and `POST /api/products/filter`, which uses a mutation
+  verb to run a read.
 - `modules[]` is stored as `{ productId, quantity }` and **flattened** on read
-  into `{ _id, name, price, currency, imageUrl, quantity }` — the API shape is
-  not the schema shape.
-- The `Product.imageUrl` column is dead. `updateProduct` still writes it; every
-  read path ignores it and regenerates from `imageName`.
-- `migrations/` holds one-shot scripts. Nothing runs them automatically.
+  into `{ _id, name, price, currency, imageUrl, quantity, … }` plus a computed
+  `totalPrice` — the API shape is not the schema shape.
+- Errors always come back as `{ statusCode, message, path, errors? }`.
+- A `@Body()` parameter must be annotated with the DTO itself. Writing
+  `Dto | undefined` makes Nest resolve the metatype to `Object`, and the global
+  `ValidationPipe` then silently stops validating that endpoint. Use a default
+  (`dto: FilterDto = {}`) when the body is optional.
+- Route declaration order matters: `create-images/:id` has to be declared before
+  `:id`, or `:id` swallows it.

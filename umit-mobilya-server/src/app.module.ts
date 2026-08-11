@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { validateEnvironment } from './config/env.validation';
+import { ProductModule } from './product/product.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -24,8 +26,10 @@ import { validateEnvironment } from './config/env.validation';
         uri: config.getOrThrow<string>('MONGO_URI'),
       }),
     }),
+    StorageModule,
     AuthModule,
     CategoryModule,
+    ProductModule,
   ],
 })
 export class AppModule {}

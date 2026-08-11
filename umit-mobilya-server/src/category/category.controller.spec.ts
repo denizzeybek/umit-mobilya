@@ -49,10 +49,10 @@ describe('CategoryController', () => {
     expect(service.filter).toHaveBeenCalledWith({ name: 'koltuk' });
   });
 
-  it('filter tolerates a GET with no body at all', async () => {
+  it('filter defaults to an empty filter when the GET carries no body', async () => {
     service.filter.mockResolvedValue([]);
 
-    await controller.filter(undefined);
+    await controller.filter();
 
     expect(service.filter).toHaveBeenCalledWith({});
   });

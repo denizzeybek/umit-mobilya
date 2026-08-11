@@ -618,7 +618,12 @@ describe('/api/products (characterization)', () => {
       expect(response.body.product.modules[0].quantity).toBe(5);
     });
 
-    it('responds 400 when an entry has no quantity', async () => {
+    /*
+     * Status unchanged at 400. The Express version answered the flat
+     * "Geçersiz modül listesi" for every malformed list; the message now names
+     * the entry and the field, which is what makes it actionable.
+     */
+    it('responds 400 and names the offending entry when quantity is missing', async () => {
       const moduleId = await seedProduct({ name: 'Puf' });
       const setId = await seedProduct({ name: 'Set' });
 
@@ -629,7 +634,19 @@ describe('/api/products (characterization)', () => {
       ).send({ modules: [{ productId: moduleId }] });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toBe('Geçersiz modül listesi');
+      expect(response.body.message).toContain('modules.0.quantity');
+    });
+
+    it('responds 400 when an entry has a productId that is not an id', async () => {
+      const setId = await seedProduct({ name: 'Set' });
+
+      const response = await auth(
+        request(app.getHttpServer()).put(
+          `/api/products/update-modules/${setId}`,
+        ),
+      ).send({ modules: [{ productId: 'not-an-id', quantity: 1 }] });
+
+      expect(response.status).toBe(400);
     });
   });
 });

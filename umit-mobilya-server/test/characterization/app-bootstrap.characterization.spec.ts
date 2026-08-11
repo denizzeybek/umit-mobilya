@@ -6,21 +6,19 @@ import { createTestApp } from '../create-test-app';
 import { connectTestMongo, disconnectTestMongo } from '../mongo-memory';
 
 /**
- * The migration rests on one claim: a NestJS app can serve the not-yet-ported
- * Express routers on the same port, so the handover happens domain by domain
- * instead of in one jump. This spec is that claim, checked.
+ * The service-wide contract: what boots, what is published, and who is let in.
  *
- * It also pins the ordering rule that makes the handover work — Express
- * middleware added with `app.use()` runs before Nest's router, so a domain is
- * released by deleting its line from `routes/index.js`, not by adding a Nest
- * controller and hoping.
+ * The path list below is not decoration. The frontend's `yarn gcl` generates
+ * its API client from exactly this schema, so a path missing here is a method
+ * missing there. Adding an endpoint means adding it to this list too — which
+ * is the point: the list makes "did we remember to expose it?" a test failure
+ * rather than a discovery made in the browser.
  */
-describe('Nest bootstrap with the legacy Express mount', () => {
+describe('Service bootstrap', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     await connectTestMongo();
-
     app = await createTestApp();
   });
 
@@ -29,7 +27,7 @@ describe('Nest bootstrap with the legacy Express mount', () => {
     await disconnectTestMongo();
   });
 
-  it('serves a legacy Express route through the Nest server', async () => {
+  it('answers a request end to end', async () => {
     await mongoose.connection
       .collection('categories')
       .insertOne({ name: 'Koltuk', createdAt: new Date() });
@@ -37,7 +35,6 @@ describe('Nest bootstrap with the legacy Express mount', () => {
     const response = await request(app.getHttpServer()).get('/api/categories');
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(1);
     expect(response.body[0].name).toBe('Koltuk');
   });
 
@@ -49,19 +46,26 @@ describe('Nest bootstrap with the legacy Express mount', () => {
     expect(response.body.info.title).toBe('Ümit Mobilya API');
   });
 
-  /*
-   * This is the migration's progress bar. A path appears here the moment its
-   * domain moves to Nest, and only then does `yarn gcl` generate a client for
-   * it — the legacy Express routes are invisible to the schema, so anything
-   * still listed as "not described" is still un-ported.
-   */
-  it('describes the ported domains and not the ones still served by Express', async () => {
+  it('describes every endpoint, so the generated client covers the whole API', async () => {
     const response = await request(app.getHttpServer()).get('/docs-json');
-    const paths = Object.keys(response.body.paths ?? {});
 
-    expect(paths).toContain('/api/categories');
-    expect(paths).toContain('/api/auth/login');
-    expect(paths).not.toContain('/api/products');
+    expect(Object.keys(response.body.paths ?? {}).sort()).toEqual([
+      '/api/auth/login',
+      '/api/auth/logout',
+      '/api/auth/me',
+      '/api/auth/signup',
+      '/api/categories',
+      '/api/categories/filter',
+      '/api/categories/{id}',
+      '/api/products',
+      '/api/products/add-module',
+      '/api/products/create-images/{id}',
+      '/api/products/delete-image/{id}',
+      '/api/products/filter',
+      '/api/products/remove-module/{productId}/{moduleId}',
+      '/api/products/update-modules/{id}',
+      '/api/products/{id}',
+    ]);
   });
 
   it('rejects an origin that is absent from ALLOWED_ORIGINS without echoing it back', async () => {
@@ -70,5 +74,24 @@ describe('Nest bootstrap with the legacy Express mount', () => {
       .set('Origin', 'https://not-allowed.example');
 
     expect(response.headers['access-control-allow-origin']).toBeUndefined();
+  });
+
+  it('allows the configured origin', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/categories')
+      .set('Origin', 'http://localhost:3001');
+
+    expect(response.headers['access-control-allow-origin']).toBe(
+      'http://localhost:3001',
+    );
+  });
+
+  it('rejects a request carrying a field no DTO declares', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/products/filter')
+      .send({ name: 'Koltuk', isAdmin: true });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toContain('isAdmin');
   });
 });
