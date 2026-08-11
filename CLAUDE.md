@@ -86,7 +86,7 @@ imports → `IProps`/`defineProps` → `IEmits`/`defineEmits` → composables & 
 
 There is **no CI in this repo** — no `.github/` directory. Both hosts deploy from git themselves:
 
-- **Frontend → Netlify.** `umit-mobilya-client/netlify.toml` sets `base`, `command = yarn build`, `publish = dist`, and pins Node 18. `public/_redirects` holds the SPA fallback (`/* /index.html 200`); without it a direct visit to `/login` or `/products` 404s, because the router uses `createWebHistory`. Env vars come from the Netlify dashboard.
+- **Frontend → Netlify.** `netlify.toml` sits at the **repo root** (Netlify only looks there) and sets `base = umit-mobilya-client`, `command = yarn build`, `publish = dist`, and pins Node 18. `public/_redirects` holds the SPA fallback (`/* /index.html 200`); without it a direct visit to `/login` or `/products` 404s, because the router uses `createWebHistory`. Env vars come from the Netlify dashboard.
 - **Backend → Railway.** `yarn start` (`node app.js`) is the start command and `app.js` already honours the injected `PORT`. There is no Dockerfile in the server, so Nixpacks detects it; the root directory must be set to `umit-mobilya-server`. Env vars come from the Railway dashboard, and dependencies are installed on deploy.
 - **Images → Cloudflare R2**, **database → MongoDB Atlas** (Atlas needs Railway's egress allowed under Network Access).
 

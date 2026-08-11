@@ -52,7 +52,7 @@ Rules for writing code in `umit-mobilya-client/`. Architecture lives in the root
 
 ## Deploy
 
-19. `netlify.toml` carries the monorepo wiring: `base = "umit-mobilya-client"`, `command = "yarn build"`, `publish = "dist"` (resolved relative to `base`), plus `NODE_VERSION = "18"`. Netlify needs it because the repo root is not the app root — don't move or flatten it.
+19. `netlify.toml` lives at the **repo root**, not in this folder — Netlify only reads it from the root of the repository. It carries the monorepo wiring: `base = "umit-mobilya-client"`, `command = "yarn build"`, `publish = "dist"` (resolved relative to `base`), plus `NODE_VERSION = "18"`. Leave the Netlify UI's base directory field empty; setting it too would nest the path twice.
 20. `public/_redirects` holds the SPA fallback `/*  /index.html  200`. The router uses `createWebHistory`, so without this file a direct visit to `/login` or `/products` returns Netlify's 404 instead of the app. Vite copies `public/` into `dist/` verbatim; verify it lands in `dist/_redirects` after a build.
 
 ## Best practices
