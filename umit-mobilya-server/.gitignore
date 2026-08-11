@@ -33,3 +33,6 @@ coverage
 storybook-static
 .yarn
 .yarnrc.yml
+
+# TypeScript incremental build state
+*.tsbuildinfo

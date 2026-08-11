@@ -10,21 +10,32 @@ repo_root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
 [[ -z "$repo_root" ]] && exit 0
 
 client="$repo_root/umit-mobilya-client"
+server="$repo_root/umit-mobilya-server"
 
 staged="$(git -C "$repo_root" diff --cached --name-only 2>/dev/null || true)"
 [[ -z "$staged" ]] && exit 0
 
-printf '%s\n' "$staged" | grep -q '^umit-mobilya-client/src/' || exit 0
-[[ -d "$client/node_modules" ]] || exit 0
-
 failures=""
+logs=""
 
-if ! (cd "$client" && yarn --silent lint >/tmp/umb-lint.log 2>&1); then
-  failures="${failures}  yarn lint\n"
+run_gate() {
+  local dir="$1" script="$2" log="$3"
+  if ! (cd "$dir" && yarn --silent "$script" >"$log" 2>&1); then
+    failures="${failures}  ($(basename "$dir")) yarn ${script}\n"
+    logs="${logs} ${log}"
+  fi
+}
+
+if printf '%s\n' "$staged" | grep -q '^umit-mobilya-client/src/' \
+  && [[ -d "$client/node_modules" ]]; then
+  run_gate "$client" lint /tmp/umb-client-lint.log
+  run_gate "$client" type-check /tmp/umb-client-tsc.log
 fi
 
-if ! (cd "$client" && yarn --silent type-check >/tmp/umb-tsc.log 2>&1); then
-  failures="${failures}  yarn type-check\n"
+if printf '%s\n' "$staged" | grep -qE '^umit-mobilya-server/(src|test)/' \
+  && [[ -d "$server/node_modules" ]]; then
+  run_gate "$server" type-check /tmp/umb-server-tsc.log
+  run_gate "$server" test /tmp/umb-server-test.log
 fi
 
 if [[ -n "$failures" ]]; then
@@ -33,8 +44,9 @@ if [[ -n "$failures" ]]; then
     echo
     printf "%b" "$failures"
     echo
-    echo "--- last 20 lines ---"
-    tail -20 /tmp/umb-lint.log /tmp/umb-tsc.log 2>/dev/null || true
+    echo "--- last 25 lines ---"
+    # shellcheck disable=SC2086
+    tail -25 $logs 2>/dev/null || true
     echo
     echo "Fix these, or say explicitly that you are committing a known-red state."
     echo "See .claude/rules/done-checklist.md"

@@ -34,12 +34,23 @@ moved. Never add surface to the old Express controllers.
 ## Commands
 
 ```bash
-yarn dev          # nodemon app.js — never run this in a tool call, it blocks
-yarn start        # node app.js (PORT env, default 5000)
+yarn dev          # nest start --watch — never run this in a tool call, it blocks
+yarn start        # node dist/main (PORT env, default 5000)
+yarn build        # nest build
+yarn type-check   # tsc --noEmit, strict
+yarn test         # jest
 node --check <f>  # syntax gate for the remaining .js files; also a PostToolUse hook
 ```
 
-Jest arrives with the NestJS skeleton. Until then there is no test command.
+`src/main.ts` is the entry point. It boots Nest, then mounts the not-yet-ported
+Express routers with `app.use()` — so both stacks answer on the same port and a
+domain is handed over by deleting its line from `routes/index.js`. Express
+middleware runs before Nest's router, so leaving that line in place means the
+old handler keeps shadowing the new controller with no error anywhere.
+
+Specs run against an in-memory mongod (`test/global-setup.ts`) with deliberately
+fake credentials (`test/setup-env.ts`). No spec can reach the real cluster or
+the real bucket.
 
 ## The five-second version
 

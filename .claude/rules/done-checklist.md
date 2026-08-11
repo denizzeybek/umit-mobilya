@@ -28,18 +28,24 @@ every command above.
 
 ## Server — `umit-mobilya-server/`
 
-Current state (pre-migration):
+The NestJS half (`src/`, `test/`):
+
+```bash
+yarn test         # Jest; the spec you wrote must be green
+yarn type-check   # tsc --noEmit, strict
+yarn build        # nest build
+```
+
+The not-yet-ported Express half (`routes/`, `controllers/`, `models/`):
 
 ```bash
 node --check <changed-file>   # syntax gate, also enforced by a PostToolUse hook
 ```
 
-After the NestJS migration:
-
-```bash
-yarn test         # Jest; the spec you wrote must be green
-yarn build        # nest build
-```
+A domain is only migrated when its characterization spec is green against the
+**new** implementation and its line is gone from `routes/index.js`. Leaving the
+legacy mount in place means the old handler still shadows the new controller —
+Express middleware runs before Nest's router, and nothing errors.
 
 ## Both
 

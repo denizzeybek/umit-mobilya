@@ -3,6 +3,7 @@
     "deny": [
       "Edit(./.env)",
       "Edit(./node_modules/**)",
+      "Edit(./dist/**)",
       "mcp__mongodb__drop-database",
       "mcp__mongodb__drop-collection"
     ],
@@ -13,6 +14,10 @@
     "allow": [
       "Bash(node --check *)",
       "Bash(node -e *)",
+      "Bash(yarn test*)",
+      "Bash(yarn build*)",
+      "Bash(yarn type-check*)",
+      "Bash(npx jest*)",
       "mcp__mongodb__find",
       "mcp__mongodb__list-collections",
       "mcp__mongodb__list-databases",
@@ -22,7 +27,37 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-spec-first.sh",
+            "timeout": 15,
+            "statusMessage": "Spec-first kontrolu..."
+          },
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/block-skip-and-only.sh",
+            "timeout": 15,
+            "statusMessage": "only/skip kontrolu..."
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/run-related-tests.sh",
+            "timeout": 120,
+            "statusMessage": "Ilgili testler calisiyor..."
+          }
+        ]
+      },
       {
         "matcher": "Write|Edit",
         "hooks": [
