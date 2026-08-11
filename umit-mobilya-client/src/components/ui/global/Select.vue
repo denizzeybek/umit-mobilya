@@ -56,7 +56,7 @@
 import Select, { type SelectProps } from 'primevue/select';
 import { useField } from 'vee-validate';
 
-import type { IOption } from '@/common/interfaces/option.interface';
+import type { IOption } from '@/interfaces/option.interface';
 
 export interface IProps {
   name: string;

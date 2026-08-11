@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 
 import axios from 'axios';
 
-import { EStorageKeys } from '@/constants/storageKeys';
+import { EStorageKeys } from '@/enums/storageKeys.enum';
 import { EStoreNames } from '@/stores/storeNames.enum';
 
 import { useUsersStore } from './users';
