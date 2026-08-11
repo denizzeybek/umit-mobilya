@@ -12,9 +12,15 @@ The Nest structure exists to split those responsibilities so each one can be tes
 
 | Domain | State | Order |
 |---|---|---|
-| `category` | Express (90 lines) | Migrate 1st — cheapest place to establish the pattern |
+| `category` | **Ported** — `src/category/` | Done. Copy this shape for the rest. |
 | `auth` | Express (113 lines) | Migrate 2nd — guard/strategy pattern |
 | `product` | Express (532 lines) | Migrate 3rd — R2 and module logic, once the pattern is settled |
+
+`src/category/` is the reference implementation: `schemas/`, `dto/`, service,
+controller, module — plus a spec beside the service and the controller, and the
+HTTP contract pinned in `test/characterization/`. `JwtAuthGuard`
+(`src/auth/guards/`) and `ParseObjectIdPipe` (`src/common/pipes/`) are shared;
+reuse them rather than writing a second copy.
 
 Both stacks run side by side during the move. That is expected, not a problem to fix early.
 

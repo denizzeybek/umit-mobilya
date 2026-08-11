@@ -70,8 +70,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
       if (typeof message === 'string') {
         return message;
       }
-      if (Array.isArray(message) && typeof message[0] === 'string') {
-        return message[0];
+      if (Array.isArray(message)) {
+        /*
+         * class-validator returns one string per failed constraint, in
+         * decorator-evaluation order — which is bottom-up, so `message[0]`
+         * would surface "name must be shorter than 120 characters" for a
+         * field that was simply missing. The frontend puts this straight into
+         * a toast, so all of them are joined instead of picking one at random.
+         */
+        return message.map(String).join(', ');
       }
       return exception.message;
     }

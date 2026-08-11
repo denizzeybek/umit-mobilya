@@ -1,11 +1,8 @@
 import type { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 import mongoose from 'mongoose';
 import request from 'supertest';
 
-import { AppModule } from '../../src/app.module';
-import { mountLegacyExpress } from '../../src/legacy/legacy-express';
-import { setupApp } from '../../src/setup-app';
+import { createTestApp } from '../create-test-app';
 import { connectTestMongo, disconnectTestMongo } from '../mongo-memory';
 
 /**
@@ -24,15 +21,7 @@ describe('Nest bootstrap with the legacy Express mount', () => {
   beforeAll(async () => {
     await connectTestMongo();
 
-    const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleRef.createNestApplication();
-    setupApp(app);
-    await mountLegacyExpress(app);
-
-    await app.init();
+    app = await createTestApp();
   });
 
   afterAll(async () => {
@@ -60,12 +49,19 @@ describe('Nest bootstrap with the legacy Express mount', () => {
     expect(response.body.info.title).toBe('Ümit Mobilya API');
   });
 
-  it('does not describe the legacy Express routes in the schema', async () => {
+  /*
+   * This is the migration's progress bar. A path appears here the moment its
+   * domain moves to Nest, and only then does `yarn gcl` generate a client for
+   * it — the legacy Express routes are invisible to the schema, so anything
+   * still listed as "not described" is still un-ported.
+   */
+  it('describes the ported domains and not the ones still served by Express', async () => {
     const response = await request(app.getHttpServer()).get('/docs-json');
+    const paths = Object.keys(response.body.paths ?? {});
 
-    expect(Object.keys(response.body.paths ?? {})).not.toContain(
-      '/api/categories',
-    );
+    expect(paths).toContain('/api/categories');
+    expect(paths).not.toContain('/api/products');
+    expect(paths).not.toContain('/api/auth/login');
   });
 
   it('rejects an origin that is absent from ALLOWED_ORIGINS without echoing it back', async () => {

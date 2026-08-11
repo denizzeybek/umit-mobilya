@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { CategoryModule } from './category/category.module';
 import { validateEnvironment } from './config/env.validation';
 
 @Module({
@@ -22,6 +23,7 @@ import { validateEnvironment } from './config/env.validation';
         uri: config.getOrThrow<string>('MONGO_URI'),
       }),
     }),
+    CategoryModule,
   ],
 })
 export class AppModule {}

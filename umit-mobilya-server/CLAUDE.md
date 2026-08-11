@@ -24,7 +24,7 @@ Moving from Express + CommonJS to **NestJS + TypeScript**, domain by domain:
 
 | Domain | State |
 |---|---|
-| `category` | Express — 90 lines |
+| `category` | **NestJS** — `src/category/`, in the OpenAPI schema |
 | `auth` | Express — 113 lines |
 | `product` | Express — 532 lines |
 
