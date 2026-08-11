@@ -4,9 +4,12 @@
       "Edit(./components.d.ts)",
       "Edit(./dist/**)",
       "Edit(./*.tsbuildinfo)",
-      "Edit(./.env)"
+      "Edit(./.env)",
+      "Edit(./src/client/**)",
+      "Write(./src/client/**)"
     ],
     "allow": [
+      "Bash(yarn lint*)",
       "Bash(yarn build*)",
       "Bash(yarn type-check*)",
       "Bash(yarn test:unit*)",
@@ -16,6 +19,19 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-client/.claude/hooks/enforce-no-any.sh",
+            "timeout": 15,
+            "statusMessage": "any kontrolu..."
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",

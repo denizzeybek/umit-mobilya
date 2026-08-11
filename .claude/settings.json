@@ -22,6 +22,8 @@
       "Edit(./umit-mobilya-client/dist/**)",
       "Edit(./umit-mobilya-client/*.tsbuildinfo)",
       "Edit(./**/node_modules/**)",
+      "Edit(./umit-mobilya-client/src/client/**)",
+      "Write(./umit-mobilya-client/src/client/**)",
       "Bash(rm -rf *)",
       "mcp__mongodb__drop-database",
       "mcp__mongodb__drop-collection"
@@ -36,7 +38,14 @@
             "type": "command",
             "if": "Bash(git push*)",
             "statusMessage": "Deploy guard: branch kontrol ediliyor",
-            "command": "cmd=$(jq -r '.tool_input.command // \"\"' 2>/dev/null); case \"$cmd\" in *\"git push\"*) br=$(git -C /Users/denizzeybek/Documents/umit-mobilya rev-parse --abbrev-ref HEAD 2>/dev/null); [ \"$br\" = \"main\" ] && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"UYARI: main branch uzerindesin. main e push PRODUCTION deploy tetikler - frontend S3 e (.github/workflows/frontend.yml), backend EC2 ye (.github/workflows/backend.yaml, systemctl restart myapp.service). Devam etmek istedigine emin ol.\"}}' ;; esac; exit 0"
+            "command": "cmd=$(jq -r '.tool_input.command // \"\"' 2>/dev/null); case \"$cmd\" in *\"git push\"*) br=$(git -C /Users/denizzeybek/Documents/umit-mobilya rev-parse --abbrev-ref HEAD 2>/dev/null); [ \"$br\" = \"main\" ] && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"UYARI: main branch uzerindesin. main e push PRODUCTION deploy tetikler - frontend Netlify de yeniden build edilir, backend Railway de yeniden deploy olur. Arada CI kapisi ve review adimi yok. Devam etmek istedigine emin ol.\"}}' ;; esac; exit 0"
+          },
+          {
+            "type": "command",
+            "if": "Bash(git commit*)",
+            "statusMessage": "Kalite kapilari calisiyor (lint + type-check)...",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/enforce-pre-commit-quality.sh",
+            "timeout": 180
           }
         ]
       }
