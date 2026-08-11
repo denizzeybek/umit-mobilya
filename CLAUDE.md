@@ -1,6 +1,28 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file describes the **architecture**. The rules that govern how code is
+written live in `.claude/rules/` — read the one that covers what you are about
+to touch.
+
+## Rules index
+
+Repo-wide (`.claude/rules/`), applying to both apps:
+
+| File | Covers |
+|---|---|
+| [`comment-policy.md`](.claude/rules/comment-policy.md) | Which `//` comments the global hook allows; where JSDoc is functional |
+| [`done-checklist.md`](.claude/rules/done-checklist.md) | The gates to run before calling a change done — there is no CI here |
+| [`git-workflow.md`](.claude/rules/git-workflow.md) | Branch first, Turkish commit messages, `main` is deployed |
+
+Per app:
+
+- **Client** — `umit-mobilya-client/.claude/rules/`, indexed in
+  [`umit-mobilya-client/CLAUDE.md`](umit-mobilya-client/CLAUDE.md): TypeScript
+  strictness, API layer, Vue components, generated code, forms and tables,
+  routing and config.
+- **Server** — `umit-mobilya-server/.claude/rules/`, indexed in
+  [`umit-mobilya-server/CLAUDE.md`](umit-mobilya-server/CLAUDE.md): TDD
+  discipline, backend architecture, validation and errors, config and secrets.
 
 ## Repository layout
 
@@ -15,6 +37,7 @@ Client (`cd umit-mobilya-client`):
 
 ```bash
 yarn dev          # vite dev server on port 3001 (the server's default CORS origin)
+yarn lint         # eslint flat config (eslint.config.js)
 yarn build        # vue-tsc -b && vite build
 yarn type-check   # vue-tsc --noEmit -p tsconfig.vitest.json
 yarn test:unit    # vitest (watch); vitest run <path> for a single file
@@ -35,7 +58,6 @@ Env files are gitignored and must exist locally:
 A new `VITE_*` var must also be added in the Netlify dashboard, and a new server var in the Railway dashboard — neither is read from the repo.
 
 Known broken/absent tooling — don't assume these work:
-- `yarn lint` is defined but there is **no ESLint config file** (neither `eslint.config.js` nor `.eslintrc*`).
 - `yarn generate-icon-names` points at a `scripts/` directory that doesn't exist.
 - No test files exist yet, though vitest + jsdom are configured.
 - `tsconfig.*.tsbuildinfo` files are committed and churn on every build; ignore them in diffs. (`dist/` is gitignored.)
