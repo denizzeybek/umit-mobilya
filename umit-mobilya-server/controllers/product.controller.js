@@ -8,33 +8,36 @@ const dotenv = require('dotenv');
 const {
   S3Client,
   PutObjectCommand,
-  GetObjectCommand,
   DeleteObjectCommand,
 } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 dotenv.config(); // En üstte olmalı!
 
 const bucketName = process.env.BUCKET_NAME;
-const bucketRegion = process.env.BUCKET_REGION;
 const accessKey = process.env.ACCESS_KEY;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+const publicBucketUrl = (process.env.PUBLIC_BUCKET_URL ?? '').replace(
+  /\/+$/,
+  '',
+);
 
+/* Cloudflare R2: region daima 'auto', endpoint hesaba özeldir. */
 const s3 = new S3Client({
+  region: 'auto',
+  endpoint: process.env.S3_ENDPOINT,
   credentials: {
     accessKeyId: accessKey,
     secretAccessKey: secretAccessKey,
   },
-  region: bucketRegion,
 });
 
-// Helper function to generate signed URLs
-const generateImageUrl = async (key) => {
-  if (!key) return null;
-  const params = { Bucket: process.env.BUCKET_NAME, Key: key };
-  const command = new GetObjectCommand(params);
-  return await getSignedUrl(s3, command, { expiresIn: 3600 });
-};
+/**
+ * Bucket public olduğu için imzalı URL üretilmez; key doğrudan public
+ * domain'e eklenir. Key'ler orijinal dosya adından türediği için boşluk
+ * içerebiliyor, bu yüzden encode ediliyor.
+ */
+const generateImageUrl = (key) =>
+  key ? `${publicBucketUrl}/${encodeURIComponent(key)}` : null;
 
 const getProducts = async (payload) => {
   try {
@@ -54,62 +57,48 @@ const getProducts = async (payload) => {
       })
       .populate('category');
 
-    // Process products and modules
-    const result = await Promise.all(
-      products.map(async (product) => {
-        const imageName = product.imageName;
-        const imageUrl = await generateImageUrl(imageName);
-        const imageUrlList = await Promise.all(
-          product.imageNameList.map(async (imageName) => {
-            return await generateImageUrl(imageName); // await the async function
-          }),
-        );
+    const result = products.map((product) => {
+      const imageName = product.imageName;
+      const imageUrl = generateImageUrl(imageName);
+      const imageUrlList = product.imageNameList.map((name) =>
+        generateImageUrl(name),
+      );
 
-        const modules = await Promise.all(
-          product.modules.map(async (module) => {
-            const moduleImageUrl = await generateImageUrl(
-              module.productId?.imageName,
-            );
+      const modules = product.modules.map((module) => ({
+        _id: module.productId?._id,
+        name: module.productId?.name,
+        price: module.productId?.price,
+        currency: module.productId?.currency,
+        imageUrl: generateImageUrl(module.productId?.imageName),
+        quantity: module.quantity,
+        sizes: module.productId?.sizes,
+        description: module.productId?.description,
+        category: module.productId?.category,
+      }));
 
-            return {
-              _id: module.productId?._id,
-              name: module.productId?.name,
-              price: module.productId?.price,
-              currency: module.productId?.currency,
-              imageUrl: moduleImageUrl,
-              quantity: module.quantity,
-              sizes: module.productId?.sizes,
-              description: module.productId?.description,
-              category: module.productId?.category,
-            };
-          }),
-        );
+      const moduleTotalPrice = modules.reduce(
+        (sum, module) => sum + (module.price || 0) * (module.quantity || 1),
+        0,
+      );
+      const totalPrice = (product.price || 0) + moduleTotalPrice;
 
-        // Calculate total price
-        const moduleTotalPrice = modules.reduce(
-          (sum, module) => sum + (module.price || 0) * (module.quantity || 1),
-          0,
-        );
-        const totalPrice = (product.price || 0) + moduleTotalPrice;
-
-        return {
-          _id: product._id,
-          name: product.name,
-          price: product.price,
-          currency: product.currency,
-          imageName,
-          imageUrl,
-          imageUrlList,
-          sizes: product.sizes,
-          description: product.description,
-          category: product.category,
-          quantity: product.quantity,
-          modules,
-          totalPrice,
-          imageNameList: product.imageNameList,
-        };
-      }),
-    );
+      return {
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        currency: product.currency,
+        imageName,
+        imageUrl,
+        imageUrlList,
+        sizes: product.sizes,
+        description: product.description,
+        category: product.category,
+        quantity: product.quantity,
+        modules,
+        totalPrice,
+        imageNameList: product.imageNameList,
+      };
+    });
 
     return result;
   } catch (error) {
@@ -163,6 +152,23 @@ const randomImageName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString('hex');
 };
 
+/**
+ * Key public URL'in parçası olduğu için dosya adındaki boşluk ve
+ * URL-güvensiz karakterler tireye indirgenir. Rastgele son ek korunduğu
+ * için benzersizlik değişmez.
+ */
+const buildImageKey = (originalname = '') => {
+  const base = originalname
+    .split('.')[0]
+    .normalize('NFKD')
+    .replace(/[^\w.-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+
+  return `${base || 'image'}-${randomImageName()}`;
+};
+
 // Yeni ürün ekleme
 
 exports.createProduct = async (req, res) => {
@@ -171,8 +177,7 @@ exports.createProduct = async (req, res) => {
       .resize({ height: 600, width: 900, fit: 'inside' })
       .toBuffer();
 
-    const imageInitialName = req.file.originalname.split('.')[0];
-    const imageName = `${imageInitialName}-${randomImageName()}`;
+    const imageName = buildImageKey(req.file.originalname);
 
     const command = new PutObjectCommand({
       Bucket: bucketName,
@@ -243,8 +248,7 @@ exports.uploadMultipleImages = async (req, res) => {
           throw error;
         });
 
-      const imageInitialName = file.originalname.split('.')[0];
-      const imageName = `${imageInitialName}-${randomImageName()}`;
+      const imageName = buildImageKey(file.originalname);
 
       // Upload image to S3
       const command = new PutObjectCommand({
@@ -392,6 +396,21 @@ exports.deleteProduct = async (req, res) => {
     }
 
     // Burada silme işlemini gerçekleştirebilirsiniz
+    const imageKeys = [
+      product.imageName,
+      ...(product.imageNameList ?? []),
+    ].filter(Boolean);
+
+    await Promise.all(
+      imageKeys.map(async (Key) => {
+        try {
+          await s3.send(new DeleteObjectCommand({ Bucket: bucketName, Key }));
+        } catch (error) {
+          console.error('R2 objesi silinemedi:', Key, error.message);
+        }
+      }),
+    );
+
     await Product.findByIdAndDelete(req.params.id);
 
     res.json({ message: 'Ürün silindi' });
@@ -416,7 +435,7 @@ exports.deleteImage = async (req, res) => {
     }
 
     const params = {
-      Bucket: process.env.BUCKET_NAME,
+      Bucket: bucketName,
       Key: imageName,
     };
 

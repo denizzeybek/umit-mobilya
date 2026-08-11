@@ -14,7 +14,7 @@ Two independent apps in one repo (no workspace tooling — each has its own `pac
 Client (`cd umit-mobilya-client`):
 
 ```bash
-yarn dev          # vite dev server on port 3001 (server CORS only allows :3001)
+yarn dev          # vite dev server on port 3001 (the server's default CORS origin)
 yarn build        # vue-tsc -b && vite build
 yarn type-check   # vue-tsc --noEmit -p tsconfig.vitest.json
 yarn test:unit    # vitest (watch); vitest run <path> for a single file
@@ -30,15 +30,15 @@ yarn start        # node app.js  (PORT env, default 5000)
 
 Env files are gitignored and must exist locally:
 - client `.env`: `VITE_API_URL`, `VITE_I18N_LOCALE`
-- server `.env`: `MONGO_URI`, `JWT_SECRET`, `PORT`, `BUCKET_NAME`, `BUCKET_REGION`, `ACCESS_KEY`, `SECRET_ACCESS_KEY`
+- server `.env`: `MONGO_URI`, `JWT_SECRET`, `PORT`, `ALLOWED_ORIGINS`, `BUCKET_NAME`, `S3_ENDPOINT`, `PUBLIC_BUCKET_URL`, `ACCESS_KEY`, `SECRET_ACCESS_KEY`
 
-Adding a new `VITE_*` var also requires adding it to `.github/workflows/frontend.yml` (it writes `.env` from GitHub secrets at build time).
+A new `VITE_*` var must also be added in the Netlify dashboard, and a new server var in the Railway dashboard — neither is read from the repo.
 
 Known broken/absent tooling — don't assume these work:
 - `yarn lint` is defined but there is **no ESLint config file** (neither `eslint.config.js` nor `.eslintrc*`).
 - `yarn generate-icon-names` points at a `scripts/` directory that doesn't exist.
 - No test files exist yet, though vitest + jsdom are configured.
-- `tsconfig.*.tsbuildinfo` and `dist/` are committed and churn on every build; ignore them in diffs.
+- `tsconfig.*.tsbuildinfo` files are committed and churn on every build; ignore them in diffs. (`dist/` is gitignored.)
 
 ## Backend architecture
 
@@ -46,11 +46,14 @@ Known broken/absent tooling — don't assume these work:
 
 **Auth**: JWT signed in `auth.controller.js` (3-day expiry), returned in the login response *and* set as an `httpOnly` `jwt` cookie. Two middlewares in `middleware/auth.middleware.js`: `requireAuth` reads the `Authorization: Bearer` header (used on all mutating routes), `checkUser` reads the cookie. Password hashing + a `User.login()` static live as Mongoose hooks on `models/user.model.js`.
 
-**Images / S3** — the core non-obvious piece, all inside `controllers/product.controller.js`:
-- MongoDB stores only S3 **keys** (`imageName`, `imageNameList[]`), never URLs.
-- Every read path passes keys through `generateImageUrl()`, which mints a **presigned GET URL with a 1-hour expiry**. So `imageUrl`/`imageUrlList` on API responses are ephemeral and must not be persisted or cached long-term by the client.
-- Uploads use `multer.memoryStorage()` (buffers, not disk) → `sharp` resize → `PutObjectCommand`. Key names are random hex via `crypto`.
+**Images / object storage** — the core non-obvious piece, all inside `controllers/product.controller.js`:
+- Storage is **Cloudflare R2**, driven through `@aws-sdk/client-s3` because R2 is S3-compatible. The client is configured with `region: 'auto'` and `endpoint: process.env.S3_ENDPOINT` — both are R2 requirements.
+- MongoDB stores only **keys** (`imageName`, `imageNameList[]`), never URLs. This keeps rows portable if the public domain or bucket changes.
+- The bucket is **public**. `generateImageUrl()` is synchronous and just joins `PUBLIC_BUCKET_URL` with the URL-encoded key — no signing, no expiry. Response `imageUrl`/`imageUrlList` values are stable, so browser and CDN caching work; they may be cached freely.
+- Keys are built by `buildImageKey()`: the original filename is slugified (non-`[\w.-]` runs collapse to `-`, lowercased) and suffixed with 32 random bytes of hex. Slugifying matters because the key is now part of a public URL.
+- Uploads use `multer.memoryStorage()` (buffers, not disk) → `sharp` resize → `PutObjectCommand`.
 - Single main image: `upload.single('image')` on `POST /api/products`. Gallery: `upload.array('image', 20)` on `PUT /api/products/create-images/:id` — note the field name is still singular `image`.
+- Both `deleteImage` and `deleteProduct` remove the objects from R2; deletion failures are logged and swallowed so a storage error can't block the DB delete.
 
 **Modular products**: `product.modules` is an array of `{ productId: ObjectId(ref Product), quantity }`. A product is both a standalone item and a possible module of another. Read queries deep-populate `modules.productId` *and* its `category`, then flatten each module into `{_id, name, price, currency, imageUrl, quantity}` before responding — so the API shape of a module differs from the stored schema. Module endpoints: `POST /add-module`, `DELETE /remove-module/:productId/:moduleId`, `PUT /update-modules/:id`.
 
@@ -81,8 +84,10 @@ imports → `IProps`/`defineProps` → `IEmits`/`defineEmits` → composables & 
 
 ## Deployment
 
-Both `.github/workflows/*.yml` trigger on push to `main`, environment `umit-mobilya-deployment`:
-- **frontend.yml**: writes `.env` from secrets → `npm install && npm run build` → `aws s3 sync ./dist/ s3://$S3_BUCKET_NAME --delete`.
-- **backend.yaml**: `rsync` the server folder to `~/app` on EC2 (excluding `node_modules`/`.git`/`.env`) → `sudo systemctl restart myapp.service`. Dependencies are **not** installed by CI, so adding a server dependency requires a manual `yarn install` on the box.
+There is **no CI in this repo** — no `.github/` directory. Both hosts deploy from git themselves:
 
-The server's CORS allowlist in `app.js` is a hardcoded array — a new frontend origin/domain must be added there.
+- **Frontend → Netlify.** `umit-mobilya-client/netlify.toml` sets `base`, `command = yarn build`, `publish = dist`, and pins Node 18. `public/_redirects` holds the SPA fallback (`/* /index.html 200`); without it a direct visit to `/login` or `/products` 404s, because the router uses `createWebHistory`. Env vars come from the Netlify dashboard.
+- **Backend → Railway.** `yarn start` (`node app.js`) is the start command and `app.js` already honours the injected `PORT`. There is no Dockerfile in the server, so Nixpacks detects it; the root directory must be set to `umit-mobilya-server`. Env vars come from the Railway dashboard, and dependencies are installed on deploy.
+- **Images → Cloudflare R2**, **database → MongoDB Atlas** (Atlas needs Railway's egress allowed under Network Access).
+
+The server's CORS allowlist is read from `ALLOWED_ORIGINS` (comma-separated, defaults to `http://localhost:3001`), so a new frontend domain is an env change, not a code change.

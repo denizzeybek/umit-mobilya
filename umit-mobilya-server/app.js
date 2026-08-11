@@ -22,13 +22,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-// Eğer belirli bir frontend domainine izin vermek istiyorsanız:
-const allowedOrigins = [
-  'http://localhost:3001', // Lokal geliştirme için
-  'http://umit-mobilya-client.s3-website-us-east-1.amazonaws.com', // Deploy edilen Vue uygulaması için (IP'n)
-  // Eğer ileride domain alırsan mesela:
-  // 'https://www.seninwebsiten.com'
-];
+/**
+ * İzinli origin'ler ALLOWED_ORIGINS ortam değişkeninden virgülle ayrılmış
+ * olarak okunur; böylece deploy domain'i değiştiğinde kod değişmez.
+ */
+const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:3001')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 app.use(cors({
   origin: function(origin, callback) {

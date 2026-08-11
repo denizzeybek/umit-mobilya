@@ -3,7 +3,7 @@
 ## Overview
 This is a full-stack modular furniture website project designed to provide a seamless user experience for browsing, customizing, and purchasing furniture. The platform supports modular product creation, allowing users to combine multiple products into a single package. For example, users can assemble a wardrobe by selecting and adding related products as modules.
 
-The project heavily utilizes images, and to manage this efficiently, it integrates with AWS S3 for image storage and retrieval.
+The project heavily utilizes images, and to manage this efficiently, it stores them in Cloudflare R2 and serves them from a public CDN domain.
 
 ## Technologies Used
 
@@ -18,13 +18,18 @@ The project heavily utilizes images, and to manage this efficiently, it integrat
 - **MongoDB**: NoSQL database for storing data in a flexible and scalable manner.
 
 ### Additional Tools:
-- **AWS S3**: Cloud storage service for handling the extensive use of images.
+- **Cloudflare R2**: S3-compatible object storage for the extensive use of images.
+
+### Hosting:
+- **Netlify**: Frontend hosting and builds.
+- **Railway**: Backend hosting.
+- **MongoDB Atlas**: Managed database.
 
 ## Features
 - **Product Browsing**: Users can view various furniture products with detailed descriptions and images.
 - **Modular Product Creation**: Users can create custom furniture packages by selecting related modules (e.g., combining parts of a modular wardrobe).
 - **Responsive Design**: The site is fully responsive and optimized for all devices.
-- **Image Management**: Efficiently handles numerous images through AWS S3 integration.
+- **Image Management**: Efficiently handles numerous images through Cloudflare R2 integration.
 - **User Authentication**: Secure login and registration system for personalized experiences.
 - **Advanced Search and Filter Options**: Easily find products using dynamic filters and search capabilities.
 

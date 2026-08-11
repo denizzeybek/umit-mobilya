@@ -8,11 +8,11 @@ Rules for writing code in `umit-mobilya-client/`. Architecture lives in the root
 |---|---|
 | `useFToast()` for toasts (§8) | Call vue-toastification's `useToast()` directly |
 | Use the value an action returns as-is (§10) | Read `response.data` again — the interceptor already unwrapped it |
-| Read/write localStorage through `EStorageKeys` (§23) | Pass bare strings like `'languageCode'` |
+| Read/write localStorage through `EStorageKeys` (§27) | Pass bare strings like `'languageCode'` |
 | Drop new global widgets in `components/ui/global/` (§5) | Import them explicitly — they're auto-registered as `F*` |
-| Build `FormData` inside the store action (§22) | Assemble multipart payloads in the component |
-| Render presigned S3 URLs immediately (§12) | Cache or persist them — they expire in 1 hour |
-| Add colors to `constants/colors.ts` (§21) | Hardcode hex values in templates |
+| Build `FormData` inside the store action (§25) | Assemble multipart payloads in the component |
+| Keep `public/_redirects` in place (§20) | Delete it — every deep link 404s on Netlify without it |
+| Add colors to `constants/colors.ts` (§26) | Hardcode hex values in templates |
 | `yarn format` / `yarn type-check` (§15) | `yarn lint` — there is no ESLint config |
 | Grep before renaming an `ERouteNames` value (§13) | Assume it's just a label — it's the route identity |
 | Let `unplugin-vue-components` regenerate `components.d.ts` (§6) | Hand-edit it |
@@ -36,31 +36,36 @@ Rules for writing code in `umit-mobilya-client/`. Architecture lives in the root
 9. Follow the existing action shape — `return new Promise((resolve, reject) => { axios...then(resolve).catch(reject) })`. Don't convert stores to bare `async/await`; keep the file internally consistent.
 10. The axios interceptor returns `response.data`, so an action already receives the payload body. Type it with `as unknown as IProduct[]`-style casts, and never read `response.data` again.
 11. Register new stores through `EStoreNames` (`src/stores/storeNames.enum.ts`) rather than passing a raw string id.
-12. Image URLs from the API are short-lived S3 presigned links — render them, never persist or cache them in a store beyond the current view.
+12. `imageUrl` / `imageUrlList` are **permanent public URLs** on Cloudflare R2 — the API composes them from the object key on every read. They don't expire, so caching them or holding them across views is safe. They are still derived values: never send them back to the server as the source of truth, and expect them to change wholesale if the storage domain changes.
 
 ## Routing & config
 
 13. `ERouteNames` values are Turkish display strings used simultaneously as route `name`, `meta.title`, and nav labels. Changing a value changes route identity everywhere — grep before touching one.
-14. Adding a `VITE_*` variable means editing three places: local `.env`, `env.d.ts` typing if referenced, and `.github/workflows/frontend.yml` (which regenerates `.env` from secrets at build time).
+14. Adding a `VITE_*` variable means editing three places: local `.env`, `env.d.ts` typing if referenced, and the **Netlify dashboard** environment variables (Netlify injects them at build time). There is no CI workflow writing `.env` any more.
 
 ## Tooling
 
 15. There is **no ESLint config** in this project — `yarn lint` will fail. Use `yarn format` (prettier) and `yarn type-check` (vue-tsc) instead.
 16. `.prettierrc.json` pins `singleQuote: true` to match the existing code. Without it prettier's defaults would rewrite every string to double quotes. Don't delete it.
 17. Don't run `yarn dev` in a tool call — it blocks in the foreground. Use `yarn build` or `yarn type-check` to verify changes.
-18. `dist/` and `*.tsbuildinfo` are committed but generated. Never edit them by hand and ignore their churn in diffs.
+18. `components.d.ts` and `*.tsconfig.tsbuildinfo` are committed but generated — never edit them by hand and ignore their churn in diffs. `dist/` is gitignored despite existing locally.
+
+## Deploy
+
+19. `netlify.toml` carries the monorepo wiring: `base = "umit-mobilya-client"`, `command = "yarn build"`, `publish = "dist"` (resolved relative to `base`), plus `NODE_VERSION = "18"`. Netlify needs it because the repo root is not the app root — don't move or flatten it.
+20. `public/_redirects` holds the SPA fallback `/*  /index.html  200`. The router uses `createWebHistory`, so without this file a direct visit to `/login` or `/products` returns Netlify's 404 instead of the app. Vite copies `public/` into `dist/` verbatim; verify it lands in `dist/_redirects` after a build.
 
 ## Best practices
 
 ### Forms
 
-19. Build forms with `useForm({ validationSchema })` from vee-validate, where the schema is a yup `object({...})`. Destructure only what you need — the codebase uses `handleSubmit`, `isSubmitting`, `resetForm` (and `defineField` when a field isn't wrapped by an `F*` component).
+21. Build forms with `useForm({ validationSchema })` from vee-validate, where the schema is a yup `object({...})`. Destructure only what you need — the codebase uses `handleSubmit`, `isSubmitting`, `resetForm` (and `defineField` when a field isn't wrapped by an `F*` component).
     - Wire the form with `<form @submit="submitHandler">` where `const submitHandler = handleSubmit(async (values) => {...})`.
     - Give every yup field a `.label('Türkçe Etiket')` — the label is what appears inside validation messages.
     - `F*` inputs bind themselves via `useField(() => props.name)`, so passing `name="price"` is the entire wiring. Don't add `v-model` on top of it.
     - Bind submit buttons to `:disabled="isSubmitting"` and `:loading="isSubmitting"`.
 
-20. Modal components in `_modals/` follow one shape — copy it rather than inventing a new one:
+22. Modal components in `_modals/` follow one shape — copy it rather than inventing a new one:
     - The modal owns `const open = defineModel<boolean>('open')`; the parent renders `<XModal v-if="showX" v-model:open="showX" />`. The `v-if` matters: it forces a remount so `onMounted` re-seeds the form.
     - Edit vs create is `const isEditing = computed(() => !!props.data)`.
     - Seed edit values in `onMounted` with `resetForm({ values: getInitialFormData.value })`.
@@ -69,31 +74,30 @@ Rules for writing code in `umit-mobilya-client/`. Architecture lives in the root
 
 ### Lists and tables
 
-21. For tabular views use PrimeVue `DataTable` with the established defaults: `paginator`, `:rows="20"`, `:rowsPerPageOptions="[5, 10, 20, 50]"`, and a `filters` ref built from `FilterMatchMode` (imported from `@primevue/core/api`) plus `:globalFilterFields`. See `views/categories/_views/CategoriesList.vue`.
+23. For tabular views use PrimeVue `DataTable` with the established defaults: `paginator`, `:rows="20"`, `:rowsPerPageOptions="[5, 10, 20, 50]"`, and a `filters` ref built from `FilterMatchMode` (imported from `@primevue/core/api`) plus `:globalFilterFields`. See `views/categories/_views/CategoriesList.vue`.
     - For server-side filtering instead (as in `ProductsList.vue`), keep local `ref`s for the criteria and `watch([...], filterFn)` — the store action posts to `/products/filter`.
 
-22. Track loading with a local `const isLoading = ref(false)` toggled around the store call, and surface failures through `useFToast()`. Two error shapes are in play, both correct:
+24. Track loading with a local `const isLoading = ref(false)` toggled around the store call, and surface failures through `useFToast()`. Two error shapes are in play, both correct:
     - `showErrorMessage(error)` — `useFToast` itself reads `error?.body?.message ?? error?.message`.
     - `showErrorMessage(error?.response?.data?.message)` — for API failures. The axios interceptor only unwraps **successful** responses; it rejects the raw `AxiosError`, so `error.response.data` is still the right path on the error branch.
 
 ### Uploads
 
-23. Multipart uploads are assembled **inside the store action**, not the component (`stores/products.ts` → `create`, `createImages`). The component only holds a `File` in a ref (`selectedFile`) and passes it through the payload; the action builds `FormData` and sets `'Content-Type': 'multipart/form-data'`.
+25. Multipart uploads are assembled **inside the store action**, not the component (`stores/products.ts` → `create`, `createImages`). The component only holds a `File` in a ref (`selectedFile`) and passes it through the payload; the action builds `FormData` and sets `'Content-Type': 'multipart/form-data'`.
     - On edit, drop the file key before calling update (`delete payload.image`) — the update endpoint takes JSON, not multipart.
     - The gallery endpoint appends every file under the **singular** field name `image` (`upload.array('image', 20)` server-side).
 
 ### Styling and storage
 
-24. Colors come from `src/constants/colors.ts`, which `tailwind.config.js` spreads into `colors`, `textColor` and `borderColor`. Every token is `f-`-prefixed (`f-primary`, `f-secondary-purple`, `f-stroke`). Add a new shade there and use the class; never inline a hex value.
+26. Colors come from `src/constants/colors.ts`, which `tailwind.config.js` spreads into `colors`, `textColor` and `borderColor`. Every token is `f-`-prefixed (`f-primary`, `f-secondary-purple`, `f-stroke`). Add a new shade there and use the class; never inline a hex value.
     - The same file is the source for custom `screens` (`3xl`), `animation` (`shake-x`, `slide-in-up`) and `gridTemplateColumns` (`36`) — extend `tailwind.config.js` rather than writing arbitrary values.
-25. Reach localStorage only through `EStorageKeys` from `@/constants/storageKeys`. Bare strings drift (`stores/auth.ts` still has a stray `'languageCode'`).
+27. Reach localStorage only through `EStorageKeys` from `@/constants/storageKeys` (`TOKEN`, `USER`, `AUTHENTICATION`). Bare string keys drift apart from the enum and end up reading something nobody writes.
 
 ## Common pitfalls
 
-26. **Double-unwrapping a response.** The interceptor already returned the body, so `response.data` inside a store action is `undefined`. This bug is live in `stores/auth.ts` (`getProfile` does `result.user = response.data`). On the *error* branch `error.response.data` is still valid — only success paths are unwrapped.
-27. **Two conflicting `EStorageKeys` enums exist.** `@/constants/storageKeys` (`TOKEN = 'token'`) is the one actually imported; `@/common/enums/storageKeys.enum.ts` (`TOKEN = 'v2_token'`) is stale and unused. Import the former or you'll read a key nobody writes.
-28. **i18n is wired but effectively unused for UI.** There are zero `$t()` calls in `views/`, `components/` and `layouts/` — all copy is hardcoded Turkish. `locales/*.json` currently only backs yup validation messages, and even that is inert because `initVeeValidateI18n()` is defined in `helpers/veeValidateI18n.ts` but never called. Don't assume adding a locale key changes anything on screen.
-29. **Storing presigned S3 URLs.** `imageUrl` / `imageUrlList` expire after an hour. Rendering them is fine; keeping them in a store across views, or writing them anywhere persistent, produces broken images later.
-30. **Renaming an `ERouteNames` value.** It is simultaneously the route `name`, the document title and the nav label, so a "copy tweak" silently breaks every `router.push({ name: ... })`.
-31. **Editing generated files.** `components.d.ts`, `dist/` and `*.tsbuildinfo` are committed but regenerated on build — edits are lost and pollute diffs.
-32. **Reaching for `yarn lint`.** No ESLint config file exists (neither `eslint.config.js` nor `.eslintrc*`), so the script fails outright. Verify with `yarn type-check` and `yarn format`.
+28. **Double-unwrapping a response.** The interceptor already returned the body, so `response.data` inside a store action is `undefined`. On the *error* branch `error.response.data` is still valid — only success paths are unwrapped.
+29. **i18n is wired but effectively unused for UI.** There are zero `$t()` calls in `views/`, `components/` and `layouts/` — all copy is hardcoded Turkish. `locales/*.json` currently only backs yup validation messages, and even that is inert because `initVeeValidateI18n()` is defined in `helpers/veeValidateI18n.ts` but never called. Don't assume adding a locale key changes anything on screen.
+30. **Removing `public/_redirects`.** It looks like a stray file with no extension, but deleting it breaks every deep link and page refresh in production while leaving `yarn dev` perfectly happy — the Vite dev server has its own history fallback, so the failure only appears after deploy.
+31. **Renaming an `ERouteNames` value.** It is simultaneously the route `name`, the document title and the nav label, so a "copy tweak" silently breaks every `router.push({ name: ... })`.
+32. **Editing generated files.** `components.d.ts` and `*.tsbuildinfo` are committed but regenerated on build — edits are lost and pollute diffs.
+33. **Reaching for `yarn lint`.** No ESLint config file exists (neither `eslint.config.js` nor `.eslintrc*`), so the script fails outright. Verify with `yarn type-check` and `yarn format`.
