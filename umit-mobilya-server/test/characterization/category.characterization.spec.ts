@@ -164,20 +164,7 @@ describe('GET/POST/PUT/DELETE /api/categories (characterization)', () => {
   });
 
   describe('PUT /api/categories/:id', () => {
-    /*
-     * BROKEN, and pinned here as broken on purpose.
-     *
-     * updateCategory renames the document and then runs
-     *   Product.updateMany({ category: id }, { $set: { 'category.name': ... } })
-     * but `Product.category` is an ObjectId ref, not an embedded object, so
-     * mongoose throws CastError and the handler answers 400 — after the rename
-     * has already been persisted. The caller is told the write failed while it
-     * in fact succeeded.
-     *
-     * This spec records what is deployed today so the NestJS port can be shown
-     * to be faithful. The fix is a separate, deliberate behaviour change.
-     */
-    it('renames the document but still responds 400, because the Product sync throws CastError', async () => {
+    it('responds 200 with the updated document', async () => {
       const id = await seedCategory('Koltuk');
 
       const response = await request(app)
@@ -185,11 +172,39 @@ describe('GET/POST/PUT/DELETE /api/categories (characterization)', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({ name: 'Koltuk Takımı' });
 
-      expect(response.status).toBe(400);
-      expect(response.body.message).toBe('Error updating category.');
+      expect(response.status).toBe(200);
+      expect(response.body._id).toBe(id);
+      expect(response.body.name).toBe('Koltuk Takımı');
+    });
+
+    it('persists the rename', async () => {
+      const id = await seedCategory('Koltuk');
+
+      await request(app)
+        .put(`/api/categories/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: 'Koltuk Takımı' });
 
       const stored = await request(app).get('/api/categories');
       expect(stored.body[0].name).toBe('Koltuk Takımı');
+    });
+
+    it('leaves products pointing at the renamed category, because the link is an id', async () => {
+      const id = await seedCategory('Koltuk');
+      await mongoose.connection
+        .collection('products')
+        .insertOne({ name: 'Üçlü Koltuk', category: new mongoose.Types.ObjectId(id) });
+
+      await request(app)
+        .put(`/api/categories/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: 'Koltuk Takımı' });
+
+      const product = await mongoose.connection
+        .collection('products')
+        .findOne({ name: 'Üçlü Koltuk' });
+
+      expect(product?.['category']?.toString()).toBe(id);
     });
 
     it('responds 404 when the id matches nothing', async () => {

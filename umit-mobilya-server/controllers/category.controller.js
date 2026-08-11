@@ -1,5 +1,4 @@
 const Category = require('../models/category.model');
-const Product = require('../models/product.model');
 
 // Tüm kategorileri listeleme
 exports.getCategories = async (req, res) => {
@@ -59,12 +58,6 @@ exports.updateCategory = async (req, res) => {
     if (!updatedCategory) {
       return res.status(404).json({ message: 'Category not found.' });
     }
-
-    // Update related products' category name
-    await Product.updateMany(
-      { category: id },
-      { $set: { 'category.name': updatedCategory.name } }
-    );
 
     res.status(200).json(updatedCategory);
   } catch (error) {
