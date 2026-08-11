@@ -8,10 +8,10 @@ Index only. Every rule that governs code in `umit-mobilya-client/` is defined in
 
 | File | Covers |
 |---|---|
-| [`01-typescript-strict.md`](.claude/rules/01-typescript-strict.md) | `any` ban and the `// reason:` escape, no `as unknown as`, `noImplicitAny` debt |
-| [`02-api-layer.md`](.claude/rules/02-api-layer.md) | Store action shape (`async/await` + `try/finally`), endpoint map, error branches, `FormData` in the action |
+| [`01-typescript-strict.md`](.claude/rules/01-typescript-strict.md) | `any` ban and the `// reason:` escape, no `as unknown as`, `noImplicitAny` is ON |
+| [`02-api-layer.md`](.claude/rules/02-api-layer.md) | Generated services only, store action shape (`async/await` + `try/finally`), error handling, multipart |
 | [`03-vue-components.md`](.claude/rules/03-vue-components.md) | SFC section order, `F*` auto-registration, PrimeVue registration, the modal pattern, colour tokens |
-| [`04-generated-code.md`](.claude/rules/04-generated-code.md) | `components.d.ts` and (from Phase 2) `src/client/` — never hand-edited |
+| [`04-generated-code.md`](.claude/rules/04-generated-code.md) | `components.d.ts` and `src/client/` — never hand-edited, how to regenerate |
 | [`05-forms-and-tables.md`](.claude/rules/05-forms-and-tables.md) | vee-validate + yup wiring, `DataTable` defaults, client vs server filtering |
 | [`06-routing-and-config.md`](.claude/rules/06-routing-and-config.md) | `ERouteNames` as identity, router guard, `EStorageKeys`, `VITE_*` vars, Netlify, i18n reality |
 
@@ -28,6 +28,7 @@ yarn type-check   # vue-tsc --noEmit
 yarn build        # vue-tsc -b && vite build
 yarn test:unit    # vitest
 yarn format       # prettier --write src/
+yarn gcl          # regenerate src/client from the server's openapi.json
 ```
 
 `yarn generate-icon-names` points at a `scripts/` directory that does not exist.
@@ -36,10 +37,12 @@ No test files exist yet, though vitest + jsdom are configured.
 ## The five-second version
 
 - Components in `components/ui/global/` are global as `<F*>` — never import them.
-- The axios interceptor already returned the body; `response.data` inside an
-  action is `undefined`. On the **error** branch `error.response.data` is still
-  right.
+- Every backend call goes through a generated service from `@/client`. There is
+  no hand-written axios layer any more, and adding a global axios interceptor
+  breaks the generated client.
 - Toasts go through `useFToast()`, never vue-toastification's `useToast()`.
-- `components.d.ts` and `*.tsbuildinfo` are generated and committed. Ignore their
-  churn; never edit them.
+  Pass the caught error object itself — it already understands `ApiError`.
+- `yarn gcl` regenerates `src/client/` from `../umit-mobilya-server/openapi.json`.
+- `components.d.ts` is generated and committed; `*.tsbuildinfo` is gitignored.
+  Never edit either.
 - Renaming an `ERouteNames` value changes route identity everywhere.

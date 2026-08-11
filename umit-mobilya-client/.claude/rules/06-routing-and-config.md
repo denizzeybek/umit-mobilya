@@ -23,8 +23,9 @@ builds fine and ships `undefined`.
    nav label at once.
 2. The router guard in `src/router/index.ts` restores the session from
    `localStorage` (`EStorageKeys.TOKEN`) via `usersStore.fetchUser` before every
-   navigation, and attaches the token to `axios.defaults.headers.common`. Auth
-   headers are set there, not in an interceptor — don't add a second mechanism.
+   navigation. It does **not** set any auth header: `OpenAPI.TOKEN` in
+   `src/plugins/apiClient.ts` reads the token from localStorage per request.
+   Don't add a second mechanism.
 3. Anything touching the guard gets opened in a browser before it is called done.
    An infinite-redirect bug shipped from this file once and `type-check` was
    green throughout. See [[done-checklist]].
@@ -40,6 +41,8 @@ builds fine and ships `undefined`.
 5. Adding a `VITE_*` variable means **three** places: the local `.env`, the
    `env.d.ts` typing if it is referenced, and the **Netlify dashboard**. There is
    no CI workflow writing `.env` any more.
+   `VITE_API_URL` ends with `/api`; `apiClient.ts` strips that suffix because the
+   generated paths already carry it. One variable serves both.
 6. `netlify.toml` lives at the **repo root**, not in this folder — Netlify only
    reads it from the repository root. It carries `base = "umit-mobilya-client"`,
    `command = "yarn build"`, `publish = "dist"` (relative to `base`) and

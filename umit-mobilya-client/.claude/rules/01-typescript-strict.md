@@ -4,18 +4,18 @@
 
 ## Why this rule exists
 
-`tsconfig.app.json:16` sets `noImplicitAny: false`. The base config
-(`@vue/tsconfig/tsconfig.dom.json`) turns `strict` on, and that one line takes
-the most valuable check back out. The result is measurable: **44 `any`
-occurrences** and **5 `as unknown as` casts** across `src/`.
+`tsconfig.app.json` used to set `noImplicitAny: false`, which took the most
+valuable check straight back out of `strict`. That line is gone. The bill for
+it was 44 `any` occurrences and 5 `as unknown as` casts, and the casts existed
+almost entirely to re-type what a hand-written axios layer had erased.
 
-This is **technical debt, not a licence to write untyped code.** The flag stays
-`false` only until Phase 2 — once OpenAPI codegen lands, the generated types
-replace most of the casts and the flag gets flipped. Until then ESLint's
-`@typescript-eslint/no-explicit-any` (currently `warn`) is the only guard, and
-it only catches *explicit* `any`, not inferred ones.
+Generated types settled most of it: once `src/client/` arrived, only **7**
+implicit `any`s were left to fix by hand. What remains is 18 *explicit* `any`s
+in code that never touches the API — PrimeVue prop passthroughs, the i18n
+locale ref, the global component registry. ESLint reports each as a warning.
 
-Do not add to the pile. Every new `any` makes the Phase 2 flip more expensive.
+Do not add to the pile, and never reach for `as unknown as` again: if a type
+does not fit, the schema is the thing to change.
 
 ## Do
 
@@ -29,37 +29,30 @@ Do not add to the pile. Every new `any` makes the Phase 2 flip more expensive.
 4. Register store ids through `EStoreNames` and route names through
    `ERouteNames` instead of bare string literals, so typos surface at compile
    time.
-5. Prefer widening a shared interface in `src/interfaces/` over casting at the
-   call site. The interfaces already drift from the API; casting hides the drift
-   instead of recording it.
+5. Take API types from `@/client`. There are no hand-written API interfaces
+   left — they drifted, and the compiler found 25 places where they disagreed
+   with the server the moment they were removed.
 
 ## Don't
 
 - ❌ Add `any` without an immediately-preceding `// reason:` line.
-- ❌ Use `as unknown as X`. All five current uses exist to contradict a type the
-  code already knows is wrong — four of them
-  (`stores/categories.ts:26`, `stores/products.ts:47,61,74`) exist purely to
-  re-type what the axios interceptor returned. Codegen is the real fix; adding a
-  sixth is not.
-- ❌ Write `as unknown as any` (`plugins/i18n.ts:26`). This is a double escape
-  and defeats both checks at once.
-- ❌ Re-enable `noImplicitAny: false` reasoning to justify new untyped
-  parameters. Implicit `any` is tolerated in *existing* code, not invited into
-  new code.
+- ❌ Use `as unknown as X`. Every previous use existed to contradict a type the
+  code already knew was wrong. They are all gone; do not start again.
+- ❌ Re-add `noImplicitAny: false`, or work around it with an annotation of
+  convenience. If a parameter's type is unclear, read the generated DTO.
 - ❌ Silence a type error with `@ts-ignore`. Use `@ts-expect-error` with a
   reason, so it fails loudly once the underlying problem is fixed.
 
 ## Example
 
 ```ts
-// ❌ Contradicts the interceptor's return type instead of typing it
+// ❌ Contradicts the response type instead of typing it
 this.list = response as unknown as IProduct[];
 
-// ✅ Type the action's return so the cast is unnecessary
-async fetch(): Promise<IProduct[]> {
-  const products = await api.get<IProduct[]>('/products');
-  this.list = products;
-  return products;
+// ✅ The generated service already knows the shape
+async fetch(): Promise<ProductResponseDto[]> {
+  this.list = await ProductsService.productControllerFindAll();
+  return this.list;
 }
 ```
 
