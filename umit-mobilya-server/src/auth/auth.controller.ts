@@ -8,12 +8,22 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import type { CookieOptions, Response } from 'express';
 
 import { AuthService, TOKEN_MAX_AGE_SECONDS } from './auth.service';
 import type { AuthResult, PublicUser } from './auth.service';
+import { MessageResponseDto } from '../common/dto/message-response.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
+import {
+  AuthResponseDto,
+  MeResponseDto,
+} from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -33,6 +43,7 @@ export class AuthController {
 
   /** Registers a user and signs them in straight away. */
   @Post('signup')
+  @ApiCreatedResponse({ type: AuthResponseDto })
   async signup(
     @Body() dto: SignupDto,
     @Res({ passthrough: true }) response: Response,
@@ -44,6 +55,7 @@ export class AuthController {
 
   /** Signs an existing user in. */
   @Post('login')
+  @ApiOkResponse({ type: AuthResponseDto })
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() dto: LoginDto,
@@ -56,6 +68,7 @@ export class AuthController {
 
   /** Expires the session cookie. The body token is dropped by the client. */
   @Get('logout')
+  @ApiOkResponse({ type: MessageResponseDto })
   logout(@Res({ passthrough: true }) response: Response): { message: string } {
     response.cookie(COOKIE_NAME, '', { maxAge: 1 });
     return { message: 'Çıkış yapıldı.' };
@@ -63,6 +76,7 @@ export class AuthController {
 
   /** The user behind the supplied Bearer token. Never includes the password. */
   @Get('me')
+  @ApiOkResponse({ type: MeResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async me(

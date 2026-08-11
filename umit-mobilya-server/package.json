@@ -1,7 +1,7 @@
 {
   "name": "umit-mobilya-server",
   "version": "1.0.0",
-  "description": "Ümit Mobilya REST API",
+  "description": "\u00dcmit Mobilya REST API",
   "main": "dist/main.js",
   "scripts": {
     "build": "nest build",
@@ -11,7 +11,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:changed": "jest --onlyChanged --bail"
+    "test:changed": "jest --onlyChanged --bail",
+    "schema:dump": "nest build && node dist/tools/dump-openapi.js"
   },
   "keywords": [],
   "author": "",

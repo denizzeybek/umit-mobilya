@@ -10,11 +10,18 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
+import { MessageResponseDto } from '../common/dto/message-response.dto';
 import { CategoryService } from './category.service';
+import { CategoryResponseDto } from './dto/category-response.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { FilterCategoryDto } from './dto/filter-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -27,6 +34,7 @@ export class CategoryController {
 
   /** Every category, unfiltered. Public — the storefront reads it. */
   @Get()
+  @ApiOkResponse({ type: [CategoryResponseDto] })
   async findAll(): Promise<CategoryDocument[]> {
     return this.categoryService.findAll();
   }
@@ -39,6 +47,7 @@ export class CategoryController {
    * sends. Changing it to a query parameter is a breaking change for callers.
    */
   @Get('filter')
+  @ApiOkResponse({ type: [CategoryResponseDto] })
   async filter(
     @Body() dto: FilterCategoryDto = {},
   ): Promise<CategoryDocument[]> {
@@ -47,6 +56,7 @@ export class CategoryController {
 
   /** Creates a category. */
   @Post()
+  @ApiCreatedResponse({ type: CategoryResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async create(@Body() dto: CreateCategoryDto): Promise<CategoryDocument> {
@@ -55,6 +65,7 @@ export class CategoryController {
 
   /** Renames a category. */
   @Put(':id')
+  @ApiOkResponse({ type: CategoryResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
@@ -67,6 +78,7 @@ export class CategoryController {
 
   /** Deletes a category. Answers with a message, not the deleted document. */
   @Delete(':id')
+  @ApiOkResponse({ type: MessageResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async remove(@Param('id', ParseObjectIdPipe) id: string): Promise<{ message: string }> {

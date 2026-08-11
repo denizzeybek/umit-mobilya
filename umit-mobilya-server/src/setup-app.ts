@@ -1,10 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
 import type { INestApplication } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+import { buildOpenApiDocument } from './openapi';
 
 /**
  * Shared between `main.ts` and the e2e specs, so a test never exercises a
@@ -52,20 +53,7 @@ export function setupApp(app: INestApplication): void {
     },
   });
 
-  const document = SwaggerModule.createDocument(
-    app,
-    new DocumentBuilder()
-      .setTitle('Ümit Mobilya API')
-      .setDescription(
-        'Frontend istemcisi bu şemadan üretilir (`yarn gcl`). Bir uç burada ' +
-          'görünmüyorsa istemcide de yoktur.',
-      )
-      .setVersion('1.0')
-      .addBearerAuth()
-      .build(),
-  );
-
-  SwaggerModule.setup('docs', app, document, {
+  SwaggerModule.setup('docs', app, buildOpenApiDocument(app), {
     jsonDocumentUrl: 'docs-json',
   });
 }

@@ -8,7 +8,8 @@ import plugins from './plugins'
 import '@/styles/index.scss'
 import '@/style.css'
 
-import  '@/plugins/axios'
+import '@/plugins/apiClient';
+import '@/plugins/axios';
 
 const app = createApp(App)
 

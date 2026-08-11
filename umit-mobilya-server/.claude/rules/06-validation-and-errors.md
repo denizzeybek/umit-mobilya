@@ -38,7 +38,7 @@ Both problems disappear as a side effect of doing NestJS properly, which is a la
 ## Don't
 
 - ❌ Destructure `req.body` in a controller. If you are reaching for the raw request, the DTO is missing.
-- ❌ Write `@ApiProperty()` by hand. The CLI plugin derives the schema from the class-validator decorators and the property types; adding it manually is noise that will drift.
+- ❌ Write `@ApiProperty()` by hand. The CLI plugin derives the schema from the class-validator decorators and the property types; adding it manually is noise that will drift. The one standing exception is a type the plugin genuinely cannot express — `(string | null)[]` in `ProductResponseDto.imageUrlList` comes out as `Record<string, any>` without help. If you add another, say in a comment what the plugin got wrong.
 - ❌ Invent a fourth error shape. If a failure does not fit the standard body, that is a conversation about the body, not a place for a one-off.
 - ❌ Validate inside a service "just to be safe". Duplicated validation drifts, and the second copy is always the stale one.
 - ❌ Return raw Mongoose documents where a response DTO belongs — internal fields leak that way.
@@ -56,6 +56,13 @@ export class CreateCategoryDto {
 }
 ```
 
-That single class gives you: request validation, a typed handler parameter, an OpenAPI schema entry with a real description, and — after codegen — a matching type in the frontend client. One definition, four payoffs. That is the whole argument for this rule.
+That single class gives you: request validation, a typed handler parameter, an OpenAPI schema entry with a real description, and a matching type in the frontend client after `yarn gcl`. One definition, four payoffs. That is the whole argument for this rule.
+
+Response shapes need the same treatment, in `*-response.dto.ts`. Without a
+class the plugin has nothing to describe, and the generated client types that
+endpoint as `any` — which quietly removes the reason the migration happened.
+Annotate the handler with `@ApiOkResponse({ type: X })` / `@ApiCreatedResponse`;
+the return type alone is not enough, because interfaces do not survive to
+runtime.
 
 Related: [[05-backend-architecture]] (where DTOs live), [[00-tdd-discipline]] (pinning status codes before the port).

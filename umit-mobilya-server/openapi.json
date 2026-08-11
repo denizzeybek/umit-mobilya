@@ -1,0 +1,1262 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "operationId": "AuthController_signup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Registers a user and signs them in straight away.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Signs an existing user in.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "get": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Expires the session cookie. The body token is dropped by the client.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "The user behind the supplied Bearer token. Never includes the password.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/categories": {
+      "get": {
+        "operationId": "CategoryController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Every category, unfiltered. Public — the storefront reads it.",
+        "tags": [
+          "categories"
+        ]
+      },
+      "post": {
+        "operationId": "CategoryController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Creates a category.",
+        "tags": [
+          "categories"
+        ]
+      }
+    },
+    "/api/categories/filter": {
+      "get": {
+        "operationId": "CategoryController_filter",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Filters categories by name.\n\nReads the criteria from the request BODY of a GET, which is unusual and\ndeliberate: that is what the Express version did and what the frontend\nsends. Changing it to a query parameter is a breaking change for callers.",
+        "tags": [
+          "categories"
+        ]
+      }
+    },
+    "/api/categories/{id}": {
+      "put": {
+        "operationId": "CategoryController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Renames a category.",
+        "tags": [
+          "categories"
+        ]
+      },
+      "delete": {
+        "operationId": "CategoryController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Deletes a category. Answers with a message, not the deleted document.",
+        "tags": [
+          "categories"
+        ]
+      }
+    },
+    "/api/products": {
+      "get": {
+        "operationId": "ProductController_findAll",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Every product, in the read shape: modules flattened, image URLs composed,\ntotalPrice added.\n\nAnswers **201**, not 200. That is what the Express version did and the\nfrontend has been living with it; changing it is a separate decision.",
+        "tags": [
+          "products"
+        ]
+      },
+      "post": {
+        "operationId": "ProductController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDocumentDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Adds a product. The image is required and is uploaded to R2.",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/products/filter": {
+      "post": {
+        "operationId": "ProductController_filter",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Filters products by name and category.\n\nA POST that performs a read, and public — both inherited from the Express\nversion, which the frontend's product list depends on.",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/products/create-images/{id}": {
+      "put": {
+        "operationId": "ProductController_uploadImages",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Appends gallery images.\n\nThe field name is the **singular** `image` even though several files are\naccepted — inherited from `upload.array('image', 20)`, and the frontend\nappends every file under that one key.",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/products/update-modules/{id}": {
+      "put": {
+        "operationId": "ProductController_updateModules",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateModulesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductEnvelopeDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Replaces the whole module list of a product.",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/products/add-module": {
+      "post": {
+        "operationId": "ProductController_addModule",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddModuleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductEnvelopeDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Adds one product to another as a module.",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/products/remove-module/{productId}/{moduleId}": {
+      "delete": {
+        "operationId": "ProductController_removeModule",
+        "parameters": [
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "moduleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductEnvelopeDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Removes a module from a product.",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/products/delete-image/{id}": {
+      "post": {
+        "operationId": "ProductController_deleteImage",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteImageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Removes one gallery image, from both the record and the bucket.",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "operationId": "ProductController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "One product in the read shape. Answers **201**, matching `GET /`.",
+        "tags": [
+          "products"
+        ]
+      },
+      "put": {
+        "operationId": "ProductController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDocumentDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Patches a product. Fields that are not sent keep their stored value.",
+        "tags": [
+          "products"
+        ]
+      },
+      "delete": {
+        "operationId": "ProductController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Deletes a product and every image it owns.",
+        "tags": [
+          "products"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Ümit Mobilya API",
+    "description": "Frontend istemcisi bu şemadan üretilir (`yarn gcl`). Bir uç burada görünmüyorsa istemcide de yoktur.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "SignupDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Login address. Stored lowercased and unique across users.",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "Plain password, at least six characters. Never stored as given.",
+            "minLength": 6
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "description": "The signed-in user's id, as a bare hex string — not an object."
+          },
+          "token": {
+            "type": "string",
+            "description": "Signed JWT, valid for three days. Also set as an httpOnly `jwt` cookie on\nthe same response; the frontend stores this copy in localStorage."
+          }
+        },
+        "required": [
+          "user",
+          "token"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Registered login address.",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "Plain password, compared against the stored bcrypt hash."
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "MessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Human-readable confirmation, safe to show to the user as-is."
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "PublicUserDto": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "description": "Login address, always lowercased. The password hash is never included."
+          }
+        },
+        "required": [
+          "_id",
+          "email"
+        ]
+      },
+      "MeResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Always \"Token is valid\". Kept because the frontend store reads the envelope."
+          },
+          "user": {
+            "$ref": "#/components/schemas/PublicUserDto"
+          }
+        },
+        "required": [
+          "message",
+          "user"
+        ]
+      },
+      "CategoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Mongo id, as a hex string."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name shown in the category list."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO-8601 timestamp of when the category was added."
+          }
+        },
+        "required": [
+          "_id",
+          "name",
+          "createdAt"
+        ]
+      },
+      "FilterCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Case-insensitive substring to match against the category name. Omit it to\nget every category back.",
+            "maxLength": 120
+          }
+        }
+      },
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name shown in the category list, e.g. \"Koltuk Takımı\".",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "New display name for the category.",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ProductModuleResponseDto": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Permanent public R2 URL, or null when that product has no image."
+          },
+          "quantity": {
+            "type": "number",
+            "description": "How many of this module the parent product contains."
+          },
+          "sizes": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/CategoryResponseDto"
+          }
+        },
+        "required": [
+          "_id",
+          "name",
+          "price",
+          "currency",
+          "imageUrl",
+          "quantity"
+        ]
+      },
+      "ProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "imageUrlList": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            },
+            "description": "Public URLs matching `imageNameList`, position for position."
+          },
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "description": "Base price, before modules are added."
+          },
+          "currency": {
+            "type": "string"
+          },
+          "imageName": {
+            "type": "string",
+            "description": "R2 object key of the main image. Never send this back as a URL."
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Permanent public R2 URL composed from `imageName`, or null when unset."
+          },
+          "imageNameList": {
+            "description": "R2 object keys of the gallery images.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sizes": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/CategoryResponseDto"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductModuleResponseDto"
+            }
+          },
+          "totalPrice": {
+            "type": "number",
+            "description": "`price` plus, for every module, its price times its quantity."
+          }
+        },
+        "required": [
+          "imageUrlList",
+          "_id",
+          "name",
+          "price",
+          "currency",
+          "imageUrl",
+          "imageNameList",
+          "quantity",
+          "modules",
+          "totalPrice"
+        ]
+      },
+      "FilterProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Case-insensitive substring matched against the product name.",
+            "maxLength": 200
+          },
+          "category": {
+            "type": "string",
+            "description": "Category id to restrict the result to."
+          }
+        }
+      },
+      "CreateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name in the catalogue.",
+            "maxLength": 200
+          },
+          "price": {
+            "type": "number",
+            "description": "Base price, before modules are added.",
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string",
+            "description": "ISO currency code. Defaults to TRY when omitted.",
+            "maxLength": 8
+          },
+          "sizes": {
+            "type": "string",
+            "description": "Free-text dimensions, e.g. \"200x90x75\".",
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "category": {
+            "type": "string",
+            "description": "Id of an existing category. The request is rejected if it does not exist."
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "name",
+          "price",
+          "category"
+        ]
+      },
+      "StoredModuleDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "description": "Id of the product used as a module."
+          },
+          "quantity": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "productId",
+          "quantity"
+        ]
+      },
+      "ProductDocumentDto": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "imageName": {
+            "type": "string"
+          },
+          "imageNameList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sizes": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category id. Not populated on the write path."
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoredModuleDto"
+            }
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "_id",
+          "name",
+          "price",
+          "currency",
+          "imageNameList",
+          "quantity",
+          "modules",
+          "createdAt"
+        ]
+      },
+      "ImageListResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "imageNameList": {
+            "description": "The product's full gallery key list after the upload, not just the new keys.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "message",
+          "imageNameList"
+        ]
+      },
+      "ModuleEntryDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "description": "Id of the product being used as a module."
+          },
+          "quantity": {
+            "type": "number",
+            "description": "How many of that product this bundle contains.",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "productId",
+          "quantity"
+        ]
+      },
+      "UpdateModulesDto": {
+        "type": "object",
+        "properties": {
+          "modules": {
+            "description": "The complete new module list. Replaces whatever was stored.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModuleEntryDto"
+            }
+          }
+        },
+        "required": [
+          "modules"
+        ]
+      },
+      "ProductEnvelopeDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductDocumentDto"
+          }
+        },
+        "required": [
+          "message",
+          "product"
+        ]
+      },
+      "AddModuleDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "description": "Id of the product the module is added to."
+          },
+          "module": {
+            "description": "The module to add.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModuleEntryDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "productId",
+          "module"
+        ]
+      },
+      "DeleteImageDto": {
+        "type": "object",
+        "properties": {
+          "imageName": {
+            "type": "string",
+            "description": "R2 object key of the gallery image to remove — a key, never a URL."
+          }
+        },
+        "required": [
+          "imageName"
+        ]
+      },
+      "UpdateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 8
+          },
+          "sizes": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "category": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

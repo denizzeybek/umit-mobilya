@@ -14,9 +14,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { MessageResponseDto } from '../common/dto/message-response.dto';
 import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
 import { CreateProductDto } from './dto/create-product.dto';
 import { FilterProductDto } from './dto/filter-product.dto';
@@ -25,6 +32,12 @@ import {
   DeleteImageDto,
   UpdateModulesDto,
 } from './dto/module.dto';
+import {
+  ImageListResponseDto,
+  ProductDocumentDto,
+  ProductEnvelopeDto,
+  ProductResponseDto,
+} from './dto/product-response.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
 import type { ProductView } from './product.service';
@@ -52,6 +65,7 @@ export class ProductController {
    */
   @Get()
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ type: [ProductResponseDto] })
   async findAll(): Promise<ProductView[]> {
     return this.productService.findAll({});
   }
@@ -64,12 +78,14 @@ export class ProductController {
    */
   @Post('filter')
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: [ProductResponseDto] })
   async filter(@Body() dto: FilterProductDto = {}): Promise<ProductView[]> {
     return this.productService.findAll(dto);
   }
 
   /** Adds a product. The image is required and is uploaded to R2. */
   @Post()
+  @ApiCreatedResponse({ type: ProductDocumentDto })
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
@@ -89,6 +105,7 @@ export class ProductController {
    * appends every file under that one key.
    */
   @Put('create-images/:id')
+  @ApiOkResponse({ type: ImageListResponseDto })
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
@@ -110,6 +127,7 @@ export class ProductController {
 
   /** Replaces the whole module list of a product. */
   @Put('update-modules/:id')
+  @ApiOkResponse({ type: ProductEnvelopeDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async updateModules(
@@ -122,6 +140,7 @@ export class ProductController {
 
   /** Adds one product to another as a module. */
   @Post('add-module')
+  @ApiOkResponse({ type: ProductEnvelopeDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
@@ -137,6 +156,7 @@ export class ProductController {
 
   /** Removes a module from a product. */
   @Delete('remove-module/:productId/:moduleId')
+  @ApiOkResponse({ type: ProductEnvelopeDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async removeModule(
@@ -149,6 +169,7 @@ export class ProductController {
 
   /** Removes one gallery image, from both the record and the bucket. */
   @Post('delete-image/:id')
+  @ApiOkResponse({ type: MessageResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
@@ -163,6 +184,7 @@ export class ProductController {
   /** One product in the read shape. Answers **201**, matching `GET /`. */
   @Get(':id')
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ type: ProductResponseDto })
   async findById(
     @Param('id', ParseObjectIdPipe) id: string,
   ): Promise<ProductView> {
@@ -171,6 +193,7 @@ export class ProductController {
 
   /** Patches a product. Fields that are not sent keep their stored value. */
   @Put(':id')
+  @ApiOkResponse({ type: ProductDocumentDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async update(
@@ -182,6 +205,7 @@ export class ProductController {
 
   /** Deletes a product and every image it owns. */
   @Delete(':id')
+  @ApiOkResponse({ type: MessageResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async remove(
