@@ -1,5 +1,14 @@
 const mongoose = require('mongoose');
 
+/*
+ * `category` ve `modules.productId` ref'leri populate edilirken Category
+ * modelinin bu bağlantıda kayıtlı olması gerekiyor. Category domain'i NestJS'e
+ * taşındıktan sonra bu dosyayı require eden kimse kalmadı, dolayısıyla ref
+ * MissingSchemaError'a düşüyordu ve GET /api/products 500 dönüyordu.
+ * Product taşınınca bu satır de dosyayla birlikte gidecek.
+ */
+require('./category.model');
+
 // Ürün şeması
 const productSchema = new mongoose.Schema({
   name: {
