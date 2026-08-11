@@ -31,16 +31,12 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (requiresAuth) {
-    if (requiresUnAuth) {
-      next();
-    } else if (requiresAuth) {
-      if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      } else {
-        return next({
-          name: ERouteNames.Dashboard,
-        });
-      }
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      return next({
+        name: ERouteNames.Dashboard,
+      });
     }
   }
 

@@ -15,7 +15,9 @@ export const useUsersStore = defineStore(EStoreNames.COMMON_USERS, {
   }),
   actions: {
     async setUser(payload: any) {
-      this.user = payload?.user;
+      if (payload.user) {
+        this.user = payload?.user;
+      }
       this.isAuthenticated = payload?.user?._id ? true : false;
     },
     async fetchUser(token: string) {

@@ -2,7 +2,7 @@
   <Dialog
     v-model:visible="open"
     modal
-    header="Resimleri Ekle"
+    header="Galeriye Resim Ekle"
     class="!bg-f-secondary-purple lg:!w-[700px] !w-full"
     :style="{ width: '50rem' }"
   >

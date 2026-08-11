@@ -44,7 +44,7 @@ const route = useRoute();
 
 const menuItems = ref([
   {
-    label: 'Items',
+    label: '',
     items: [
       {
         label: 'Ürünü Güncelle',
@@ -97,3 +97,9 @@ const items = computed(() => {
   return [{ label: 'Ürünler', goBack: true }, { label: 'Ürün Detayı' }];
 });
 </script>
+
+<style>
+.p-menu-submenu-label {
+  padding: 0 !important;
+}
+</style>

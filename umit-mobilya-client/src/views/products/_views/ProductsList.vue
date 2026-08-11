@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
-    <div class="flex justify-end items-center gap-2">
+    <div class="flex flex-col lg:flex-row justify-between items-center gap-2">
+      <FText as="h1" :innerText="pageTitle" />
       <!-- <FSelect
         name="filterCategory"
         placeholder="Kategori Adı Seçin"
@@ -8,20 +9,22 @@
         v-model="selectedFilter"
         class="!h-full"
       /> -->
-      <FInput
-        name="filterName"
-        v-model="typedName"
-        placeholder="Ürün ismi girin"
-      />
-      <Button
-        v-if="usersStore.isAuthenticated"
-        label="Ürün Ekle"
-        @click="showProductModal = true"
-      />
+      <div class="flex items-center gap-2">
+        <FInput
+          name="filterName"
+          v-model="typedName"
+          placeholder="Ürün ismi girin"
+        />
+        <Button
+          v-if="usersStore.isAuthenticated"
+          label="Ürün Ekle"
+          @click="showProductModal = true"
+        />
+      </div>
     </div>
     <template v-if="isLoading">
-      <div v-for="i in 2" class="flex justify-between gap-4">
-        <Skeleton v-for="j in 3" width="33%" height="22rem"></Skeleton>
+      <div class="flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:gap-6">
+        <Skeleton v-for="j in 3" :key="j" class="!w-full !h-[22rem] lg:w-1/3" />
       </div>
     </template>
     <div
@@ -125,6 +128,19 @@ const categoryTypeOptions = computed(() => {
   }));
 
   return [{ name: 'Tüm Categoriler', value: null }, ...categoriesList];
+});
+
+const currentCategory = computed(() => {
+  return categoryTypeOptions.value.find(
+    (category) => category.value === route?.query?.categoryId,
+  );
+});
+
+const pageTitle = computed(() => {
+  if (currentCategory.value?.name) {
+    return `${currentCategory.value?.name} Ürüleri`;
+  }
+  return '';
 });
 
 const filterProducts = async () => {

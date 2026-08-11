@@ -2,7 +2,7 @@
   <Dialog
     v-model:visible="open"
     modal
-    header="Update Modules"
+    header="Modülü Güncelle"
     class="!bg-f-secondary-purple !w-full lg:h-3/4"
     :style="{ width: '50rem' }"
   >

@@ -5,7 +5,7 @@
       @click="toggle"
       aria-haspopup="true"
       aria-controls="overlay_menu"
-      label="Actions"
+      label="Aksiyonlar"
     >
     </Button>
 

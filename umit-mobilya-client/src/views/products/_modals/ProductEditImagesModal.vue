@@ -2,11 +2,12 @@
   <Dialog
     v-model:visible="open"
     modal
-    header="Images Gallery"
+    header="Resim Galerisi"
     class="!bg-f-secondary-purple"
     :style="{ width: '50rem' }"
   >
     <div
+      v-if="imagesList.length"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 rounded-md gap-8 my-5"
     >
       <template v-for="(image, idx) in imagesList" :key="idx">
@@ -25,6 +26,10 @@
           />
         </div>
       </template>
+    </div>
+
+    <div v-else class="flex items-center justify-center p-8">
+      Ürünün resim galerisi boş
     </div>
   </Dialog>
 </template>

@@ -19,8 +19,9 @@
       <template #item="{ item }">
         <Button
           v-if="item.root && !item?.items?.length"
+          class="w-full"
           severity="secondary"
-          :variant="isActive(item) ? undefined : 'text'"
+          :variant="item.isActive ? undefined : 'text'"
           @click="
             item?.method && !item?.items?.length
               ? item.method()
@@ -31,9 +32,9 @@
         </Button>
         <Button
           v-else
-          severity="secondary"
           class="w-full"
-          :variant="isActive(item) ? undefined : 'text'"
+          :severity="item.root ? 'secondary' : 'contrast'"
+          :variant="item.isActive ? undefined : 'text'"
           @click="item?.method"
         >
           {{ item.label }}
@@ -96,15 +97,15 @@ const items = computed(() => {
       root: true,
       route: { name: ERouteNames.Contact },
     },
-    ...(!usersStore.isAuthenticated
-      ? [
-          {
-            label: 'Giriş Yap',
-            root: true,
-            route: { name: ERouteNames.Login },
-          },
-        ]
-      : []),
+    // ...(!usersStore.isAuthenticated
+    //   ? [
+    //       {
+    //         label: 'Giriş Yap',
+    //         root: true,
+    //         route: { name: ERouteNames.Login },
+    //       },
+    //     ]
+    //   : []),
     ...(usersStore.isAuthenticated
       ? [
           {
@@ -123,12 +124,13 @@ const items = computed(() => {
           },
         ]
       : []),
-  ];
+  ].map((item) => {
+    return {
+      ...item,
+      isActive: item.route.name === route.name,
+    };
+  });
 });
-
-const isActive = (item) => {
-  return route.name === item.route.name;
-};
 
 onMounted(async () => {
   await categoriesStore.fetch();
