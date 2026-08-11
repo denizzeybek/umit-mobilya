@@ -11,61 +11,36 @@ import type {
 
 interface State {
   list: ICategory[];
+  loading: boolean;
+  saving: boolean;
 }
 
 export const useCategoriesStore = defineStore(EStoreNames.CATEGORIES, {
   state: (): State => ({
     list: [],
+    loading: false,
+    saving: false,
   }),
   actions: {
-    async fetch() {
-      return new Promise((resolve, reject) => {
-        axios
-          .get('/categories')
-          .then((response) => {
-            this.list = response as unknown as ICategory[];
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+    async fetch(): Promise<ICategory[]> {
+      this.loading = true;
+      try {
+        const categories = await axios.get<ICategory[], ICategory[]>(
+          '/categories',
+        );
+        this.list = categories;
+        return categories;
+      } finally {
+        this.loading = false;
+      }
     },
-    async create(payload: ICategoryDTO) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post('/categories', payload)
-          .then((response) => {
-            resolve(response);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+    async create(payload: ICategoryDTO): Promise<ICategory> {
+      this.saving = true;
+      try {
+        return await axios.post<ICategory, ICategory>('/categories', payload);
+      } finally {
+        this.saving = false;
+      }
     },
-    // async remove(id: string) {
-    //   return new Promise((resolve, reject) => {
-    //     axios
-    //       .delete(`/categories/${id}`)
-    //       .then((response) => {
-    //         resolve(response);
-    //       })
-    //       .catch((error) => {
-    //         reject(error);
-    //       });
-    //   });
-    // },
-    // async update(id: string, payload: ICategoryDTO) {
-    //   return new Promise((resolve, reject) => {
-    //     axios
-    //       .put(`/categories/${id}`, payload)
-    //       .then((response) => {
-    //         resolve(response);
-    //       })
-    //       .catch((error) => {
-    //         reject(error);
-    //       });
-    //   });
-    // },
   },
 });

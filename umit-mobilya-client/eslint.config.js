@@ -83,4 +83,17 @@ export default [
       'simple-import-sort/exports': 'error',
     },
   },
+  {
+    /*
+     * PrimeVue ships components literally named Dialog, Menu and Select, which
+     * collide with the HTML elements of the same name. The names are PrimeVue's,
+     * not ours — renaming them at registration would break every template that
+     * uses <Dialog>, <Menu> or <Select>.
+     */
+    name: 'app/primevue-registration',
+    files: ['src/plugins/primeVue/primeVue.ts'],
+    rules: {
+      'vue/no-reserved-component-names': 'off',
+    },
+  },
 ];

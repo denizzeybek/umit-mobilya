@@ -40,7 +40,7 @@ const validationSchema = object({
   password: string().required().label('Password'),
 });
 
-const { handleSubmit, isSubmitting, resetForm, defineField } = useForm({
+const { handleSubmit, isSubmitting } = useForm({
   validationSchema,
 });
 

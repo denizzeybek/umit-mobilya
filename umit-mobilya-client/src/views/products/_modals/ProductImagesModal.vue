@@ -45,7 +45,7 @@ const selectedFile = ref<FileList | null>(null);
 
 const validationSchema = object({});
 
-const { handleSubmit, isSubmitting, resetForm, defineField } = useForm({
+const { handleSubmit, isSubmitting, resetForm } = useForm({
   validationSchema,
 });
 
@@ -64,7 +64,7 @@ const fileSelected = (event: Event) => {
   }
 };
 
-const submitHandler = handleSubmit(async (values) => {
+const submitHandler = handleSubmit(async () => {
   try {
     const payload = {
       id: productsStore.currentProduct._id,

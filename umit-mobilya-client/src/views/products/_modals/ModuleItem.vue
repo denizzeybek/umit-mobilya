@@ -77,6 +77,8 @@ const buttonProps = computed(() => {
       },
     };
   }
+
+  return null;
 });
 </script>
 

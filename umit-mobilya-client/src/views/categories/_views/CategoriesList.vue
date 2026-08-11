@@ -9,7 +9,7 @@
         <DataTable
           v-model:filters="filters"
           tableStyle="min-width: 50rem"
-          :loading="isLoading"
+          :loading="categoriesStore.loading"
           :value="categories"
           paginator
           :globalFilterFields="['name']"
@@ -66,12 +66,6 @@ import { FilterMatchMode } from '@primevue/core/api';
 import { useCategoriesStore } from '@/stores/categories';
 
 import CategoryModal from '../_components/_modals/CategoryModal.vue';
-
-interface IProps {
-  isLoading: boolean;
-}
-
-defineProps<IProps>();
 
 const showCategoryModal = ref(false);
 const filters = ref({

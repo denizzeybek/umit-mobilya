@@ -24,7 +24,7 @@
             <template v-if="hasModules">
               <div
                 v-for="(product, idx) in products"
-                :keey="idx"
+                :key="idx"
                 class="flex items-center justify-between w-full mb-6"
               >
                 <p

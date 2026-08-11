@@ -88,12 +88,6 @@ const menuItems = ref([
   },
 ]);
 
-const home = computed(() => {
-  return {
-    icon: 'pi pi-home',
-  };
-});
-
 const items = computed(() => {
   return [{ label: 'Ürünler', goBack: true }, { label: 'Ürün Detayı' }];
 });

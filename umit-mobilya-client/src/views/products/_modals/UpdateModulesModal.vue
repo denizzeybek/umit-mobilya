@@ -22,7 +22,7 @@
           />
         </div>
         <template v-if="isLoading">
-          <Skeleton v-for="i in 3" width="100%" height="145px"></Skeleton>
+          <Skeleton v-for="i in 3" :key="i" width="100%" height="145px"></Skeleton>
         </template>
         <template v-else>
           <template v-for="(product, idx) in productsList" :key="idx">

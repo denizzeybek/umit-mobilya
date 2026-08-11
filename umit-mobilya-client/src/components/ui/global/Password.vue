@@ -38,8 +38,6 @@ interface IProps {
   primeProps?: PasswordProps;
   validatingAsync?: boolean;
   errorMessage?: string;
-  customEvents?: Record<string, (e: Event) => any>;
-  transformValue?: (value: InputEvent) => unknown;
   disabled?: boolean;
   toggleMask?: boolean;
   feedback?: boolean;
@@ -52,43 +50,15 @@ const props = withDefaults(defineProps<IProps>(), {
   feedback: false,
 });
 
-const isFocused = ref(false);
-const passwordVal = ref()
+const passwordVal = ref();
 
-const {
-  errorMessage: vError,
-  value,
-  handleBlur,
-  handleChange,
-} = useField(() => props.name, undefined, {
+const { errorMessage: vError, value } = useField(() => props.name, undefined, {
   validateOnValueUpdate: false,
   syncVModel: true,
 });
 const errorMessage = computed(() =>
   props.errorMessage ? props.errorMessage : vError.value,
 );
-
-const listeners = {
-  ...props.customEvents,
-  blur: (e: InputEvent) => {
-    handleBlur(e, true);
-    props.customEvents?.blur?.(e);
-    isFocused.value = false;
-  },
-  change: (e: InputEvent) => {
-    handleChange(e);
-    props.customEvents?.change?.(e);
-  },
-  input: (e: InputEvent) => {
-    const value = props.transformValue ? props.transformValue(e) : e;
-    handleChange(value, !!errorMessage.value);
-    props.customEvents?.input?.(e);
-  },
-  focus: (e: InputEvent) => {
-    props.customEvents?.focus?.(e);
-    isFocused.value = true;
-  },
-};
 
 watch(
   () => passwordVal.value,

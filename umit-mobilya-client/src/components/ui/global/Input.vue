@@ -25,8 +25,8 @@
         :invalid="!!errorMessage"
         :list="list"
         :class="[customClass]"
-        @update:value="(newValue) => (value as any).value = newValue"
         v-bind="primeProps"
+        @update:value="(newValue) => (value as any).value = newValue"
         @focus="list ? (showOptions = true) : (showOptions = false)"
         @input="filterOptions"
         v-on="listeners"
@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type InputHTMLAttributes, onMounted,ref } from 'vue';
+import { computed, type InputHTMLAttributes, ref } from 'vue';
 
 import { useField } from 'vee-validate';
 

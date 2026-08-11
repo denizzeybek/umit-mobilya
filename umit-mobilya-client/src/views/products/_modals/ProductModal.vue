@@ -134,7 +134,7 @@ const validationSchema = object({
     .label('Kategori'),
 });
 
-const { handleSubmit, isSubmitting, resetForm, defineField } = useForm({
+const { handleSubmit, isSubmitting, resetForm } = useForm({
   validationSchema,
 });
 

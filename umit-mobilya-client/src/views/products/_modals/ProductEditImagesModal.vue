@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useFToast } from '@/composables/useFToast';
@@ -78,7 +78,7 @@ const removeImage = async (imageName: string) => {
     await productsStore.deleteImage(payload);
     await productsStore.find(route.params.id?.toString());
     showSuccessMessage('Resim Galeriden Kaldırıldı');
-  } catch (error) {
+  } catch {
     showErrorMessage('Resmi silerken hata oluştu');
   }
 };

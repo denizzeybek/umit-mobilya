@@ -32,7 +32,7 @@
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full"
     >
       <Card
-        v-for="(product, idx) in productList"
+        v-for="product in productList"
         :key="product._id"
         class="cursor-pointer min-h-[320px]"
         @click="
@@ -43,11 +43,6 @@
         "
       >
         <template #header>
-          <!-- <Skeleton
-            v-if="imageLoadingStates[product._id]"
-            width="328px"
-            height="180px"
-          /> -->
           <div class="flex items-center justify-center">
             <img
               :src="product.imageUrl"
@@ -55,8 +50,6 @@
               alt="product image"
             />
           </div>
-          <!-- @load="handleImageLoad(product._id)"
-            @error="handleImageError(product._id)" -->
         </template>
         <template #content>
           <ProductItemContent :product="product" />
@@ -107,18 +100,6 @@ const selectedFilter = ref({
   value: null,
 });
 const typedName = ref();
-
-// Her ürün için yükleme durumlarını takip etmek için bir obje
-const imageLoadingStates = ref<Record<string, boolean>>({});
-
-// Resim yüklenirken skeleton gösterimi için
-const handleImageLoad = (id: string) => {
-  imageLoadingStates.value[id] = false; // Yükleme tamamlandı
-};
-
-const handleImageError = (id: string) => {
-  imageLoadingStates.value[id] = false; // Hata durumunda da skeleton kaldırılır
-};
 
 const productList = computed(() => {
   return productsStore.list;
@@ -178,8 +159,5 @@ watch(
 
 onMounted(async () => {
   await categoriesStore.fetch();
-  productsStore.list?.forEach((product) => {
-    imageLoadingStates.value[product._id!] = true;
-  });
 });
 </script>

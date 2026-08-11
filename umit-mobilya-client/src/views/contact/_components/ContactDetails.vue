@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex items-center justify-center py-20">
     <div class="w-1/2 flex flex-col lg:flex-row gap-12">
-      <template v-for="item in itemList">
+      <template v-for="item in itemList" :key="item.title">
         <BannerText
           :title="item.title"
           :text="item.text"

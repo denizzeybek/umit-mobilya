@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import axios from 'axios';
 
-import { EStorageKeys } from '@/constants/storageKeys';
+import { EStorageKeys } from '@/enums/storageKeys.enum';
 import { useUsersStore } from '@/stores/users';
 
 import { ERouteNames } from './routeNames.enum';
@@ -19,7 +19,7 @@ router.beforeEach(async (to, from, next) => {
   const usersStore = useUsersStore();
 
   const token = localStorage.getItem(EStorageKeys.TOKEN);
-  const { requiresAuth, requiresUnAuth, isPublic } = to.meta;
+  const { requiresAuth } = to.meta;
 
   if (token && !usersStore.isAuthenticated) {
     try {

@@ -36,7 +36,7 @@
   <Footer />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
 import Footer from '@/views/about/_components/footer/Footer.vue';

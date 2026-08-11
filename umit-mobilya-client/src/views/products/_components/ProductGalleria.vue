@@ -36,7 +36,7 @@
   </Card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed,ref } from 'vue';
 
 import { useProductsStore } from '@/stores/products';
@@ -62,12 +62,10 @@ const responsiveOptions = ref([
   },
 ]);
 
-const productImages = computed(() => {
-  return (
-    [
-      ...[productsStore.currentProduct?.imageUrl],
-      ...productsStore.currentProduct?.imageUrlList,
-    ] || []
+const productImages = computed<string[]>(() => {
+  const product = productsStore.currentProduct;
+  return [product?.imageUrl, ...(product?.imageUrlList ?? [])].filter(
+    (url): url is string => !!url,
   );
 });
 </script>
