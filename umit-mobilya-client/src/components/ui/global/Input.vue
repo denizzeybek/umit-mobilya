@@ -1,22 +1,21 @@
 <template>
   <div
-    class="flex flex-col gap-2 relative"
     v-click-outside="handleOutsideClick"
+    class="flex flex-col gap-2 relative"
   >
     <label :for="id">{{ label }}</label>
     <div class="flex items-center">
       <Button
         v-if="showAdjustmentButtons"
-        @click="adjustInput(-1)"
         icon="pi pi-minus"
         outlined
         severity="secondary"
         class="!min-w-[40px]"
+        @click="adjustInput(-1)"
       />
       <InputText
-        :value="value"
-        @update:value="(newValue) => (value as any).value = newValue"
         :id="id"
+        :value="value"
         :data-error="!!errorMessage"
         :data-valid="isValid"
         :placeholder="placeholder"
@@ -25,19 +24,20 @@
         class="w-full"
         :invalid="!!errorMessage"
         :list="list"
+        :class="[customClass]"
+        @update:value="(newValue) => (value as any).value = newValue"
+        v-bind="primeProps"
         @focus="list ? (showOptions = true) : (showOptions = false)"
         @input="filterOptions"
-        :class="[customClass]"
         v-on="listeners"
-        v-bind="primeProps"
       />
       <Button
         v-if="showAdjustmentButtons"
-        @click="adjustInput(1)"
         icon="pi pi-plus"
         outlined
         severity="secondary"
         class="!min-w-[40px]"
+        @click="adjustInput(1)"
       />
     </div>
     <slot name="dataList" />
@@ -48,8 +48,8 @@
       <li
         v-for="option in filteredOptions"
         :key="option"
-        @click="selectOption(option)"
         class="hover:bg-slate-100 cursor-pointer rounded-s px-3 py-2"
+        @click="selectOption(option)"
       >
         {{ option }}
       </li>
@@ -59,11 +59,11 @@
       >
         <FText innerText="No option found" />
         <Button
-          @click="addNewOption"
           label="Ekle"
           icon="pi pi-plus"
           class="flex-1"
           outlined
+          @click="addNewOption"
         />
       </div>
     </ul>
@@ -74,9 +74,11 @@
 </template>
 
 <script setup lang="ts">
-import type { InputTextProps } from 'primevue/inputtext';
-import { ref, computed, type InputHTMLAttributes, onMounted } from 'vue';
+import { computed, type InputHTMLAttributes, onMounted,ref } from 'vue';
+
 import { useField } from 'vee-validate';
+
+import type { InputTextProps } from 'primevue/inputtext';
 
 interface IProps {
   id: string;
@@ -107,11 +109,10 @@ const props = withDefaults(defineProps<IProps>(), {
   isReturnNumber: false,
 });
 
+const emit = defineEmits<IEmits>();
 interface IEmits {
   (event: 'updateList', value: string): void;
 }
-const emit = defineEmits<IEmits>();
-
 const isFocused = ref(false);
 const showOptions = ref(false);
 const filteredOptions = ref(props.datalistOptions || []);

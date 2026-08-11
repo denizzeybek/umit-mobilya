@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap lg:flex-nowrap justify-between w-full p-20 gap-20">
-    <BoxItem v-for="(item, key) in items" :item="item" :key="key" />
+    <BoxItem v-for="(item, key) in items" :key="key" :item="item" />
   </div>
 </template>
 

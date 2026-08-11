@@ -1,5 +1,5 @@
-import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
 import About from '@/views/about/_views/About.vue';
+import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
 export enum ERouteNames {
   // AUTH
   Login = 'Giriş Yap',

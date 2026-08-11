@@ -1,8 +1,10 @@
-import { setI18nLanguage, type Language } from '@/plugins/i18n'
 // import { useUsersStore } from '@/stores/common/users'
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+
 import { setLocale } from 'yup'
+
+import { type Language,setI18nLanguage } from '@/plugins/i18n'
 
 export const initVeeValidateI18n = () => {
   const { t } = useI18n()

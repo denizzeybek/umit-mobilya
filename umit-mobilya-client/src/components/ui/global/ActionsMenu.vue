@@ -2,10 +2,10 @@
   <div>
     <Button
       type="button"
-      @click="toggle"
       aria-haspopup="true"
       aria-controls="overlay_menu"
       label="Aksiyonlar"
+      @click="toggle"
     >
     </Button>
 
@@ -29,6 +29,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
 import type { MenuItem } from 'primevue/menuitem';
 
 interface IProps {

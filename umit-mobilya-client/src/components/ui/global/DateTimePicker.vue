@@ -2,11 +2,10 @@
   <div class="flex flex-col gap-2">
     <label :for="id">{{ label }}</label>
     <div class="flex items-center gap-1">
-      <Button v-if="showPrevNextButtons" @click="handleWeek(EWeek.PREV)" type="button" icon="pi pi-angle-left" />
+      <Button v-if="showPrevNextButtons" type="button" icon="pi pi-angle-left" @click="handleWeek(EWeek.PREV)" />
       <DatePicker
-        :value="value"
-        @update:value="(newValue) => (value as any).value = newValue"
         :id="id"
+        :value="value"
         :data-error="!!errorMessage"
         :data-valid="isValid"
         :placeholder="placeholder"
@@ -17,17 +16,18 @@
         v-bind="primeProps"
         :numberOfMonths="numberOfMonths"
         :manualInput="manualInput"
+        @update:value="(newValue) => (value as any).value = newValue"
         format="dd/mm/yy"
       >
         <template #footer>
           <div v-if="primeProps?.selectionMode === 'range'" class="py-5 flex flex-wrap gap-2">
-            <Button v-for="(prop, idx) in buttonProps" :key="idx" @click="handleChange(prop.key)" class="w-[80px] !text-sm">
+            <Button v-for="(prop, idx) in buttonProps" :key="idx" class="w-[80px] !text-sm" @click="handleChange(prop.key)">
               {{prop.label}}
             </Button>
           </div>
         </template>
       </DatePicker>
-      <Button v-if="showPrevNextButtons" @click="handleWeek(EWeek.NEXT)" type="button" icon="pi pi-angle-right" />
+      <Button v-if="showPrevNextButtons" type="button" icon="pi pi-angle-right" @click="handleWeek(EWeek.NEXT)" />
   </div>
     <small :id="`${id}-help`" class="p-error text-red-500">{{ errorMessage }}</small>
   </div>
@@ -35,10 +35,21 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import type { DatePickerProps } from 'primevue/datepicker';
-import { useField } from 'vee-validate';
 import { computed } from 'vue';
+
+import dayjs from 'dayjs';
+import { useField } from 'vee-validate';
+
+import type { DatePickerProps } from 'primevue/datepicker';
+
+const props = withDefaults(defineProps<IProps>(), {
+  disabled: false,
+  placeholder: 'Enter date',
+  numberOfMonths: 2,
+  manualInput: true,
+  format: 'YY/MM/DDDD',
+  showPrevNextButtons: false
+});
 
 enum EHelperButton {
   TODAY = 'today',
@@ -73,15 +84,6 @@ interface IProps {
   format?: string;
   showPrevNextButtons?:boolean;
 }
-
-const props = withDefaults(defineProps<IProps>(), {
-  disabled: false,
-  placeholder: 'Enter date',
-  numberOfMonths: 2,
-  manualInput: true,
-  format: 'YY/MM/DDDD',
-  showPrevNextButtons: false
-});
 
 const buttonProps = [
   {

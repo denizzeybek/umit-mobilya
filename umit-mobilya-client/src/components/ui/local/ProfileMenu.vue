@@ -1,7 +1,6 @@
 <template>
   <Button
     type="button"
-    @click="toggle"
     outlined
     aria-haspopup="true"
     severity="contrast"
@@ -9,6 +8,7 @@
     unstyled
     size="large"
     pt:root="bg-f-white rounded-md px-4 border border-gray-300 "
+    @click="toggle"
   >
     <ProfileBadge title="Deniz Zeybek" onlyTitle />
   </Button>
@@ -31,9 +31,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import ProfileBadge from '@/components/ui/local/ProfileBadge.vue';
 import { ERouteNames } from '@/router/routeNames.enum';
-import { useRouter } from 'vue-router';
 
 const router = useRouter();
 

@@ -7,16 +7,16 @@
     </button>
     <input
       :id="name"
+      ref="input"
+      v-model="value"
       :name="name"
       :data-error="!!errorMessage"
       :data-valid="isValid"
-      v-model="value"
       :disabled="disabled"
-      v-on="listeners"
-      ref="input"
       type="text"
       class="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[118px] min-w-[80px] placeholder:text-gray-900 py-[13px] text-center bg-transparent"
       placeholder="1"
+      v-on="listeners"
     />
     <button
       class="group rounded-r-full px-6 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:border-gray-300 hover:bg-gray-50"
@@ -27,8 +27,9 @@
 </template>
 
 <script setup lang="ts">
-import { useField } from 'vee-validate';
 import { computed } from 'vue';
+
+import { useField } from 'vee-validate';
 
 export interface IProps {
   label?: string;

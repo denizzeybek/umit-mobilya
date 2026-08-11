@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-undef
+ 
 import { colors } from './src/constants/colors';
 /** @type {import('tailwindcss').Config} */
 

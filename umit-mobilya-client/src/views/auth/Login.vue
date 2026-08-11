@@ -3,7 +3,7 @@
     <FText as="h1" class="mb-8 text-center"> Login </FText>
 
     <form class="flex flex-col gap-5" @submit="submitHandler">
-      <FInput type="email" id="email" label="Email" name="email" />
+      <FInput id="email" type="email" label="Email" name="email" />
 
       <div class="relative">
         <FPassword id="password" label="Password" name="password" />
@@ -22,12 +22,14 @@
 </template>
 
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
-import { string, object } from 'yup';
-import { useFToast } from '@/composables/useFToast';
-import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+
+import { useForm } from 'vee-validate';
+import { object,string } from 'yup';
+
+import { useFToast } from '@/composables/useFToast';
 import { ERouteNames } from '@/router/routeNames.enum';
+import { useAuthStore } from '@/stores/auth';
 
 const { showSuccessMessage, showErrorMessage } = useFToast();
 const router = useRouter();

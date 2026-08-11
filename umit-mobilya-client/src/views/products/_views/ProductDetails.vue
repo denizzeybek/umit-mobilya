@@ -40,18 +40,19 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { useProductsStore } from '@/stores/products';
 import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+
 import ProductDetailLayout from '@/layouts/product/ProductDetailLayout.vue';
+import { useProductsStore } from '@/stores/products';
 import ProductBasket from '@/views/products/_components/ProductBasket.vue';
 import ProductGalleria from '@/views/products/_components/ProductGalleria.vue';
 import ProductHeader from '@/views/products/_components/ProductHeader.vue';
 import ProductModules from '@/views/products/_components/ProductModules.vue';
-import ProductModal from '@/views/products/_modals/ProductModal.vue';
-import ProductImagesModal from '@/views/products/_modals/ProductImagesModal.vue';
-import UpdateModulesModal from '@/views/products/_modals/UpdateModulesModal.vue';
 import ProductEditImagesModal from '@/views/products/_modals/ProductEditImagesModal.vue';
+import ProductImagesModal from '@/views/products/_modals/ProductImagesModal.vue';
+import ProductModal from '@/views/products/_modals/ProductModal.vue';
+import UpdateModulesModal from '@/views/products/_modals/UpdateModulesModal.vue';
 
 const productsStore = useProductsStore();
 const route = useRoute();

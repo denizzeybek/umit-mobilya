@@ -43,15 +43,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onMounted } from 'vue';
-import { useProductsStore } from '@/stores/products';
-import { useFieldArray, useForm } from 'vee-validate';
-import { object, array, number } from 'yup';
-import { useFToast } from '@/composables/useFToast';
-import type { IProductModuleUpdateDTO } from '@/interfaces/product/product.interface';
+import { computed, onMounted,watch } from 'vue';
 import { useRoute } from 'vue-router';
-import ProductItemContent from './ProductItemContent.vue';
+
+import { useFieldArray, useForm } from 'vee-validate';
+import { array, number,object } from 'yup';
+
+import { useFToast } from '@/composables/useFToast';
+import { useProductsStore } from '@/stores/products';
 import { useUsersStore } from '@/stores/users';
+
+import ProductItemContent from './ProductItemContent.vue';
+
+import type { IProductModuleUpdateDTO } from '@/interfaces/product/product.interface';
 
 const { showErrorMessage } = useFToast();
 const route = useRoute();

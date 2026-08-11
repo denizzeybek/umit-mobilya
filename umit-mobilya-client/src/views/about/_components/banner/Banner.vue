@@ -20,8 +20,8 @@
 
 <script setup lang="ts">
 import BannerCarousel from './BannerCarousel.vue';
-import BannerImage from './BannerImage.vue';
 import BannerContent from './BannerContent.vue';
+import BannerImage from './BannerImage.vue';
 import BannerText from './BannerText.vue';
 
 const content = {

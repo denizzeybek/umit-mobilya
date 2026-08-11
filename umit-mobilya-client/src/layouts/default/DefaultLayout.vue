@@ -14,9 +14,10 @@
 </template>
 
 <script lang="ts" setup>
-import PageWrapper from './_components/PageWrapper.vue';
 import { ref } from 'vue';
+
 import PageHeader from './_components/PageHeader.vue';
+import PageWrapper from './_components/PageWrapper.vue';
 
 const visible = ref(false);
 </script>

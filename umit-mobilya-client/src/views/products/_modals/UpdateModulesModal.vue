@@ -10,14 +10,14 @@
       <SplitterPanel class="flex flex-col gap-2 p-2 !overflow-y-auto !h-full">
         <div class="flex justify-end gap-2">
           <FSelect
+            v-model="selectedFilter"
             name="filterCategory"
             placeholder="Kategori Adı Seçin"
             :options="categoryTypeOptions"
-            v-model="selectedFilter"
           />
           <FInput
-            name="filterName"
             v-model="typedName"
+            name="filterName"
             placeholder="Ürün ismi girin"
           />
         </div>
@@ -49,18 +49,21 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
+
 import { useFToast } from '@/composables/useFToast';
-import ModuleItem from './ModuleItem.vue';
+import { useCategoriesStore } from '@/stores/categories';
+import { useProductsStore } from '@/stores/products';
 import { EModuleItemButtonType } from '@/views/products/_etc/enums/EModuleItemButtonType';
+
+import ModuleItem from './ModuleItem.vue';
+
 import type {
   IProductFilterDTO,
   IProductRemoveModuleDTO,
   IProductUpdateModuleDTO,
 } from '@/interfaces/product/product.interface';
-import { useProductsStore } from '@/stores/products';
-import { useRoute } from 'vue-router';
-import { useCategoriesStore } from '@/stores/categories';
-import { watch } from '@vue/reactivity';
 
 interface IFilter {
   name: string;

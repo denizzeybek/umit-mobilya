@@ -1,6 +1,9 @@
-import { EStoreNames } from '@/stores/storeNames.enum';
-import axios from 'axios';
 import { defineStore } from 'pinia';
+
+import axios from 'axios';
+
+import { EStoreNames } from '@/stores/storeNames.enum';
+
 import type {
   IProductDeleteImageDTO,
   IProductDTO,
@@ -9,7 +12,6 @@ import type {
   IProductRemoveModuleDTO,
   IProductUpdateModuleDTO,
 } from '@/interfaces/product/product.interface';
-
 import type {
   IProduct,
   IProductModule,

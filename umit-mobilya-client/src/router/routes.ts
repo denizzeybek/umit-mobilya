@@ -1,16 +1,14 @@
-import type { RouteRecordRaw } from 'vue-router';
-import { ERouteNames } from '@/router/routeNames.enum';
 import DefaultLayout from '@/layouts/default/DefaultLayout.vue';
-
-import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
-import ProductsList from '@/views/products/_views/ProductsList.vue';
-import ProductDetails from '@/views/products/_views/ProductDetails.vue';
-
+import { ERouteNames } from '@/router/routeNames.enum';
 import About from '@/views/about/_views/About.vue';
-import Contact from '@/views/contact/_views/Contact.vue';
-
 import Login from '@/views/auth/Login.vue';
 import CategoriesList from '@/views/categories/_views/CategoriesList.vue';
+import Contact from '@/views/contact/_views/Contact.vue';
+import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
+import ProductDetails from '@/views/products/_views/ProductDetails.vue';
+import ProductsList from '@/views/products/_views/ProductsList.vue';
+
+import type { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {

@@ -1,58 +1,58 @@
 import { type App } from 'vue';
-import PrimeVue from 'primevue/config';
-import ToastService from 'primevue/toastservice';
-import 'primeicons/primeicons.css';
-import Drawer from 'primevue/drawer';
-import { flexyPreset } from './flexytheme';
-// import Aura from '@primevue/themes/aura';
 
-import StyleClass from 'primevue/styleclass';
-import Ripple from 'primevue/ripple';
-import Tooltip from 'primevue/tooltip';
-
-import Tabs from 'primevue/tabs';
-import TabList from 'primevue/tablist';
-import Tab from 'primevue/tab';
-import TabPanels from 'primevue/tabpanels';
-import TabPanel from 'primevue/tabpanel';
-import Panel from 'primevue/panel';
-
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Rating from 'primevue/rating';
-import Tag from 'primevue/tag';
-import ColumnGroup from 'primevue/columngroup';
-import Row from 'primevue/row';
-import Card from 'primevue/card';
-import Checkbox from 'primevue/checkbox';
-import Password from 'primevue/password';
-import Select from 'primevue/select';
-import MultiSelect from 'primevue/multiselect';
-import Menu from 'primevue/menu';
-import Message from 'primevue/message';
 import Breadcrumb from 'primevue/breadcrumb';
-import TreeTable from 'primevue/treetable'
+import Card from 'primevue/card';
+import Carousel from 'primevue/carousel';
+import Chart from 'primevue/chart';
+import Checkbox from 'primevue/checkbox';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';
+import PrimeVue from 'primevue/config';
+import DataTable from 'primevue/datatable';
+import DataView from 'primevue/dataview';
+import DatePicker from 'primevue/datepicker';
 import Dialog from 'primevue/dialog';
 import Divider from 'primevue/divider';
-import Skeleton from 'primevue/skeleton';
-import DatePicker from 'primevue/datepicker';
-import ToggleSwitch from 'primevue/toggleswitch';
-import SelectButton from 'primevue/selectbutton';
-import Stepper from 'primevue/stepper';
-import StepList from 'primevue/steplist';
-import StepPanels from 'primevue/steppanels';
-import StepItem from 'primevue/stepitem';
-import Step from 'primevue/step';
-import StepPanel from 'primevue/steppanel';
-import Chart from 'primevue/chart';
-import Carousel from 'primevue/carousel';
-import Toolbar from 'primevue/toolbar';
-import DataView from 'primevue/dataview';
-import PickList from 'primevue/picklist';
-import Splitter from 'primevue/splitter';
-import SplitterPanel from 'primevue/splitterpanel';
+import Drawer from 'primevue/drawer';
 import FileUpload from 'primevue/fileupload';
 import Galleria from 'primevue/galleria';
+import Menu from 'primevue/menu';
+import Message from 'primevue/message';
+import MultiSelect from 'primevue/multiselect';
+import Panel from 'primevue/panel';
+import Password from 'primevue/password';
+import PickList from 'primevue/picklist';
+import Rating from 'primevue/rating';
+import Ripple from 'primevue/ripple';
+import Row from 'primevue/row';
+import Select from 'primevue/select';
+import SelectButton from 'primevue/selectbutton';
+import Skeleton from 'primevue/skeleton';
+import Splitter from 'primevue/splitter';
+import SplitterPanel from 'primevue/splitterpanel';
+import Step from 'primevue/step';
+import StepItem from 'primevue/stepitem';
+import StepList from 'primevue/steplist';
+import StepPanel from 'primevue/steppanel';
+import StepPanels from 'primevue/steppanels';
+import Stepper from 'primevue/stepper';
+// import Aura from '@primevue/themes/aura';
+import StyleClass from 'primevue/styleclass';
+import Tab from 'primevue/tab';
+import TabList from 'primevue/tablist';
+import TabPanel from 'primevue/tabpanel';
+import TabPanels from 'primevue/tabpanels';
+import Tabs from 'primevue/tabs';
+import Tag from 'primevue/tag';
+import ToastService from 'primevue/toastservice';
+import ToggleSwitch from 'primevue/toggleswitch';
+import Toolbar from 'primevue/toolbar';
+import Tooltip from 'primevue/tooltip';
+import TreeTable from 'primevue/treetable'
+
+import { flexyPreset } from './flexytheme';
+
+import 'primeicons/primeicons.css';
 
 
 export default {

@@ -7,11 +7,11 @@
     <Card>
       <template #content>
         <DataTable
+          v-model:filters="filters"
           tableStyle="min-width: 50rem"
           :loading="isLoading"
           :value="categories"
           paginator
-          v-model:filters="filters"
           :globalFilterFields="['name']"
           :rows="20"
           :rowsPerPageOptions="[5, 10, 20, 50]"
@@ -60,9 +60,12 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { useCategoriesStore } from '@/stores/categories';
-import CategoryModal from '../_components/_modals/CategoryModal.vue';
+
 import { FilterMatchMode } from '@primevue/core/api';
+
+import { useCategoriesStore } from '@/stores/categories';
+
+import CategoryModal from '../_components/_modals/CategoryModal.vue';
 
 interface IProps {
   isLoading: boolean;

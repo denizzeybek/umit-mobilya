@@ -75,25 +75,27 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { useForm } from 'vee-validate';
-import { string, object, number } from 'yup';
-import { useFToast } from '@/composables/useFToast';
-import { useProductsStore } from '@/stores/products';
-import { useCategoriesStore } from '@/stores/categories';
-import type { IProductDTO } from '@/interfaces/product/product.interface';
 import { useRoute } from 'vue-router';
+
+import { useForm } from 'vee-validate';
+import { number,object, string } from 'yup';
+
+import { useFToast } from '@/composables/useFToast';
+import { useCategoriesStore } from '@/stores/categories';
+import { useProductsStore } from '@/stores/products';
 import CategoryModal from '@/views/categories/_components/_modals/CategoryModal.vue';
+
+import type { IProductDTO } from '@/interfaces/product/product.interface';
 
 interface IProps {
   data?: any;
 }
 const props = defineProps<IProps>();
 
+const emit = defineEmits<IEmits>();
 interface IEmits {
   (event: 'fetchProducts'): void;
 }
-const emit = defineEmits<IEmits>();
-
 const route = useRoute();
 const productsStore = useProductsStore();
 const categoriesStore = useCategoriesStore();

@@ -22,10 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import type { PasswordProps } from 'primevue/password';
-import { ref, computed, watch } from 'vue';
-import { useField } from 'vee-validate';
+import { computed, ref, watch } from 'vue';
+
 import Password from 'primevue/password';
+import { useField } from 'vee-validate';
+
+import type { PasswordProps } from 'primevue/password';
 
 interface IProps {
   id: string;

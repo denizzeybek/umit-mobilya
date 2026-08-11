@@ -1,9 +1,13 @@
+import { createApp } from 'vue'
+
 import App from '@/App.vue'
 import router from '@/router'
-import '@/styles/index.scss'
-import { createApp } from 'vue'
+
 import plugins from './plugins'
+
+import '@/styles/index.scss'
 import '@/style.css'
+
 import  '@/plugins/axios'
 
 const app = createApp(App)

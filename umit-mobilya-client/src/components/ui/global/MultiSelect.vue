@@ -7,12 +7,12 @@
       optionLabel="name"
       :placeholder="placeholder"
       :invalid="!!errorMessage"
-      @change="onSelect($event)"
-      v-on="validationListeners"
       :class="[customWidth]"
       v-bind="primeProps"
       filter
       :display="chip ? 'chip' : 'comma'"
+      @change="onSelect($event)"
+      v-on="validationListeners"
     >
       <template #option="slotProps">
         <div class="flex items-center">
@@ -35,8 +35,8 @@
             outlined
             label="Ekle"
             icon="pi pi-plus"
-            @click.stop="emit('addList')"
             type="button"
+            @click.stop="emit('addList')"
           />
         </div>
       </template>
@@ -51,10 +51,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { IOption } from '@/common/interfaces/option.interface';
 import MultiSelect, { type MultiSelectProps } from 'primevue/multiselect';
 import Tag from 'primevue/tag';
 import { useField } from 'vee-validate';
+
+import type { IOption } from '@/common/interfaces/option.interface';
 
 export interface IProps {
   name: string;
@@ -81,13 +82,12 @@ const props = withDefaults(defineProps<IProps>(), {
   chip: true,
 });
 
+const emit = defineEmits<IEmits>();
 interface IEmits {
   (event: 'selected', value: any): void;
   (event: 'addList'): void;
   (event: 'update:modelValue', value: IOption[]): void;
 }
-const emit = defineEmits<IEmits>();
-
 const { errorMessage, value, handleBlur, handleChange } = useField<IOption[]>(
   () => props.name,
   undefined,

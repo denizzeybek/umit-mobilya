@@ -29,10 +29,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
+
 import { useForm } from 'vee-validate';
-import { string, object } from 'yup';
+import { object,string } from 'yup';
+
 import { useFToast } from '@/composables/useFToast';
 import { useCategoriesStore } from '@/stores/categories';
+
 import type { ICategoryDTO } from '@/interfaces/category/category.interface';
 
 interface IProps {
@@ -40,11 +43,10 @@ interface IProps {
 }
 const props = defineProps<IProps>();
 
+const emit = defineEmits<IEmits>();
 interface IEmits {
   (event: 'fetchCategories'): void;
 }
-const emit = defineEmits<IEmits>();
-
 const { showSuccessMessage, showErrorMessage } = useFToast();
 const categoriesStore = useCategoriesStore();
 

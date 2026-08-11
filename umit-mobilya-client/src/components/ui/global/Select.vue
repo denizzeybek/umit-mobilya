@@ -7,10 +7,10 @@
       optionLabel="name"
       :placeholder="placeholder"
       :invalid="!!errorMessage"
-      @change="onSelect($event)"
-      v-on="validationListeners"
       :class="[customWidth]"
       v-bind="primeProps"
+      @change="onSelect($event)"
+      v-on="validationListeners"
     >
       <template #value="slotProps">
         <div v-if="slotProps?.value" class="flex items-center gap-3">
@@ -37,8 +37,8 @@
             outlined
             label="Ekle"
             icon="pi pi-plus"
-            @click.stop="emit('addList')"
             type="button"
+            @click.stop="emit('addList')"
           />
         </div>
       </template>
@@ -53,9 +53,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { IOption } from '@/common/interfaces/option.interface';
 import Select, { type SelectProps } from 'primevue/select';
 import { useField } from 'vee-validate';
+
+import type { IOption } from '@/common/interfaces/option.interface';
 
 export interface IProps {
   name: string;
@@ -78,13 +79,12 @@ const props = withDefaults(defineProps<IProps>(), {
   customWidth: 'w-full',
 });
 
+const emit = defineEmits<IEmits>();
 interface IEmits {
   (event: 'selected', value: any): void;
   (event: 'addList'): void;
   (event: 'update:modelValue', value: string | number): void;
 }
-const emit = defineEmits<IEmits>();
-
 const { errorMessage, value, handleBlur, handleChange } = useField<IOption>(
   () => props.name,
   undefined,

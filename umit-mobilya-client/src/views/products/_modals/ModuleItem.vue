@@ -17,19 +17,22 @@
         :icon="buttonProps?.icon"
         :label="buttonProps?.label"
         :severity="buttonProps?.severity"
-        @click="buttonProps?.method()"
         outlined
         class="!flex-1"
+        @click="buttonProps?.method()"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { IProductModule } from '@/interfaces/product/product.interface';
 import { computed } from 'vue';
+
 import { EModuleItemButtonType } from '@/views/products/_etc/enums/EModuleItemButtonType';
+
 import ProductItemContent from '../_components/ProductItemContent.vue';
+
+import type { IProductModule } from '@/interfaces/product/product.interface';
 
 interface IProps {
   module: IProductModule;
@@ -37,6 +40,8 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
+
+const emit = defineEmits<IEmits>();
 
 interface IClickMethod {
   type: EModuleItemButtonType;
@@ -46,8 +51,6 @@ interface IClickMethod {
 interface IEmits {
   (event: 'handleModuleButtonClick', params: IClickMethod): void;
 }
-const emit = defineEmits<IEmits>();
-
 const buttonProps = computed(() => {
   if (props.type === EModuleItemButtonType.ADD) {
     return {

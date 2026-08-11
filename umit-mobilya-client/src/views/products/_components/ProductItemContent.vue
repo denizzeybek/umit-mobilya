@@ -18,11 +18,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import type {
   IProduct,
   IProductModule,
 } from '@/interfaces/product/product.interface';
-import { computed } from 'vue';
 
 interface IProps {
   product: IProduct | IProductModule;

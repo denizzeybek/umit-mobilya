@@ -36,9 +36,11 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+
 import { useFToast } from '@/composables/useFToast';
 import { useProductsStore } from '@/stores/products';
-import { useRoute } from 'vue-router';
+
 import type { IProductDeleteImageDTO } from '@/interfaces/product/product.interface';
 
 const productsStore = useProductsStore();

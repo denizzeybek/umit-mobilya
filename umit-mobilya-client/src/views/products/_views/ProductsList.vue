@@ -11,8 +11,8 @@
       /> -->
       <div class="flex items-center gap-2">
         <FInput
-          name="filterName"
           v-model="typedName"
+          name="filterName"
           placeholder="Ürün ismi girin"
         />
         <Button
@@ -34,13 +34,13 @@
       <Card
         v-for="(product, idx) in productList"
         :key="product._id"
+        class="cursor-pointer min-h-[320px]"
         @click="
           router.push({
             name: ERouteNames.ProductDetails,
             params: { id: product._id! },
           })
         "
-        class="cursor-pointer min-h-[320px]"
       >
         <template #header>
           <!-- <Skeleton
@@ -79,15 +79,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref, watch } from 'vue';
-import { useProductsStore } from '@/stores/products';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute,useRouter } from 'vue-router';
+
+import { useFToast } from '@/composables/useFToast';
 import { ERouteNames } from '@/router/routeNames.enum';
-import { useRouter, useRoute } from 'vue-router';
+import { useCategoriesStore } from '@/stores/categories';
+import { useProductsStore } from '@/stores/products';
 import { useUsersStore } from '@/stores/users';
 import ProductModal from '@/views/products/_modals/ProductModal.vue';
+
 import ProductItemContent from '../_components/ProductItemContent.vue';
-import { useCategoriesStore } from '@/stores/categories';
-import { useFToast } from '@/composables/useFToast';
+
 import type { IProductFilterDTO } from '@/interfaces/product/product.interface';
 
 const usersStore = useUsersStore();

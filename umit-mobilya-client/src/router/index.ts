@@ -1,10 +1,13 @@
-import { EStorageKeys } from '@/constants/storageKeys';
-import { useUsersStore } from '@/stores/users';
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
+
+import axios from 'axios';
+
+import { EStorageKeys } from '@/constants/storageKeys';
+import { useUsersStore } from '@/stores/users';
+
 import { ERouteNames } from './routeNames.enum';
 import routes from './routes';
-import axios from 'axios';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,7 +18,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const usersStore = useUsersStore();
 
-  let token = localStorage.getItem(EStorageKeys.TOKEN);
+  const token = localStorage.getItem(EStorageKeys.TOKEN);
   const { requiresAuth, requiresUnAuth, isPublic } = to.meta;
 
   if (token && !usersStore.isAuthenticated) {

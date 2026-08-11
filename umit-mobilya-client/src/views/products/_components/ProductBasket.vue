@@ -68,8 +68,10 @@
 </template>
 
 <script setup lang="ts">
-import { useProductsStore } from '@/stores/products';
 import { computed } from 'vue';
+
+import { useProductsStore } from '@/stores/products';
+
 import ProductItemContent from './ProductItemContent.vue';
 
 interface IProps {

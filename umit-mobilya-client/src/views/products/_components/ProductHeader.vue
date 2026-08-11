@@ -5,8 +5,8 @@
         <Breadcrumb :model="items">
           <template #item="{ item }">
             <a
-              @click="item?.goBack ? router.go(-1) : ''"
               :class="[item?.goBack ? 'cursor-pointer' : '']"
+              @click="item?.goBack ? router.go(-1) : ''"
             >
               <span class="text-surface-700 dark:text-surface-0">{{
                 item.label
@@ -25,9 +25,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { useUsersStore } from '@/stores/users';
+import { useRoute,useRouter } from 'vue-router';
+
 import { useProductsStore } from '@/stores/products';
+import { useUsersStore } from '@/stores/users';
 
 interface IEmits {
   (event: 'handleUpdateProduct'): void;

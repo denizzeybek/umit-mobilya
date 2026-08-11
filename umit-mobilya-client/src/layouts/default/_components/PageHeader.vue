@@ -46,12 +46,14 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import MegaMenu from 'primevue/megamenu';
-import { ERouteNames } from '@/router/routeNames.enum';
-import { useUsersStore } from '@/stores/users';
-import { useAuthStore } from '@/stores/auth';
 import { useRoute, useRouter } from 'vue-router';
+
+import MegaMenu from 'primevue/megamenu';
+
+import { ERouteNames } from '@/router/routeNames.enum';
+import { useAuthStore } from '@/stores/auth';
 import { useCategoriesStore } from '@/stores/categories';
+import { useUsersStore } from '@/stores/users';
 
 interface IEmits {
   (event: 'drawerChange', val: boolean): void;
