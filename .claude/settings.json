@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+      "Bash(ls *)",
+      "Bash(jq *)",
+      "Bash(node --check *)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "mcp__mongodb__delete-many",
+      "mcp__mongodb__update-many"
+    ],
+    "deny": [
+      "Edit(./umit-mobilya-client/.env)",
+      "Edit(./umit-mobilya-server/.env)",
+      "Edit(./umit-mobilya-client/dist/**)",
+      "Edit(./umit-mobilya-client/*.tsbuildinfo)",
+      "Edit(./**/node_modules/**)",
+      "Bash(rm -rf *)",
+      "mcp__mongodb__drop-database",
+      "mcp__mongodb__drop-collection"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git push*)",
+            "statusMessage": "Deploy guard: branch kontrol ediliyor",
+            "command": "cmd=$(jq -r '.tool_input.command // \"\"' 2>/dev/null); case \"$cmd\" in *\"git push\"*) br=$(git -C /Users/denizzeybek/Documents/umit-mobilya rev-parse --abbrev-ref HEAD 2>/dev/null); [ \"$br\" = \"main\" ] && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"UYARI: main branch uzerindesin. main e push PRODUCTION deploy tetikler - frontend S3 e (.github/workflows/frontend.yml), backend EC2 ye (.github/workflows/backend.yaml, systemctl restart myapp.service). Devam etmek istedigine emin ol.\"}}' ;; esac; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

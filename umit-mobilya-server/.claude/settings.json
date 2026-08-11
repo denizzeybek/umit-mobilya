@@ -1,0 +1,50 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(./.env)",
+      "Edit(./node_modules/**)",
+      "mcp__mongodb__drop-database",
+      "mcp__mongodb__drop-collection"
+    ],
+    "ask": [
+      "mcp__mongodb__delete-many",
+      "mcp__mongodb__update-many"
+    ],
+    "allow": [
+      "Bash(node --check *)",
+      "Bash(node -e *)",
+      "mcp__mongodb__find",
+      "mcp__mongodb__list-collections",
+      "mcp__mongodb__list-databases",
+      "mcp__mongodb__collection-schema",
+      "mcp__mongodb__collection-indexes",
+      "mcp__mongodb__count"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; case \"$f\" in */umit-mobilya-server/node_modules/*) exit 0 ;; */umit-mobilya-server/*.js) [ -f \"$f\" ] || exit 0; node --check \"$f\" || exit 2 ;; esac; }",
+            "timeout": 20,
+            "statusMessage": "Checking JS syntax..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; case \"$f\" in */umit-mobilya-server/node_modules/*) exit 0 ;; */umit-mobilya-server/*.js) : ;; *) exit 0 ;; esac; [ -f \"$f\" ] || exit 0; w=\"\"; case \"$f\" in */routes/*.route.js) u=$(grep -nE \"^[[:space:]]*router\\.(post|put|delete)\\(\" \"$f\" | grep -v \"requireAuth\" | grep -vE \"\\(\\s*'/(login|signup|logout|filter)'\" || true); [ -n \"$u\" ] && w=\"Unprotected mutating route(s) in $(basename \"$f\") -- no requireAuth: $(echo \"$u\" | tr '\\n' ' ')\"; b=$(basename \"$f\" .route.js); i=\"${f%/routes/*}/routes/index.js\"; if [ -f \"$i\" ] && ! grep -q \"$b\\.route\" \"$i\"; then w=\"$w${w:+ | }Router $(basename \"$f\") is not mounted in routes/index.js -- it will be silently dead.\"; fi ;; esac; [ -z \"$w\" ] && exit 0; jq -n --arg m \"$w\" '{systemMessage: $m, hookSpecificOutput: {hookEventName: \"PostToolUse\", additionalContext: (\"Server convention check: \" + $m + \"  Fix: add requireAuth from middleware/auth.middleware.js to every POST/PUT/DELETE route (public exceptions are only /login, /signup, /logout, /filter), and mount every new router in routes/index.js with router.use(\\\"/api/<x>\\\", <x>Routes).\")}}'; exit 0; }",
+            "timeout": 20,
+            "statusMessage": "Checking server conventions..."
+          }
+        ]
+      }
+    ]
+  }
+}

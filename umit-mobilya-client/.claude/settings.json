@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(./components.d.ts)",
+      "Edit(./dist/**)",
+      "Edit(./*.tsbuildinfo)",
+      "Edit(./.env)"
+    ],
+    "allow": [
+      "Bash(yarn build*)",
+      "Bash(yarn type-check*)",
+      "Bash(yarn test:unit*)",
+      "Bash(yarn format*)",
+      "Bash(npx vue-tsc*)",
+      "Bash(npx vitest*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; case \"$f\" in */node_modules/*|*/dist/*|*/.claude/*|*/components.d.ts) ;; *\"/umit-mobilya-client/\"*.vue|*\"/umit-mobilya-client/\"*.ts|*\"/umit-mobilya-client/\"*.js|*\"/umit-mobilya-client/\"*.scss|*\"/umit-mobilya-client/\"*.json) r=\"${f%%/umit-mobilya-client/*}/umit-mobilya-client\"; \"$r/node_modules/.bin/prettier\" --write --ignore-unknown \"$f\";; esac; } 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Prettier ile formatlaniyor..."
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; case \"$f\" in */node_modules/*|*/dist/*|*/.claude/*|*/components.d.ts) exit 0;; *\"/umit-mobilya-client/\"*.vue|*\"/umit-mobilya-client/\"*.ts) ;; *) exit 0;; esac; [ -f \"$f\" ] || exit 0; w=\"\"; case \"$f\" in */useFToast.ts) ;; *) grep -q \"useToast(\" \"$f\" && w=\"${w}useToast() called directly, use useFToast() from @/composables/useFToast. \";; esac; case \"$f\" in */plugins/axios.ts) ;; *) grep \"response\\.data\" \"$f\" | grep -qv \"error\" && w=\"${w}response.data read again, the axios interceptor already returns the body (only error.response.data is valid). \";; esac; grep -qE \"localStorage\\.(get|set|remove)Item\\((\\x27|\\\")\" \"$f\" && w=\"${w}Bare string passed to localStorage, use EStorageKeys from @/constants/storageKeys. \"; [ -n \"$w\" ] || exit 0; jq -n --arg w \"$w\" --arg f \"$f\" '{systemMessage: (\"Convention warning: \" + $w), hookSpecificOutput: {hookEventName: \"PostToolUse\", additionalContext: (\"Client convention check flagged \" + $f + \": \" + $w + \"Fix it unless there is a deliberate reason not to.\")}}'; }",
+            "timeout": 15,
+            "statusMessage": "Convention kontrolu..."
+          }
+        ]
+      }
+    ]
+  }
+}

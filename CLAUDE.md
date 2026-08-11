@@ -1,0 +1,88 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Repository layout
+
+Two independent apps in one repo (no workspace tooling — each has its own `package.json`/lockfile):
+
+- `umit-mobilya-client/` — Vue 3 + TypeScript + Vite SPA (yarn)
+- `umit-mobilya-server/` — Express + Mongoose REST API (CommonJS, no TypeScript)
+
+## Commands
+
+Client (`cd umit-mobilya-client`):
+
+```bash
+yarn dev          # vite dev server on port 3001 (server CORS only allows :3001)
+yarn build        # vue-tsc -b && vite build
+yarn type-check   # vue-tsc --noEmit -p tsconfig.vitest.json
+yarn test:unit    # vitest (watch); vitest run <path> for a single file
+yarn format       # prettier --write src/
+```
+
+Server (`cd umit-mobilya-server`):
+
+```bash
+yarn dev          # nodemon app.js
+yarn start        # node app.js  (PORT env, default 5000)
+```
+
+Env files are gitignored and must exist locally:
+- client `.env`: `VITE_API_URL`, `VITE_I18N_LOCALE`
+- server `.env`: `MONGO_URI`, `JWT_SECRET`, `PORT`, `BUCKET_NAME`, `BUCKET_REGION`, `ACCESS_KEY`, `SECRET_ACCESS_KEY`
+
+Adding a new `VITE_*` var also requires adding it to `.github/workflows/frontend.yml` (it writes `.env` from GitHub secrets at build time).
+
+Known broken/absent tooling — don't assume these work:
+- `yarn lint` is defined but there is **no ESLint config file** (neither `eslint.config.js` nor `.eslintrc*`).
+- `yarn generate-icon-names` points at a `scripts/` directory that doesn't exist.
+- No test files exist yet, though vitest + jsdom are configured.
+- `tsconfig.*.tsbuildinfo` and `dist/` are committed and churn on every build; ignore them in diffs.
+
+## Backend architecture
+
+`app.js` → `routes/index.js` mounts three routers under `/api/auth`, `/api/products`, `/api/categories`. Each domain is a `routes/*.route.js` + `controllers/*.controller.js` + `models/*.model.js` triple.
+
+**Auth**: JWT signed in `auth.controller.js` (3-day expiry), returned in the login response *and* set as an `httpOnly` `jwt` cookie. Two middlewares in `middleware/auth.middleware.js`: `requireAuth` reads the `Authorization: Bearer` header (used on all mutating routes), `checkUser` reads the cookie. Password hashing + a `User.login()` static live as Mongoose hooks on `models/user.model.js`.
+
+**Images / S3** — the core non-obvious piece, all inside `controllers/product.controller.js`:
+- MongoDB stores only S3 **keys** (`imageName`, `imageNameList[]`), never URLs.
+- Every read path passes keys through `generateImageUrl()`, which mints a **presigned GET URL with a 1-hour expiry**. So `imageUrl`/`imageUrlList` on API responses are ephemeral and must not be persisted or cached long-term by the client.
+- Uploads use `multer.memoryStorage()` (buffers, not disk) → `sharp` resize → `PutObjectCommand`. Key names are random hex via `crypto`.
+- Single main image: `upload.single('image')` on `POST /api/products`. Gallery: `upload.array('image', 20)` on `PUT /api/products/create-images/:id` — note the field name is still singular `image`.
+
+**Modular products**: `product.modules` is an array of `{ productId: ObjectId(ref Product), quantity }`. A product is both a standalone item and a possible module of another. Read queries deep-populate `modules.productId` *and* its `category`, then flatten each module into `{_id, name, price, currency, imageUrl, quantity}` before responding — so the API shape of a module differs from the stored schema. Module endpoints: `POST /add-module`, `DELETE /remove-module/:productId/:moduleId`, `PUT /update-modules/:id`.
+
+## Frontend architecture
+
+**Bootstrap**: `main.ts` installs `router` then `plugins/index.ts`, which composes pinia, i18n, `globalComponents`, primeVue, toast, and `v-click-outside`. `plugins/axios.ts` is imported for side effects only.
+
+**Axios**: a global response interceptor returns `response.data` directly, so every store action receives the payload body, not an AxiosResponse. That's why stores cast with `as unknown as IProduct[]`. Auth token is attached to `axios.defaults.headers.common` by the router guard, not by an interceptor.
+
+**Stores** (`src/stores/`): options-API Pinia stores keyed by `EStoreNames`, except `auth.ts` which is setup-style. All actions follow a hand-rolled `return new Promise((resolve, reject) => axios...then/catch)` wrapper — match that style when adding actions. `users.ts` holds the current user + `isAuthenticated`; `auth.ts` owns localStorage token/user and delegates user state to `users.ts`.
+
+**Routing** (`src/router/`): `routes.ts` nests everything under `DefaultLayout`. `ERouteNames` values are **Turkish display strings** used simultaneously as route `name`, `meta.title`, and sidebar labels — changing a value changes the URL-independent route identity everywhere. The guard in `index.ts` restores the session from `localStorage` (`EStorageKeys.TOKEN`) via `usersStore.fetchUser` before each navigation.
+
+**Components**:
+- `src/components/ui/global/*.vue` are auto-registered by `plugins/globalComponents.ts` with an **`F` prefix** (`Input.vue` → `<FInput>`). Add a file there and it's globally available; no import needed.
+- PrimeVue components are auto-imported via `unplugin-vue-components` + `PrimeVueResolver` (see the generated `components.d.ts`); many are *also* explicitly registered in `plugins/primeVue/primeVue.ts`. If a PrimeVue component isn't resolving, register it there.
+- The `F*` wrappers integrate PrimeVue inputs with vee-validate + yup field state (`errorMessage`, `isValid`).
+- Theming: custom `flexyPreset` in `plugins/primeVue/flexytheme.ts`, plus Tailwind whose palette comes from `src/constants/colors.ts`.
+
+**Feature folder convention** under `src/views/<feature>/`: `_views/` (route components), `_components/` (feature-local pieces), `_modals/` (dialogs), `_etc/` (feature enums/helpers). Layouts follow the same idea with `layouts/<name>/_components/`.
+
+**SFC section order** (from `umit-mobilya-client/notes.md` — follow it in new components):
+imports → `IProps`/`defineProps` → `IEmits`/`defineEmits` → composables & stores → `ref` → `computed` → functions → `watch` → `onMounted`.
+
+**Toasts**: use `useFToast()` (`composables/useFToast.ts`) — `showSuccessMessage` / `showErrorMessage`, which render the `SuccessToast`/`ErrorToast` components through vue-toastification. Don't call `useToast()` directly.
+
+**i18n**: `vue-i18n` with `en.json` eager, `tr.json` lazily imported by `setI18nLanguage`. Note that much user-facing copy is hardcoded Turkish in templates rather than routed through i18n keys; code comments are mixed Turkish/English.
+
+## Deployment
+
+Both `.github/workflows/*.yml` trigger on push to `main`, environment `umit-mobilya-deployment`:
+- **frontend.yml**: writes `.env` from secrets → `npm install && npm run build` → `aws s3 sync ./dist/ s3://$S3_BUCKET_NAME --delete`.
+- **backend.yaml**: `rsync` the server folder to `~/app` on EC2 (excluding `node_modules`/`.git`/`.env`) → `sudo systemctl restart myapp.service`. Dependencies are **not** installed by CI, so adding a server dependency requires a manual `yarn install` on the box.
+
+The server's CORS allowlist in `app.js` is a hardcoded array — a new frontend origin/domain must be added there.
