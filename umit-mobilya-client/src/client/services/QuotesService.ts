@@ -75,4 +75,25 @@ export class QuotesService {
             },
         });
     }
+    /**
+     * @param code
+     * @param format
+     * @returns any
+     * @throws ApiError
+     */
+    public static quoteControllerDocument(
+        code: string,
+        format?: any,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/quotes/{code}/document',
+            path: {
+                'code': code,
+            },
+            query: {
+                'format': format,
+            },
+        });
+    }
 }

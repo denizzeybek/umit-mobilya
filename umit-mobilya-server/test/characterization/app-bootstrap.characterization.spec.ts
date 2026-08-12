@@ -70,6 +70,7 @@ describe('Service bootstrap', () => {
       '/api/products/{id}',
       '/api/quotes',
       '/api/quotes/{code}',
+      '/api/quotes/{code}/document',
     ]);
   });
 

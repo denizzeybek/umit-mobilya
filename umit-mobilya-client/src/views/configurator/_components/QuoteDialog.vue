@@ -33,13 +33,22 @@
       <p class="text-sm text-f-ink-muted">
         Bu numarayı sakla — teklifini bu numarayla tekrar açabilirsin.
       </p>
+      <a
+        :href="documentUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="block bg-f-primary py-3 text-center text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-paper transition-colors duration-300 hover:bg-f-primary-hovered"
+      >
+        Teklifi PDF indir
+      </a>
+
       <Button label="Kapat" severity="secondary" outlined @click="handleClose" />
     </div>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
@@ -68,6 +77,17 @@ const quotesStore = useQuotesStore();
 const { showErrorMessage, showSuccessMessage } = useFToast();
 
 const created = ref<QuoteResponseDto | null>(null);
+
+/*
+ * Belge ucu public: teklifi veren oturum açmıyor ve kendi belgesini
+ * indirebilmeli. Erişimi tahmin edilemez kod koruyor, o yüzden düz bir
+ * bağlantı yeterli — istek store'dan geçmesi gerekmiyor, bu bir gezinme.
+ */
+const documentUrl = computed(() =>
+  created.value
+    ? `${import.meta.env.VITE_API_URL}/quotes/${created.value.code}/document`
+    : '',
+);
 
 const validationSchema = yup.object({
   name: yup.string().required().min(2).label('Ad soyad'),

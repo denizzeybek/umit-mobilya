@@ -933,6 +933,35 @@
           "quotes"
         ]
       }
+    },
+    "/api/quotes/{code}/document": {
+      "get": {
+        "operationId": "QuoteController_document",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "quotes"
+        ]
+      }
     }
   },
   "info": {

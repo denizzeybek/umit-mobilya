@@ -172,6 +172,42 @@ describe('quote + pricebook HTTP sözleşmesi', () => {
     });
   });
 
+  describe('GET /api/quotes/:code/document', () => {
+    it('varsayılan olarak PDF döner', async () => {
+      const created = await createQuote();
+
+      const response = await request(app.getHttpServer()).get(
+        `/api/quotes/${created.body.code}/document`,
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toContain('application/pdf');
+      expect(response.headers['content-disposition']).toContain(
+        created.body.code,
+      );
+    });
+
+    it('format=html istenirse HTML döner', async () => {
+      const created = await createQuote();
+
+      const response = await request(app.getHttpServer()).get(
+        `/api/quotes/${created.body.code}/document?format=html`,
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toContain('text/html');
+      expect(response.text).toContain(created.body.code);
+    });
+
+    it('bilinmeyen kod 404 verir', async () => {
+      const response = await request(app.getHttpServer()).get(
+        '/api/quotes/UM-2608-ZZZZZZ/document',
+      );
+
+      expect(response.status).toBe(404);
+    });
+  });
+
   describe('GET /api/quotes', () => {
     it('auth olmadan 401 verir', async () => {
       const response = await request(app.getHttpServer()).get('/api/quotes');
