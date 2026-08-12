@@ -59,7 +59,8 @@ A new `VITE_*` var must also be added in the Netlify dashboard, and a new server
 
 Known broken/absent tooling — don't assume these work:
 - `yarn generate-icon-names` points at a `scripts/` directory that doesn't exist.
-- No test files exist yet, though vitest + jsdom are configured.
+- Client tests cover only the configurator's pure functions (79 vitest tests);
+  there are no component or e2e tests. The server has its own Jest suite.
 - `tsconfig.*.tsbuildinfo` files are committed and churn on every build; ignore them in diffs. (`dist/` is gitignored.)
 
 ## Backend architecture

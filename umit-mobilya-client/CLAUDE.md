@@ -15,6 +15,9 @@ Index only. Every rule that governs code in `umit-mobilya-client/` is defined in
 | [`05-forms-and-tables.md`](.claude/rules/05-forms-and-tables.md) | vee-validate + yup wiring, `DataTable` defaults, client vs server filtering |
 | [`06-routing-and-config.md`](.claude/rules/06-routing-and-config.md) | `ERouteNames` as identity, router guard, `EStorageKeys`, `VITE_*` vars, Netlify, i18n reality |
 | [`07-naming-and-files.md`](.claude/rules/07-naming-and-files.md) | Where a file goes, what it is called, which names are identities |
+| [`08-file-size-and-splitting.md`](.claude/rules/08-file-size-and-splitting.md) | 250-line cap on `.vue`/`.ts`, how to split, which files are exempt |
+| [`09-ui-controls.md`](.claude/rules/09-ui-controls.md) | `F*` first, then PrimeVue, raw HTML controls only with `raw-control:` |
+| [`10-product-modules.md`](.claude/rules/10-product-modules.md) | Configurator product family: no cross-product imports, limits are passed not imported |
 
 Repo-wide rules that also apply here: [`comment-policy.md`](../.claude/rules/comment-policy.md),
 [`done-checklist.md`](../.claude/rules/done-checklist.md),
@@ -33,7 +36,11 @@ yarn gcl          # regenerate src/client from the server's openapi.json
 ```
 
 `yarn generate-icon-names` points at a `scripts/` directory that does not exist.
-No test files exist yet, though vitest + jsdom are configured.
+Tests cover the configurator's pure functions only (`_etc/geometry`,
+`_etc/dimensionOps`, `_etc/products/*`): 79 tests across 6 files, no component
+tests. Take the count from `yarn test:unit run`, not from grepping `it(` —
+several specs generate cases in a loop, so grep undercounts (61 vs 79).
+`.claude/hooks/hooks.test.sh` covers the hooks themselves.
 
 ## The five-second version
 

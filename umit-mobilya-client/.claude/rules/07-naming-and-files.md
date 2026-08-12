@@ -38,6 +38,12 @@ another project that survived because nothing checked. Names drift silently.
 Those four `_`-prefixed folder names are the complete set. Do not invent a
 fifth.
 
+**Plain sub-folders inside them are allowed** when a feature has more than one
+kind of thing to group — `_etc/products/gardirop/`, `_components/panel/`. The
+rule constrains the `_`-prefixed vocabulary, not nesting depth. Group by the
+thing that varies (one folder per product type), never by file kind
+(`_etc/helpers/`, `_etc/types/` — those say nothing).
+
 ## Naming
 
 1. **Enums are `E`-prefixed**, members PascalCase: `ERouteNames.ProductsList`,

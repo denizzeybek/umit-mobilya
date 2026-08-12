@@ -17,9 +17,17 @@ it — only opening the app did.
 Before calling a change done:
 
 ```bash
-yarn lint         # must be clean; lint:fix only for mechanical fixes
-yarn type-check   # vue-tsc, must pass
-yarn build        # catches what type-check misses
+yarn lint            # must be clean; lint:fix only for mechanical fixes
+yarn type-check      # vue-tsc, must pass
+yarn test:unit run   # vitest; the configurator's pure functions
+yarn build           # catches what type-check misses
+```
+
+Touched a `.claude/hooks/` script? Run its own suite — the hooks have no other
+coverage and a broken matcher fails open, which is worse than failing loud:
+
+```bash
+bash .claude/hooks/hooks.test.sh
 ```
 
 For anything touching routing, auth, or rendering: **open the app and look at it.**
