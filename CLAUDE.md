@@ -14,6 +14,13 @@ Repo-wide (`.claude/rules/`), applying to both apps:
 | [`done-checklist.md`](.claude/rules/done-checklist.md) | The gates to run before calling a change done — there is no CI here |
 | [`git-workflow.md`](.claude/rules/git-workflow.md) | Branch first, Turkish commit messages, `main` is deployed |
 
+The e2e layer is a **pair of rules**, one per side — keep them consistent:
+[`umit-mobilya-client/.claude/rules/11-e2e-conventions.md`](umit-mobilya-client/.claude/rules/11-e2e-conventions.md)
+(Playwright budget + how a spec is written) and
+[`umit-mobilya-server/.claude/rules/13-price-net.md`](umit-mobilya-server/.claude/rules/13-price-net.md)
+(the frozen price goldens). The dividing line: **a number is asserted on the
+server, never in the browser.**
+
 Per app:
 
 - **Client** — `umit-mobilya-client/.claude/rules/`, indexed in
@@ -39,16 +46,22 @@ Client (`cd umit-mobilya-client`):
 yarn dev          # vite dev server on port 3001 (the server's default CORS origin)
 yarn lint         # eslint flat config (eslint.config.js)
 yarn build        # vue-tsc -b && vite build
-yarn type-check   # vue-tsc --noEmit -p tsconfig.vitest.json
+yarn type-check   # vue-tsc for src/ + tsc -p tsconfig.e2e.json for e2e/
 yarn test:unit    # vitest (watch); vitest run <path> for a single file
 yarn format       # prettier --write src/
+yarn e2e:smoke    # Playwright: every route loads (~30 s)
+yarn e2e:journeys # Playwright: price round-trip, share link, 3D viewer (~30 s)
 ```
 
 Server (`cd umit-mobilya-server`):
 
 ```bash
-yarn dev          # nodemon app.js
-yarn start        # node app.js  (PORT env, default 5000)
+yarn dev              # nest start --watch
+yarn start            # node dist/main (PORT env, default 5000)
+yarn test             # Jest: characterization + price net
+yarn e2e:api          # hermetic Nest on mongodb-memory-server, port 5055 —
+                      # what Playwright boots; not for day-to-day development
+yarn price-net:bless  # regenerate the price goldens, then READ THE DIFF
 ```
 
 Env files are gitignored and must exist locally:
@@ -59,9 +72,31 @@ A new `VITE_*` var must also be added in the Netlify dashboard, and a new server
 
 Known broken/absent tooling — don't assume these work:
 - `yarn generate-icon-names` points at a `scripts/` directory that doesn't exist.
-- Client tests cover only the configurator's pure functions (79 vitest tests);
-  there are no component or e2e tests. The server has its own Jest suite.
+- Client vitest covers the configurator's pure functions only (131 tests, 9
+  files) — still **no component tests**. Browser coverage is Playwright
+  (`e2e/`), and it is deliberately thin: a smoke spec plus three manifested
+  journeys.
+- Playwright needs its browser once: `npx playwright install chromium`.
+  It is pinned to **1.61.1** because 1.62's chromium build refuses to install
+  on macOS 13 — don't bump it without checking that.
 - `tsconfig.*.tsbuildinfo` files are committed and churn on every build; ignore them in diffs. (`dist/` is gitignored.)
+
+## The testing layers, and which one owns what
+
+| Question | Layer | Where |
+|---|---|---|
+| Is this arithmetic right? | vitest, pure functions | `umit-mobilya-client/src/views/configurator/_etc/**/*.spec.ts` |
+| Does this design still cost the same? | golden net | `umit-mobilya-server/test/price-net/` |
+| Is the HTTP contract intact? | characterization | `umit-mobilya-server/test/characterization/` |
+| Do the two copies of the price engine still match? | byte-diff | `umit-mobilya-server/test/pricing-sync.spec.ts` |
+| Does every screen still load? | Playwright smoke | `umit-mobilya-client/e2e/smoke.spec.ts` |
+| Does the wiring hold in a real browser? | Playwright journey | `umit-mobilya-client/e2e/journeys/` |
+
+The load-bearing invariant across all six: **the price on screen and the price
+stored on the quote are the same number.** The engine is duplicated
+(client for instant feedback, server so the amount is never the client's claim),
+`pricing-sync` proves the copies are identical, the price net proves the numbers
+are right, and `quote-price-roundtrip` proves the wiring between them.
 
 ## Backend architecture
 

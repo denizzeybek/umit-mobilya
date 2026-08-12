@@ -46,6 +46,13 @@
             "statusMessage": "Kalite kapilari calisiyor (lint + type-check)...",
             "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/enforce-pre-commit-quality.sh",
             "timeout": 180
+          },
+          {
+            "type": "command",
+            "if": "Bash(git push*)",
+            "statusMessage": "e2e kapisi calisiyor (fiyat agi + smoke + yolculuklar)...",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/pre-push-e2e-gate.sh",
+            "timeout": 600
           }
         ]
       }

@@ -18,10 +18,11 @@ Before calling a change done:
 
 ```bash
 yarn lint            # must be clean; lint:fix only for mechanical fixes
-yarn type-check      # vue-tsc, must pass
+yarn type-check      # vue-tsc for src/ + tsc for e2e/, must pass
 yarn test:unit run   # vitest; the configurator's pure functions
 yarn build           # catches what type-check misses
 yarn size-check      # ana paket tavanı — build'den SONRA
+yarn e2e:smoke       # her route açılıyor mu — ~30 sn
 ```
 
 `size-check` bir alarm: bu repoda CI yok ve paket boyutu sessizce şişiyor.
@@ -38,7 +39,31 @@ bash .claude/hooks/hooks.test.sh
 
 For anything touching routing, auth, or rendering: **open the app and look at it.**
 `yarn dev`, then visit the affected route. A blank page with a console error passes
-every command above.
+`lint`, `type-check` and `build` — `e2e:smoke` is what now catches it, but a
+human eye still sees things no assertion was written for.
+
+### e2e — tarayıcı katmanı
+
+```bash
+yarn e2e:smoke      # bütün route'lar; günlük hızlı kontrol (~30 sn)
+yarn e2e:journeys   # fiyat round-trip, paylaşım bağlantısı, 3B (~30 sn)
+```
+
+İkisi de **hermetik**: Playwright kendi Nest sunucusunu bellek içi bir mongod
+üstünde (`yarn --cwd ../umit-mobilya-server e2e:api`, port 5055) ve kendi vite'ını
+(port 3101) kaldırıyor. Yerel Mongo, `.env` ya da ayakta duran bir dev ortamı
+gerekmiyor — ve senin 3001'deki `yarn dev`'ine dokunmuyor.
+
+İlk kurulumda tarayıcı bir kez inmeli:
+
+```bash
+npx playwright install chromium
+```
+
+Konfigüratöre, fiyata, route'lara ya da 3B görüntüleyiciye dokunduysan
+`e2e:journeys`'i de koş. Yeni bir yolculuk yazmadan önce
+[`11-e2e-conventions.md`](../../umit-mobilya-client/.claude/rules/11-e2e-conventions.md)
+— bütçe manifest'le, yazım kuralları hook'la uygulanıyor.
 
 ## Server — `umit-mobilya-server/`
 
@@ -56,6 +81,27 @@ The characterization suite proves the contract; the script shows it to you.
 
 There is no Express half any more; every `.js` source file is gone.
 
+### Fiyat motoruna dokunduysan
+
+`yarn test` fiyat ağını da koşuyor (`test/price-net/`). Bir golden kırmızıysa
+**önce diff'i oku** — o bir tutar değişikliği ve bir karar:
+
+```bash
+git diff test/price-net/__goldens__     # DEĞİŞEN SAYIYI OKU
+yarn price-net:bless                    # yalnızca değişiklik KASITLIYSA
+```
+
+`bless` bir onaydır, kırmızıyı susturma adımı değil; goldenları elle düzenlemek
+hook tarafından engelleniyor
+([`13-price-net.md`](../../umit-mobilya-server/.claude/rules/13-price-net.md)).
+
+Motor iki yerde yaşıyor: istemcideki değişikliği sunucuya taşımadan
+`test/pricing-sync.spec.ts` kırmızı olur.
+
+```bash
+yarn sync:pricing   # istemciden kopyala
+```
+
 ## Both
 
 - Don't commit build artefacts that changed as a side effect. `*.tsbuildinfo` churns
@@ -64,9 +110,20 @@ There is no Express half any more; every `.js` source file is gone.
 - If a check fails and you're fixing something unrelated, say so rather than silently
   leaving it broken.
 
+## Pushing
+
+`git push` bir e2e kapısından geçiyor (`.claude/hooks/pre-push-e2e-gate.sh`):
+sunucu testleri + `e2e:smoke` + `e2e:journeys`, ~2 dakika. Commit hook'unun
+göremediği tek katman tarayıcı, ve `main` doğrudan deploy ediliyor.
+
+Kapı `SKIP_E2E_GATE=1` ile bilerek atlanabilir. Atlamak bir karardır: neden
+atladığını söyle.
+
 ## Don't
 
 - ❌ Report a task complete while a gate is red. Say which one and why.
 - ❌ Use `--no-verify` or otherwise bypass a hook to land a commit.
+- ❌ `SKIP_E2E_GATE=1` ile kırmızı bir dalı push etmek.
+- ❌ Bir golden'ı okumadan `bless`lemek.
 - ❌ Treat a passing `type-check` as proof the feature works. It proves types line up,
   nothing more.
