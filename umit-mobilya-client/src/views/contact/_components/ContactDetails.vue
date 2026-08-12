@@ -55,7 +55,7 @@
             rel="noopener noreferrer"
             class="border border-f-rule-strong px-6 py-3 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-ink transition-colors duration-300 hover:border-f-primary hover:bg-f-primary hover:text-f-paper"
           >
-            WhatsApp
+            WhatsApp · {{ WHATSAPP_NUMBER }}
           </a>
         </div>
       </article>
@@ -64,5 +64,9 @@
 </template>
 
 <script setup lang="ts">
-import { LOCATIONS, WHATSAPP_URL } from '@/constants/company';
+import {
+  LOCATIONS,
+  WHATSAPP_NUMBER,
+  WHATSAPP_URL,
+} from '@/constants/company';
 </script>

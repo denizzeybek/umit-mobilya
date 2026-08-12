@@ -38,6 +38,15 @@ export const LOCATIONS: ILocation[] = [
   },
 ];
 
+/*
+ * WhatsApp hattı TEK ve atölye numarası. Düğme her iki konum kartında da
+ * çıktığı için numarayı da yazıyor: Fabrika kartı 0552 gösterip WhatsApp'ı
+ * sessizce 0549'a açmak, hangi numaraya yazdığını sanan biri için yanıltıcıydı.
+ *
+ * Fabrikanın da WhatsApp'ı açılırsa burası konuma taşınır (`ILocation`).
+ */
+export const WHATSAPP_NUMBER = '0 549 676 21 08';
+
 export const WHATSAPP_URL = 'https://wa.me/905496762108';
 
 /*
