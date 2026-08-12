@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, toRaw } from 'vue';
 
 import { useFToast } from '@/composables/useFToast';
 import { usePricebookStore } from '@/stores/pricebook';
@@ -71,10 +71,15 @@ async function handlePublish() {
 onMounted(async () => {
   try {
     const book = await pricebookStore.fetch();
+    /*
+     * `toRaw` şart: store'daki kitap Vue reaktif PROXY'si ve `structuredClone`
+     * proxy'yi klonlayamıyor — hata sessizce taslağı tohumda bırakıyordu ve
+     * ekran "Aktif sürüm: 0" gösteriyordu.
+     */
     draft.value = structuredClone({
-      ...DEFAULT_PRICE_BOOK,
-      ...book,
-      margin: book.margin ?? DEFAULT_PRICE_BOOK.margin,
+      ...toRaw(DEFAULT_PRICE_BOOK),
+      ...toRaw(book),
+      margin: toRaw(book).margin ?? DEFAULT_PRICE_BOOK.margin,
     });
   } catch (error) {
     showErrorMessage(error);

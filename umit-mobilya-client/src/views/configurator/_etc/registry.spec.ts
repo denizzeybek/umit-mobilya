@@ -59,6 +59,17 @@ describe('ürün kayıt defteri', () => {
   });
 
   /*
+   * Fiyat kitabı API'den JSON olarak geçiyor. `Infinity` ve `NaN` JSON'da
+   * `null`a dönüşüyor — menteşe tablosunun son kademesi bir kez böyle
+   * bozuldu ve sıralamayı kırdı. Tohum kitap JSON turundan AYNEN çıkmalı.
+   */
+  it('tohum fiyat kitabı JSON turundan bozulmadan çıkar', () => {
+    const roundTripped = JSON.parse(JSON.stringify(DEFAULT_PRICE_BOOK));
+
+    expect(roundTripped).toEqual(DEFAULT_PRICE_BOOK);
+  });
+
+  /*
    * Kataloğun her seçeneği her üründe fiyatlanabilmeli: gizli olanlar dahil,
    * çünkü eski bir config ya da paylaşılmış bir bağlantı onları taşıyabilir.
    */

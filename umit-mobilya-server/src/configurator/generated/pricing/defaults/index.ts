@@ -15,13 +15,16 @@ import type { IPriceBook, IProductSettings } from '../priceBook';
 /**
  * Menteşe adedi kanat YÜKSEKLİĞİNE göre okunur, genişliğine göre değil.
  * Atölyeden doğrulandı.
+ *
+ * Son kademe `Infinity` DEĞİL büyük bir sonlu sayı: kitap API'den JSON olarak
+ * geçiyor ve JSON `Infinity` taşıyamaz — `null`a dönüşüp sıralamayı bozuyordu.
  */
 const HINGE_STEPS = [
   { maxHeightCm: 100, count: 2 },
   { maxHeightCm: 160, count: 3 },
   { maxHeightCm: 200, count: 4 },
   { maxHeightCm: 240, count: 5 },
-  { maxHeightCm: Number.POSITIVE_INFINITY, count: 6 },
+  { maxHeightCm: 10_000, count: 6 },
 ];
 
 const GARDIROP: IProductSettings = {
