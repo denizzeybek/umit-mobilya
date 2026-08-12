@@ -57,6 +57,9 @@ describe('Service bootstrap', () => {
       '/api/categories',
       '/api/categories/filter',
       '/api/categories/{id}',
+      '/api/pricebook',
+      '/api/pricebook/versions',
+      '/api/pricebook/versions/{version}',
       '/api/products',
       '/api/products/add-module',
       '/api/products/create-images/{id}',
@@ -65,6 +68,8 @@ describe('Service bootstrap', () => {
       '/api/products/remove-module/{productId}/{moduleId}',
       '/api/products/update-modules/{id}',
       '/api/products/{id}',
+      '/api/quotes',
+      '/api/quotes/{code}',
     ]);
   });
 

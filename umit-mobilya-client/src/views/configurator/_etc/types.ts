@@ -1,3 +1,4 @@
+import type { IBaseConfig, IBaseSection } from './pricing/config';
 import type { IPriceBook, IProductSettings } from './pricing/priceBook';
 import type {
   IPart,
@@ -19,6 +20,14 @@ export enum EProductType {
 }
 
 export type { TBackPanel, TDoorTypeId, TFinishId, TMaterialId };
+
+/*
+ * Config tipleri `pricing/config.ts`te yaşıyor: fiyat motoru sunucuda da
+ * derleniyor ve orada Vue ile Three.js yok. Buradan yeniden dışa veriliyorlar
+ * ki çağıranlar tek yerden okusun.
+ */
+export type { IBaseConfig, IBaseSection, ISelection } from './pricing/config';
+export { selectionOf } from './pricing/config';
 
 /** Bir ölçünün izin verilen aralığı ve panel adımı. */
 export interface IRange {
@@ -49,26 +58,6 @@ export const limitsOf = (settings: IProductSettings): IProductLimits => ({
   maxModuleWidthCm: settings.maxModuleWidthCm,
   maxDoorLeafWidthCm: settings.maxDoorLeafWidthCm,
 });
-
-/** Her ürünün bölümünde bulunan tek ortak alan. */
-export interface IBaseSection {
-  width: number;
-}
-
-export interface IBaseConfig {
-  width: number;
-  height: number;
-  depth: number;
-  sectionCount: number;
-  /** Gövde ve kapak panellerinin ikisini birden fiyatlar. */
-  material: TMaterialId;
-  finish: TFinishId;
-  backPanel: TBackPanel;
-  /** Malzemeden bağımsız ikinci eksen: standart, kulpsuz, aynalı, cam. */
-  doorType: TDoorTypeId;
-  doorOpen: number;
-  sections: IBaseSection[];
-}
 
 export interface IProductBuild {
   group: Group;

@@ -1,3 +1,7 @@
+/* ÜRETİLMİŞ DOSYA — ELLE DÜZENLEMEYİN.
+ * Kaynak: umit-mobilya-client/src/views/configurator/_etc/
+ * Yeniden üretmek için: cd umit-mobilya-server && yarn sync:pricing
+ */
 import type { IHingeStep } from './priceBook';
 
 /**

@@ -711,6 +711,228 @@
           "products"
         ]
       }
+    },
+    "/api/pricebook": {
+      "get": {
+        "operationId": "PriceBookController_active",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceBookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "pricebook"
+        ]
+      },
+      "put": {
+        "operationId": "PriceBookController_publish",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePriceBookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceBookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "pricebook"
+        ]
+      }
+    },
+    "/api/pricebook/versions": {
+      "get": {
+        "operationId": "PriceBookController_versions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PriceBookVersionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "pricebook"
+        ]
+      }
+    },
+    "/api/pricebook/versions/{version}": {
+      "get": {
+        "operationId": "PriceBookController_byVersion",
+        "parameters": [
+          {
+            "name": "version",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceBookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "pricebook"
+        ]
+      }
+    },
+    "/api/quotes": {
+      "post": {
+        "operationId": "QuoteController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateQuoteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "quotes"
+        ]
+      },
+      "get": {
+        "operationId": "QuoteController_list",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteListDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "quotes"
+        ]
+      }
+    },
+    "/api/quotes/{code}": {
+      "get": {
+        "operationId": "QuoteController_byCode",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "quotes"
+        ]
+      },
+      "delete": {
+        "operationId": "QuoteController_remove",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "quotes"
+        ]
+      }
     }
   },
   "info": {
@@ -1288,6 +1510,282 @@
             "minimum": 0
           }
         }
+      },
+      "PriceBookResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Kitabın gövdesi. Public cevapta kâr marjı BULUNMAZ — arayüzün\ngöstermemesine bırakılamaz, gövde ağdan geçiyor."
+          },
+          "version": {
+            "type": "number",
+            "description": "Aktif sürüm numarası. Tohum kitap için 0."
+          }
+        },
+        "required": [
+          "data",
+          "version"
+        ]
+      },
+      "PriceBookVersionDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "description": "Artan sürüm numarası."
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "createdAt"
+        ]
+      },
+      "UpdatePriceBookDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Fiyat kitabının tamamı. Her `PUT` yeni bir sürüm yazar; var olan kayıt\ngüncellenmez, çünkü geçmiş tekliflerin hangi rakamlarla verildiği geri\nizlenebilir kalmalı.\n\nGövde serbest şema: katalog admin'in elinde ve yeni bir malzeme alanı\neklemek migration gerektirmemeli."
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "QuoteContactDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Teklifi isteyen kişinin adı.",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "phone": {
+            "type": "string",
+            "description": "Türkiye telefon numarası. Boşluk, parantez ve tire kabul edilir;\ntek zorunluluk on rakam içermesi.",
+            "pattern": "^(\\+90|0)?[\\s(-]*5\\d{2}[\\s)-]*\\d{3}[\\s-]*\\d{2}[\\s-]*\\d{2}$"
+          },
+          "email": {
+            "type": "string",
+            "description": "İsteğe bağlı e-posta adresi.",
+            "maxLength": 200,
+            "format": "email"
+          },
+          "note": {
+            "type": "string",
+            "description": "Müşterinin eklemek istediği not.",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "name",
+          "phone"
+        ]
+      },
+      "CreateQuoteDto": {
+        "type": "object",
+        "properties": {
+          "productType": {
+            "type": "string",
+            "description": "Hangi ürün tipi için teklif isteniyor — `gardirop`, `vestiyer`.",
+            "maxLength": 40
+          },
+          "config": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Konfigüratörün ürettiği tasarım. Fiyat BURADA KABUL EDİLMEZ: tutar\nsunucuda yeniden hesaplanır, yoksa admin panelindeki her sayı\nistemcinin iddiası olurdu."
+          },
+          "contact": {
+            "description": "İletişim bilgileri.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuoteContactDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "productType",
+          "config",
+          "contact"
+        ]
+      },
+      "QuotePriceLineDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Dökümde görünen kalem adı."
+          },
+          "amount": {
+            "type": "number",
+            "description": "Kalem tutarı, TRY."
+          }
+        },
+        "required": [
+          "label",
+          "amount"
+        ]
+      },
+      "QuotePriceDto": {
+        "type": "object",
+        "properties": {
+          "lines": {
+            "description": "Müşteriye gösterilen kalemler. Gizli maliyetler (arkalık, kâr marjı)\nburada YOKTUR ama toplama dahildir — bu yüzden satırların toplamı\n`total` ile tutmaz.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuotePriceLineDto"
+            }
+          },
+          "netTotal": {
+            "type": "number",
+            "description": "KDV öncesi tutar, marj dahil."
+          },
+          "vat": {
+            "type": "number",
+            "description": "Hesaplanan KDV."
+          },
+          "total": {
+            "type": "number",
+            "description": "Ödenecek tutar."
+          }
+        },
+        "required": [
+          "lines",
+          "netTotal",
+          "vat",
+          "total"
+        ]
+      },
+      "QuoteContactResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "phone"
+        ]
+      },
+      "QuoteResponseDto": {
+        "type": "object",
+        "properties": {
+          "config": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Konfigüratörün ürettiği tasarım, olduğu gibi."
+          },
+          "code": {
+            "type": "string",
+            "description": "Müşteriye verilen referans, örn. `UM-2608-K7M4XQ`."
+          },
+          "productType": {
+            "type": "string"
+          },
+          "configSchemaVersion": {
+            "type": "number",
+            "description": "Tasarımın şema sürümü."
+          },
+          "price": {
+            "description": "Teklif verildiği andaki fiyat — sonradan DEĞİŞMEZ.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuotePriceDto"
+              }
+            ]
+          },
+          "priceBookVersion": {
+            "type": "number",
+            "description": "Hangi fiyat kitabı sürümüyle hesaplandığı."
+          },
+          "contact": {
+            "$ref": "#/components/schemas/QuoteContactResponseDto"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "config",
+          "code",
+          "productType",
+          "configSchemaVersion",
+          "price",
+          "priceBookVersion",
+          "contact",
+          "createdAt"
+        ]
+      },
+      "QuoteListItemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "productType": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number"
+          },
+          "contactName": {
+            "type": "string"
+          },
+          "contactPhone": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "productType",
+          "total",
+          "contactName",
+          "contactPhone",
+          "createdAt"
+        ]
+      },
+      "QuoteListDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteListItemDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Toplam kayıt sayısı — sayfalama için."
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ]
       }
     }
   }

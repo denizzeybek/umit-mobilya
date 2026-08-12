@@ -32,6 +32,17 @@ const config: Config = {
     '!src/tools/**',
     '!src/main.ts',
     '!src/**/*.module.ts',
+    /*
+     * `src/configurator/generated/**` fiyat motorunun istemciden kopyasıdır ve
+     * BAYTINA KADAR aynıdır — `test/pricing-sync.spec.ts` bunu doğruluyor.
+     * Davranışın kendisi istemcide 124 vitest testiyle kapsanıyor.
+     *
+     * Burada ölçmek aynı kodu iki kez test etmeye zorlardı, ve ikinci kopya
+     * kaçınılmaz olarak birincinin gerisinde kalırdı. Motorun sunucudaki
+     * yüzü (`pricing.service.ts`) ölçülmeye DEVAM ediyor: ürün tipini doğru
+     * üreticiye bağlayan ve hatayı 400'e çeviren kısım orası.
+     */
+    '!src/configurator/generated/**',
   ],
   coverageDirectory: '<rootDir>/coverage',
   /*

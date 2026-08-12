@@ -1,7 +1,7 @@
 {
   "name": "umit-mobilya-server",
   "version": "1.0.0",
-  "description": "\u00dcmit Mobilya REST API",
+  "description": "Ümit Mobilya REST API",
   "main": "dist/main.js",
   "scripts": {
     "build": "nest build",
@@ -12,7 +12,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:changed": "jest --onlyChanged --bail",
-    "schema:dump": "nest build && node dist/tools/dump-openapi.js"
+    "schema:dump": "nest build && node dist/tools/dump-openapi.js",
+    "sync:pricing": "node scripts/sync-pricing.js"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
+    "@nestjs/throttler": "^6.5.0",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
