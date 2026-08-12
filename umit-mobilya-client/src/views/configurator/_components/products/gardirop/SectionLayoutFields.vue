@@ -98,8 +98,12 @@ import { computed } from 'vue';
 
 import { setSectionWidth } from '../../../_etc/dimensionOps';
 import { sectionWidthRange } from '../../../_etc/geometry/sectionWidths';
+import { gardiropDefinition } from '../../../_etc/products/gardirop';
 import { setDrawers } from '../../../_etc/products/gardirop/configOps';
-import { DRAWER_LIMIT, LIMITS } from '../../../_etc/products/gardirop/options';
+import { DRAWER_LIMIT } from '../../../_etc/products/gardirop/options';
+
+const props = defineProps<IProps>();
+const LIMITS = gardiropDefinition.limits;
 import { sectionLabel } from '../../../_etc/sectionLabel';
 import SectionFittingRow from '../../panel/SectionFittingRow.vue';
 
@@ -108,8 +112,6 @@ import type { IGardiropConfig } from '../../../_etc/products/gardirop/types';
 interface IProps {
   active: number;
 }
-
-const props = defineProps<IProps>();
 
 const config = defineModel<IGardiropConfig>({ required: true });
 

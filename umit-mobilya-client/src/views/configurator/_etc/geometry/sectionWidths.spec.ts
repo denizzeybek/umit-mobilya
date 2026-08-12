@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
 
-import { MIN_SECTION_WIDTH, PANEL_THICKNESS_CM } from '../catalog';
-
 import {
   carcassWidthOf,
   evenWidths,
@@ -9,6 +7,7 @@ import {
   sectionWidthRange,
   widthsForTotal,
 } from './sectionWidths';
+import { MIN_SECTION_WIDTH, PANEL_THICKNESS_CM } from './units';
 
 import type { IBaseConfig, IRange } from '../types';
 
@@ -30,7 +29,7 @@ const configWith = (widths: number[]): IBaseConfig => ({
   material: 'lak',
   finish: 'mese',
   backPanel: 8,
-  doorStyle: 'kulpsuz',
+  doorType: 'kulpsuz',
   doorOpen: 0,
   sections: widths.map((width) => ({ width })),
 });
@@ -38,17 +37,23 @@ const configWith = (widths: number[]): IBaseConfig => ({
 const sum = (values: number[]): number =>
   Math.round(values.reduce((a, b) => a + b, 0) * 100) / 100;
 
+/*
+ * Panel sayısı `(n+1) x T` DEĞİL `2n x T`: her bölüm kendi gövdesi olan bir
+ * modül, yani iki komşu modül arasında iki panel var. Atölye böyle imal
+ * ediyor ve 300 cm'lik tek parça üst panel kesilemez.
+ */
 describe('carcassWidthOf', () => {
   it('bölüm genişliklerine panel kalınlıklarını ekler', () => {
     const width = carcassWidthOf([{ width: 87.3 }, { width: 87.3 }], 2);
 
-    expect(width).toBe(87.3 * 2 + 3 * PANEL_THICKNESS_CM);
+    /* `carcassWidthOf` 0.01 cm'e yuvarlıyor; ham ifade yuvarlamıyor. */
+    expect(width).toBeCloseTo(87.3 * 2 + 4 * PANEL_THICKNESS_CM, 6);
   });
 
   it('sectionCount dışındaki bölümleri saymaz', () => {
     const sections = [{ width: 50 }, { width: 50 }, { width: 999 }];
 
-    expect(carcassWidthOf(sections, 2)).toBe(50 * 2 + 3 * PANEL_THICKNESS_CM);
+    expect(carcassWidthOf(sections, 2)).toBe(50 * 2 + 4 * PANEL_THICKNESS_CM);
   });
 });
 
@@ -102,7 +107,7 @@ describe('widthsForTotal', () => {
     const widths = widthsForTotal(config, target);
 
     expect(sum(widths)).toBe(
-      Math.round((target - 3 * PANEL_THICKNESS_CM) * 100) / 100,
+      Math.round((target - 4 * PANEL_THICKNESS_CM) * 100) / 100,
     );
   });
 
@@ -123,7 +128,7 @@ describe('sectionWidthRange', () => {
     const others = 87.3 * 2;
 
     expect(range.max).toBe(
-      Math.round((WIDTH_LIMIT.max - others - 4 * PANEL_THICKNESS_CM) * 100) /
+      Math.round((WIDTH_LIMIT.max - others - 6 * PANEL_THICKNESS_CM) * 100) /
         100,
     );
   });

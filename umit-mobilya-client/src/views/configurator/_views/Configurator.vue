@@ -18,13 +18,17 @@
         class="h-[52svh] min-h-[380px] lg:sticky lg:top-28 lg:h-[calc(100svh-9rem)] lg:self-start"
       />
 
-      <ConfiguratorPanel v-model="config" :definition="definition" />
+      <ConfiguratorPanel
+        v-model="config"
+        :definition="definition"
+        :parts="parts"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref, shallowRef, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import ConfiguratorPanel from '../_components/ConfiguratorPanel.vue';
@@ -34,7 +38,8 @@ import {
   decodeConfig,
   encodeConfig,
 } from '../_etc/configUrl';
-import { applyDoorOpen } from '../_etc/geometry/doors';
+import { applyDoorOpen, buildFromParts } from '../_etc/geometry/buildFromParts';
+import { DEFAULT_PRICE_BOOK } from '../_etc/pricing/defaults';
 import { sanitizeConfig } from '../_etc/sanitizeConfig';
 
 import type {
@@ -87,12 +92,25 @@ const version = ref(0);
 
 let build: IProductBuild | null = null;
 
+/*
+ * Parça listesi tek kaynak: aynı liste hem sahneyi hem paneldeki fiyatı
+ * besliyor, o yüzden burada bir kez üretilip ikisine de veriliyor.
+ */
+const parts = computed(() =>
+  props.definition.parts(config.value, DEFAULT_PRICE_BOOK),
+);
+
 const rebuild = () => {
   const previous = build;
+  const next = buildFromParts({
+    config: config.value,
+    parts: parts.value,
+    book: DEFAULT_PRICE_BOOK,
+  });
 
-  build = props.definition.build(config.value);
-  applyDoorOpen(build.doorPivots, config.value.doorOpen);
-  content.value = build.group;
+  build = next;
+  applyDoorOpen(next.doorPivots, config.value.doorOpen);
+  content.value = next.group;
   version.value += 1;
 
   previous?.dispose();

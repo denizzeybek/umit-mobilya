@@ -1,10 +1,10 @@
 import VestiyerFields from '../../../_components/products/vestiyer/VestiyerFields.vue';
+import { DEFAULT_PRICE_BOOK } from '../../pricing/defaults';
 import { productLabel } from '../../productList';
-import { EProductType } from '../../types';
+import { EProductType, limitsOf } from '../../types';
 
-import { buildVestiyer } from './build';
-import { createDefaultConfig, createSection, LIMITS } from './options';
-import { estimateVestiyerPrice } from './price';
+import { createDefaultConfig, createSection } from './options';
+import { vestiyerParts } from './parts';
 
 import type { IBaseConfig, IProductDefinition } from '../../types';
 import type { IVestiyerConfig } from './types';
@@ -24,10 +24,9 @@ export const vestiyerDefinition: IProductDefinition = {
   lede:
     'Oturağı, ayakkabılığı ve askıyı kendi ölçüne göre kur. Soldaki vestiyer ' +
     'her değişiklikte anında güncellenir.',
-  limits: LIMITS,
+  limits: limitsOf(DEFAULT_PRICE_BOOK.products.vestiyer),
   createDefault: createDefaultConfig,
   createSection,
-  build: (config) => buildVestiyer(narrow(config)),
-  price: (config) => estimateVestiyerPrice(narrow(config)),
+  parts: (config, book) => vestiyerParts(narrow(config), book),
   fields: VestiyerFields,
 };

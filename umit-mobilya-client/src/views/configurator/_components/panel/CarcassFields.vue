@@ -7,7 +7,7 @@
         <span class="eyebrow">Arkalık</span>
         <Select
           v-model="config.backPanel"
-          :options="BACK_PANELS"
+          :options="book.backPanels"
           option-label="label"
           option-value="id"
           class="w-full"
@@ -17,8 +17,8 @@
       <label class="flex flex-col gap-2">
         <span class="eyebrow">Kapak</span>
         <Select
-          v-model="config.doorStyle"
-          :options="DOOR_STYLES"
+          v-model="config.doorType"
+          :options="doorTypes"
           option-label="label"
           option-value="id"
           class="w-full"
@@ -27,7 +27,7 @@
     </div>
 
     <label
-      v-if="config.doorStyle !== 'yok'"
+      v-if="config.doorType !== 'yok'"
       class="mt-6 flex flex-col gap-4"
     >
       <span class="eyebrow">Kapakları aç / kapat</span>
@@ -37,9 +37,22 @@
 </template>
 
 <script setup lang="ts">
-import { BACK_PANELS, DOOR_STYLES } from '../../_etc/catalog';
+import { computed } from 'vue';
+
+import { DEFAULT_PRICE_BOOK } from '../../_etc/pricing/defaults';
 
 import type { IBaseConfig } from '../../_etc/types';
 
 const config = defineModel<IBaseConfig>({ required: true });
+
+/*
+ * Katalog artık fiyat kitabından geliyor; admin paneli gelince aynı yapı
+ * API'den beslenecek. `hidden` olanlar listede çıkmaz ama kataloğda durur —
+ * eski bir config o kimliği taşıyorsa hâlâ çözümlenebilsin diye.
+ */
+const book = DEFAULT_PRICE_BOOK;
+
+const doorTypes = computed(() =>
+  book.doorTypes.filter((item) => !item.hidden),
+);
 </script>

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { buildFromParts } from './geometry/buildFromParts';
 import { carcassWidthOf } from './geometry/sectionWidths';
+import { DEFAULT_PRICE_BOOK } from './pricing/defaults';
 import { gardiropDefinition } from './products/gardirop';
 import { createDefaultConfig } from './products/gardirop/options';
 import { sanitizeConfig } from './sanitizeConfig';
@@ -146,10 +148,13 @@ describe('sanitizeConfig', () => {
     expect(result.sections[2]).toHaveProperty('shelves');
   });
 
-  it('çıktı her zaman ürünün build fonksiyonuna verilebilir', () => {
-    const build = gardiropDefinition.build(
-      clean({ sectionCount: 2, sections: [{ shelves: 'yok' }, null] }),
-    );
+  it('çıktı her zaman sahneye çevrilebilir', () => {
+    const config = clean({ sectionCount: 2, sections: [{ shelves: 'yok' }, null] });
+    const build = buildFromParts({
+      config,
+      parts: gardiropDefinition.parts(config, DEFAULT_PRICE_BOOK),
+      book: DEFAULT_PRICE_BOOK,
+    });
 
     expect(build.group.children.length).toBeGreaterThan(0);
     build.dispose();

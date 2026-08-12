@@ -1,17 +1,28 @@
-import { PANEL_THICKNESS_CM } from '../catalog';
-
 /**
  * Sahne santimetre değil METRE ile çalışır. Three.js'in varsayılan ışık
  * zayıflaması, gölge kamerası ve kırpma düzlemleri metre ölçeğine göre ayarlı;
  * santimetre kullanınca aydınlatma bozuluyor.
- *
- * Panel yerleşimi yapan her yer bu dosyadan geçmeli — dönüşümü kopyalayan
- * ikinci bir yer, ölçekleri birbirine karıştırmanın en kolay yolu.
  */
 export const CM = 0.01;
 
+/**
+ * Ölçü matematiğinin varsaydığı panel kalınlığı (cm).
+ *
+ * Gerçek kalınlık artık MALZEMENİN özelliği (`IMaterial.thicknessMm`) ve parça
+ * listesi onu oradan okuyor. Buradaki sabit yalnızca bölüm genişliği
+ * matematiğinin kullandığı varsayım: `sectionWidths` fiyat kitabını görmüyor,
+ * çünkü ölçü aralığı hesabı katalogdan bağımsız olmalı.
+ *
+ * Tohumdaki her malzeme 18 mm olduğu için ikisi bugün örtüşüyor. Admin farklı
+ * kalınlıkta bir malzeme eklerse burası da kitaptan beslenmeli.
+ */
+export const PANEL_THICKNESS_CM = 1.8;
+
 /** Panel kalınlığı, metre. */
 export const T = PANEL_THICKNESS_CM * CM;
+
+/** Altına inildiğinde askılık ve çekmece imal edilemeyen pratik alt sınır. */
+export const MIN_SECTION_WIDTH = 20;
 
 export const toMeters = (centimeters: number): number => centimeters * CM;
 

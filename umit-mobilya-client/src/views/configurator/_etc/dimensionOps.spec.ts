@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { carcassWidthOf } from './geometry/sectionWidths';
-import { createDefaultConfig, LIMITS } from './products/gardirop/options';
+import { gardiropDefinition } from './products/gardirop';
+import { createDefaultConfig } from './products/gardirop/options';
+
+const LIMITS = gardiropDefinition.limits;
 import {
   distributeEvenly,
   setDepth,

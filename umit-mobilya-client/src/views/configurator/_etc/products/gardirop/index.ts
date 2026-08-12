@@ -1,10 +1,10 @@
 import GardiropFields from '../../../_components/products/gardirop/GardiropFields.vue';
+import { DEFAULT_PRICE_BOOK } from '../../pricing/defaults';
 import { productLabel } from '../../productList';
-import { EProductType } from '../../types';
+import { EProductType, limitsOf } from '../../types';
 
-import { buildGardirop } from './build';
-import { createDefaultConfig, createSection, LIMITS } from './options';
-import { estimateGardiropPrice } from './price';
+import { createDefaultConfig, createSection } from './options';
+import { gardiropParts } from './parts';
 
 import type { IBaseConfig, IProductDefinition } from '../../types';
 import type { IGardiropConfig } from './types';
@@ -12,9 +12,7 @@ import type { IGardiropConfig } from './types';
 /**
  * Gardırobun kayıt defterine verdiği yüz. Registry heterojen ürün tiplerini
  * tek tabloda tuttuğu için sözleşme `IBaseConfig` üzerinden konuşuyor;
- * daraltma ürünün kendi sınırında, tek satırda yapılıyor. Bu, her ürünün
- * kendi config şeklini bilmesini sağlarken registry'yi jenerik olmaktan
- * kurtarıyor.
+ * daraltma ürünün kendi sınırında, tek satırda yapılıyor.
  */
 const narrow = (config: IBaseConfig): IGardiropConfig =>
   config as IGardiropConfig;
@@ -27,10 +25,9 @@ export const gardiropDefinition: IProductDefinition = {
   lede:
     'Ölçüyü, malzemeyi ve iç düzeni değiştirdikçe soldaki dolap anında ' +
     'değişir. Beğendiğin kurulumu teklife çevir.',
-  limits: LIMITS,
+  limits: limitsOf(DEFAULT_PRICE_BOOK.products.gardirop),
   createDefault: createDefaultConfig,
   createSection,
-  build: (config) => buildGardirop(narrow(config)),
-  price: (config) => estimateGardiropPrice(narrow(config)),
+  parts: (config, book) => gardiropParts(narrow(config), book),
   fields: GardiropFields,
 };

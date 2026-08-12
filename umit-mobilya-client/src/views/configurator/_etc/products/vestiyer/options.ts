@@ -1,27 +1,13 @@
-import { PANEL_THICKNESS_CM } from '../../catalog';
+import { PANEL_THICKNESS_CM } from '../../geometry/units';
+import { DEFAULT_PRICE_BOOK } from '../../pricing/defaults';
 
-import type { IProductLimits } from '../../types';
 import type { IVestiyerConfig, IVestiyerSection } from './types';
 
 /**
  * Vestiyer gardıroptan daha sığ ve daha alçak: antrede duruyor, içine palto
  * asılıyor ama gardırop derinliği kapıyı kapatır.
  */
-export const LIMITS: IProductLimits = {
-  width: { min: 60, max: 320, step: 5 },
-  height: { min: 140, max: 240, step: 5 },
-  depth: { min: 28, max: 45, step: 1 },
-  sectionCount: { min: 1, max: 5 },
-};
-
 export const SHOE_SHELF_LIMIT = { min: 0, max: 4 };
-
-export const PART_PRICES = {
-  bench: 1450,
-  shoeShelf: 320,
-  shelf: 380,
-  hookRail: 540,
-};
 
 export const PRESETS: {
   id: string;
@@ -82,10 +68,16 @@ export const createSection = (width: number): IVestiyerSection => ({
  * Açılış eşit bölünmüş ve KAPAKSIZ: vestiyer açık bir mobilya, kapak istisna.
  * Genişlikler gövde ölçüsünden hesaplanıyor, sabit yazılmıyor.
  */
+/*
+ * Varsayılan malzeme ve kapak tipi fiyat kitabından okunuyor, burada
+ * SABİT DEĞİL: iki yerde yazıldığında katalog değişince biri sessizce
+ * geçersiz kimlik taşımaya başlıyor ve `priceOf` haklı olarak patlıyor.
+ */
 export const createDefaultConfig = (): IVestiyerConfig => {
+  const settings = DEFAULT_PRICE_BOOK.products.vestiyer;
   const width = 140;
   const sectionCount = 2;
-  const inner = width - (sectionCount + 1) * PANEL_THICKNESS_CM;
+  const inner = width - 2 * sectionCount * PANEL_THICKNESS_CM;
   const each = Math.round((inner / sectionCount) * 100) / 100;
 
   return {
@@ -93,10 +85,10 @@ export const createDefaultConfig = (): IVestiyerConfig => {
     height: 200,
     depth: 35,
     sectionCount,
-    material: 'mdf-lam',
+    material: settings.defaultMaterial,
     finish: 'mese',
     backPanel: 8,
-    doorStyle: 'yok',
+    doorType: settings.defaultDoorType,
     doorOpen: 0,
     sections: Array.from({ length: sectionCount }, () => createSection(each)),
   };

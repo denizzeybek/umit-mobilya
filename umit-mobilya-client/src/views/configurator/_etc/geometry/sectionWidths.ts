@@ -1,4 +1,4 @@
-import { MIN_SECTION_WIDTH, PANEL_THICKNESS_CM } from '../catalog';
+import { MIN_SECTION_WIDTH, PANEL_THICKNESS_CM } from './units';
 
 import type { IBaseConfig, IBaseSection, IRange } from '../types';
 
@@ -15,8 +15,16 @@ import type { IBaseConfig, IBaseSection, IRange } from '../types';
 
 const UNITS_PER_CM = 100;
 
+/**
+ * Her bölüm kendi gövdesi olan bir MODÜL: iki yanı da kendine ait. Eski model
+ * tek kabuk + (n-1) bölme sayıyordu, yani `(n+1) x T`. Modüler modelde iki
+ * komşu modül arasında iki panel var, bir bölme değil: `2n x T`.
+ *
+ * Fark ihmal edilebilir değil — 300 cm, 3 bölümde panel alanı %27 artıyor.
+ * Atölye zaten böyle imal ediyor ve 300 cm'lik tek parça üst panel kesilemez.
+ */
 const panelsFor = (sectionCount: number): number =>
-  (sectionCount + 1) * PANEL_THICKNESS_CM;
+  2 * sectionCount * PANEL_THICKNESS_CM;
 
 const widthsOf = (config: IBaseConfig): number[] =>
   Array.from(

@@ -1,6 +1,6 @@
-import { PANEL_THICKNESS_CM } from '../../catalog';
+import { PANEL_THICKNESS_CM } from '../../geometry/units';
+import { DEFAULT_PRICE_BOOK } from '../../pricing/defaults';
 
-import type { IProductLimits } from '../../types';
 import type { IGardiropConfig, IGardiropSection } from './types';
 
 /**
@@ -8,20 +8,7 @@ import type { IGardiropConfig, IGardiropSection } from './types';
  * değil (`_etc/catalog.ts`); burada yalnızca bu ürünün ölçü sınırları, parça
  * fiyatları ve hazır düzenleri var.
  */
-export const LIMITS: IProductLimits = {
-  width: { min: 60, max: 400, step: 5 },
-  height: { min: 160, max: 280, step: 5 },
-  depth: { min: 40, max: 80, step: 5 },
-  sectionCount: { min: 1, max: 8 },
-};
-
 export const DRAWER_LIMIT = { min: 0, max: 8 };
-
-export const PART_PRICES = {
-  shelf: 380,
-  rail: 260,
-  drawer: 950,
-};
 
 /**
  * Hazır düzenler bölüm yüksekliğine göre değil sabit cm ile tanımlı, çünkü
@@ -83,10 +70,16 @@ export const createSection = (width: number): IGardiropSection => ({
  * ölçüsünden hesaplanıyor. Sabit bir sayı yazılsaydı varsayılan genişlik ya da
  * panel kalınlığı değiştiğinde bölümler gövdeye oturmayıp boşluk bırakırdı.
  */
+/*
+ * Varsayılan malzeme ve kapak tipi fiyat kitabından okunuyor, burada
+ * SABİT DEĞİL: iki yerde yazıldığında katalog değişince biri sessizce
+ * geçersiz kimlik taşımaya başlıyor ve `priceOf` haklı olarak patlıyor.
+ */
 export const createDefaultConfig = (): IGardiropConfig => {
+  const settings = DEFAULT_PRICE_BOOK.products.gardirop;
   const width = 180;
   const sectionCount = 2;
-  const inner = width - (sectionCount + 1) * PANEL_THICKNESS_CM;
+  const inner = width - 2 * sectionCount * PANEL_THICKNESS_CM;
   const each = Math.round((inner / sectionCount) * 100) / 100;
 
   return {
@@ -94,10 +87,10 @@ export const createDefaultConfig = (): IGardiropConfig => {
     height: 220,
     depth: 60,
     sectionCount,
-    material: 'lak',
+    material: settings.defaultMaterial,
     finish: 'mese',
     backPanel: 8,
-    doorStyle: 'kulpsuz',
+    doorType: settings.defaultDoorType,
     doorOpen: 0,
     sections: Array.from({ length: sectionCount }, () => createSection(each)),
   };

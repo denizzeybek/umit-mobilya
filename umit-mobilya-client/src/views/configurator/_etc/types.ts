@@ -1,4 +1,11 @@
-import type { IPriceBreakdown } from './price/shared';
+import type { IPriceBook, IProductSettings } from './pricing/priceBook';
+import type {
+  IPart,
+  TBackPanel,
+  TDoorTypeId,
+  TFinishId,
+  TMaterialId,
+} from './pricing/types';
 import type { Group, Object3D } from 'three';
 import type { Component } from 'vue';
 
@@ -11,10 +18,7 @@ export enum EProductType {
   Vestiyer = 'vestiyer',
 }
 
-export type TMaterialId = 'suntalam' | 'mdf-lam' | 'lak' | 'mdf-gloss';
-export type TFinishId = 'beyaz' | 'antrasit' | 'mese' | 'ceviz';
-export type TDoorStyle = 'kulplu' | 'kulpsuz' | 'yok';
-export type TBackPanel = 4 | 8 | 18;
+export type { TBackPanel, TDoorTypeId, TFinishId, TMaterialId };
 
 /** Bir ölçünün izin verilen aralığı ve panel adımı. */
 export interface IRange {
@@ -33,7 +37,18 @@ export interface IProductLimits {
   height: IRange;
   depth: IRange;
   sectionCount: { min: number; max: number };
+  maxModuleWidthCm: number;
+  maxDoorLeafWidthCm: number;
 }
+
+export const limitsOf = (settings: IProductSettings): IProductLimits => ({
+  width: settings.width,
+  height: settings.height,
+  depth: settings.depth,
+  sectionCount: settings.sectionCount,
+  maxModuleWidthCm: settings.maxModuleWidthCm,
+  maxDoorLeafWidthCm: settings.maxDoorLeafWidthCm,
+});
 
 /** Her ürünün bölümünde bulunan tek ortak alan. */
 export interface IBaseSection {
@@ -45,10 +60,12 @@ export interface IBaseConfig {
   height: number;
   depth: number;
   sectionCount: number;
+  /** Gövde ve kapak panellerinin ikisini birden fiyatlar. */
   material: TMaterialId;
   finish: TFinishId;
   backPanel: TBackPanel;
-  doorStyle: TDoorStyle;
+  /** Malzemeden bağımsız ikinci eksen: standart, kulpsuz, aynalı, cam. */
+  doorType: TDoorTypeId;
   doorOpen: number;
   sections: IBaseSection[];
 }
@@ -63,8 +80,10 @@ export interface IProductBuild {
  * Bir ürün tipinin tamamı. `registry.ts` bunları tek tabloda tutar;
  * `Configurator.vue` hangi ürünü gösterdiğini bilmeden çalışır.
  *
- * `fields` ürüne özel panel bölümlerini çizen bileşen — gardıropta raf/askılık,
- * mutfakta tezgâh/davlumbaz olacak.
+ * Ürünler artık `build` ve `price` DEĞİL yalnızca `parts` bildiriyor: tek bir
+ * parça listesi hem sahneyi hem fiyatı besliyor, böylece ikisinin ayrışması
+ * imkânsız. Mesh üretimi `geometry/buildFromParts`, fiyat `pricing/priceOf` —
+ * ikisi de ürün bilmiyor.
  */
 export interface IProductDefinition {
   id: EProductType;
@@ -76,11 +95,9 @@ export interface IProductDefinition {
   createDefault: () => IBaseConfig;
   /**
    * Yeni bir bölüm eklendiğinde nasıl doldurulacağını ürün bilir — gardıropta
-   * raflı, vestiyerde oturaklı. Paylaşılan bölüm sayısı denetimi bunu tanımdan
-   * alır, yoksa ürünü tanımak zorunda kalırdı.
+   * raflı, vestiyerde oturaklı.
    */
   createSection: (width: number) => IBaseSection;
-  build: (config: IBaseConfig) => IProductBuild;
-  price: (config: IBaseConfig) => IPriceBreakdown;
+  parts: (config: IBaseConfig, book: IPriceBook) => IPart[];
   fields: Component;
 }

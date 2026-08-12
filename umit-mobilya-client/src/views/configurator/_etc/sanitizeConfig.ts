@@ -1,4 +1,4 @@
-import { BACK_PANELS, DOOR_STYLES, FINISHES, MATERIALS } from './catalog';
+import { DEFAULT_PRICE_BOOK } from './pricing/defaults';
 import {
   setDepth,
   setHeight,
@@ -92,10 +92,12 @@ export const sanitizeConfig = (
   const config = definition.createDefault();
   if (!isRecord(incoming)) return config;
 
-  config.material = pickId(incoming.material, MATERIALS, config.material);
-  config.finish = pickId(incoming.finish, FINISHES, config.finish);
-  config.doorStyle = pickId(incoming.doorStyle, DOOR_STYLES, config.doorStyle);
-  config.backPanel = pickId(incoming.backPanel, BACK_PANELS, config.backPanel);
+  const book = DEFAULT_PRICE_BOOK;
+
+  config.material = pickId(incoming.material, book.materials, config.material);
+  config.finish = pickId(incoming.finish, book.finishes, config.finish);
+  config.doorType = pickId(incoming.doorType, book.doorTypes, config.doorType);
+  config.backPanel = pickId(incoming.backPanel, book.backPanels, config.backPanel);
   config.doorOpen = clamp01(incoming.doorOpen, config.doorOpen);
 
   if (isFiniteNumber(incoming.height)) {

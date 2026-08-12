@@ -26,6 +26,8 @@
 import { computed, ref, watch } from 'vue';
 
 import { encodeConfig } from '../_etc/configUrl';
+import { DEFAULT_PRICE_BOOK } from '../_etc/pricing/defaults';
+import { priceOf } from '../_etc/pricing/priceOf';
 
 import CarcassFields from './panel/CarcassFields.vue';
 import DimensionFields from './panel/DimensionFields.vue';
@@ -34,10 +36,13 @@ import PriceSummary from './panel/PriceSummary.vue';
 import SectionCountFields from './panel/SectionCountFields.vue';
 import ShareLink from './panel/ShareLink.vue';
 
+import type { IPart } from '../_etc/pricing/types';
 import type { IBaseConfig, IProductDefinition } from '../_etc/types';
 
 interface IProps {
   definition: IProductDefinition;
+  /** Sahneyi çizen listenin AYNISI — fiyat da ondan çıkıyor. */
+  parts: IPart[];
 }
 
 const props = defineProps<IProps>();
@@ -50,7 +55,14 @@ const config = defineModel<IBaseConfig>({ required: true });
  */
 const active = ref(0);
 
-const price = computed(() => props.definition.price(config.value));
+const price = computed(() =>
+  priceOf(props.parts, DEFAULT_PRICE_BOOK, {
+    material: config.value.material,
+    finish: config.value.finish,
+    doorType: config.value.doorType,
+    backPanel: config.value.backPanel,
+  }),
+);
 
 /**
  * Teklif bağlantısına iliştirilen tasarım kodu. Bugün İletişim sayfası bunu

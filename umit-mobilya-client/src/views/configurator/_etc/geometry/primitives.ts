@@ -5,9 +5,8 @@ import {
   MeshStandardMaterial,
 } from 'three';
 
-import { FINISHES, MATERIALS } from '../catalog';
-
-import type { TFinishId, TMaterialId } from '../types';
+import type { IPriceBook } from '../pricing/priceBook';
+import type { TDoorTypeId, TFinishId, TMaterialId } from '../pricing/types';
 import type { Material } from 'three';
 
 /**
@@ -16,8 +15,10 @@ import type { Material } from 'three';
  * gölge ayarını değiştirdiğinde diğerlerinin de tutarlı kalmasını sağlıyor.
  */
 export interface IProductMaterials {
-  /** Görünen yüzeyler: gövde, kapak, raf. */
+  /** Görünen gövde yüzeyleri: yan, üst, alt, raf. */
   panel: MeshPhysicalMaterial;
+  /** Kapak yüzeyi — aynalı ve cam kapak burada ayrışıyor. */
+  door: MeshPhysicalMaterial;
   /** Arkalık gibi ışık almayan yüzeyler — biraz daha mat. */
   interior: MeshStandardMaterial;
   /** Kulp, askı borusu, çekmece rayı. */
@@ -41,12 +42,26 @@ export const box = (
   return mesh;
 };
 
+/**
+ * Görünüm de fiyat da aynı seçimden türüyor, o yüzden ikisi de fiyat
+ * kitabından okunuyor: `roughness`/`clearcoat` malzemenin, saydamlık ve
+ * metaliklik kapak tipinin özelliği.
+ *
+ * Burada sessiz düşüş KABUL EDİLİR (fiyatın aksine): bilinmeyen bir kimlik
+ * yüzünden sahnenin hiç çizilmemesi, biraz yanlış parlayan bir yüzeyden kötü.
+ * Kimlik doğrulaması `sanitizeConfig` ve `priceOf` tarafında yapılıyor.
+ */
 export const createMaterials = (
   finishId: TFinishId,
   materialId: TMaterialId,
+  book: IPriceBook,
+  doorTypeId?: TDoorTypeId,
 ): IProductMaterials => {
-  const finish = FINISHES.find((item) => item.id === finishId) ?? FINISHES[0];
-  const spec = MATERIALS.find((item) => item.id === materialId) ?? MATERIALS[0];
+  const finish =
+    book.finishes.find((item) => item.id === finishId) ?? book.finishes[0];
+  const spec =
+    book.materials.find((item) => item.id === materialId) ?? book.materials[0];
+  const doorType = book.doorTypes.find((item) => item.id === doorTypeId);
 
   const panel = new MeshPhysicalMaterial({
     color: finish.color,
@@ -54,6 +69,16 @@ export const createMaterials = (
     clearcoat: spec.clearcoat,
     clearcoatRoughness: 0.25,
     metalness: 0,
+  });
+
+  const door = new MeshPhysicalMaterial({
+    color: finish.color,
+    roughness: doorType?.render.roughness ?? spec.roughness,
+    clearcoat: spec.clearcoat,
+    clearcoatRoughness: 0.25,
+    metalness: doorType?.render.metalness ?? 0,
+    transparent: doorType?.render.transparent ?? false,
+    opacity: doorType?.render.opacity ?? 1,
   });
 
   const interior = new MeshStandardMaterial({
@@ -69,10 +94,12 @@ export const createMaterials = (
 
   return {
     panel,
+    door,
     interior,
     metal,
     dispose: () => {
       panel.dispose();
+      door.dispose();
       interior.dispose();
       metal.dispose();
     },
