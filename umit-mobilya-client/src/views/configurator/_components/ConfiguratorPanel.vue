@@ -16,18 +16,23 @@
     -->
     <component :is="definition.fields" v-model="config" :active="active" />
 
-    <PriceSummary :price="price" />
+    <PriceSummary :price="price" :config-code="configCode" />
+
+    <ShareLink :config="config" :definition="definition" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 
+import { encodeConfig } from '../_etc/configUrl';
+
 import CarcassFields from './panel/CarcassFields.vue';
 import DimensionFields from './panel/DimensionFields.vue';
 import MaterialFields from './panel/MaterialFields.vue';
 import PriceSummary from './panel/PriceSummary.vue';
 import SectionCountFields from './panel/SectionCountFields.vue';
+import ShareLink from './panel/ShareLink.vue';
 
 import type { IBaseConfig, IProductDefinition } from '../_etc/types';
 
@@ -46,6 +51,15 @@ const config = defineModel<IBaseConfig>({ required: true });
 const active = ref(0);
 
 const price = computed(() => props.definition.price(config.value));
+
+/**
+ * Teklif bağlantısına iliştirilen tasarım kodu. Bugün İletişim sayfası bunu
+ * okumuyor — teklif formu Faz 3'te geliyor. Şimdiden taşınmasının sebebi,
+ * o forma kadar tasarımın en azından adres çubuğunda kalması.
+ */
+const configCode = computed(() =>
+  encodeConfig(props.definition.id, config.value),
+);
 
 watch(
   () => config.value.sectionCount,

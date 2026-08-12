@@ -25,12 +25,23 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, ref, shallowRef, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 import ConfiguratorPanel from '../_components/ConfiguratorPanel.vue';
 import ProductViewer from '../_components/ProductViewer.vue';
+import {
+  CONFIG_QUERY_KEY,
+  decodeConfig,
+  encodeConfig,
+} from '../_etc/configUrl';
 import { applyDoorOpen } from '../_etc/geometry/doors';
+import { sanitizeConfig } from '../_etc/sanitizeConfig';
 
-import type { IProductBuild, IProductDefinition } from '../_etc/types';
+import type {
+  IBaseConfig,
+  IProductBuild,
+  IProductDefinition,
+} from '../_etc/types';
 import type { Object3D } from 'three';
 
 /**
@@ -44,7 +55,22 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
-const config = ref(props.definition.createDefault());
+const route = useRoute();
+const router = useRouter();
+
+/**
+ * Adresteki tasarım, varsayılandan önce gelir. Başka bir ürüne ait ya da
+ * okunamayan bir kod sessizce yok sayılır — `sanitizeConfig` gövdeyi bu ürünün
+ * sınırlarına oturttuğu için buraya geçersiz bir config ulaşamaz.
+ */
+const configFromUrl = (): IBaseConfig | null => {
+  const decoded = decodeConfig(route.query[CONFIG_QUERY_KEY]);
+  if (!decoded || decoded.t !== props.definition.id) return null;
+
+  return sanitizeConfig(decoded.c, props.definition);
+};
+
+const config = ref(configFromUrl() ?? props.definition.createDefault());
 
 /**
  * `shallowRef` bilinçli: Three.js nesne ağacını Vue'nun derin reaktifliğine
@@ -101,5 +127,31 @@ watch(
   },
 );
 
-onBeforeUnmount(() => build?.dispose());
+/*
+ * `replace` ve 300 ms gecikme birlikte: kaydırıcı sürüklenirken her karede
+ * geçmişe yazmak hem tarayıcıyı zorlar hem geri düğmesini kırk adım geri
+ * götürürdü. Yazma ilk değişiklikte başlıyor — dokunulmamış bir tasarım
+ * adresi kirletmesin.
+ */
+let urlTimer: ReturnType<typeof setTimeout> | undefined;
+
+const writeConfigToUrl = () => {
+  clearTimeout(urlTimer);
+
+  urlTimer = setTimeout(() => {
+    router.replace({
+      query: {
+        ...route.query,
+        [CONFIG_QUERY_KEY]: encodeConfig(props.definition.id, config.value),
+      },
+    });
+  }, 300);
+};
+
+watch(config, writeConfigToUrl, { deep: true });
+
+onBeforeUnmount(() => {
+  clearTimeout(urlTimer);
+  build?.dispose();
+});
 </script>

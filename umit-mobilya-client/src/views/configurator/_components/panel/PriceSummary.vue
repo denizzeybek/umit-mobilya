@@ -19,7 +19,7 @@
     </dl>
 
     <RouterLink
-      :to="{ name: ERouteNames.Contact }"
+      :to="{ name: ERouteNames.Contact, query: { [CONFIG_QUERY_KEY]: configCode } }"
       class="mt-7 block bg-f-bone py-4 text-center text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-primary transition-colors duration-300 hover:bg-f-brass-light"
     >
       Bu Tasarım İçin Teklif Al
@@ -35,10 +35,14 @@
 <script setup lang="ts">
 import { ERouteNames } from '@/router/routeNames.enum';
 
+import { CONFIG_QUERY_KEY } from '../../_etc/configUrl';
+
 import type { IPriceBreakdown } from '../../_etc/price/shared';
 
 interface IProps {
   price: IPriceBreakdown;
+  /** Tasarımı taşıyan kod; teklif bağlantısına iliştirilir. */
+  configCode: string;
 }
 
 defineProps<IProps>();
