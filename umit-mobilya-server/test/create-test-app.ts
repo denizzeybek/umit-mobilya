@@ -7,6 +7,21 @@ import type { Connection } from 'mongoose';
 import { AppModule } from '../src/app.module';
 import { setupApp } from '../src/setup-app';
 
+export interface ICreateTestAppOptions {
+  /**
+   * Hız sınırı gerçekten uygulansın mı. **Varsayılan `false`.**
+   *
+   * Bir spec dosyası aynı IP'den onlarca istek atıyor ve `POST /api/quotes`
+   * dakikada beşle sınırlı — fiyat ağının beş kanonik tasarımı tam sınırda
+   * duruyor, altıncı case eklendiği gün sessizce 429 alırdı. Testin konusu
+   * hız sınırı değilse sınır kapalı olmalı.
+   *
+   * Sınırın KENDİSİ `throttle.characterization.spec.ts` içinde, bu bayrak
+   * açıkken doğrulanıyor.
+   */
+  enforceRateLimit?: boolean;
+}
+
 /**
  * Boots the whole service exactly the way `main.ts` does, so a spec can never
  * exercise a differently-configured app than production runs.
@@ -16,7 +31,18 @@ import { setupApp } from '../src/setup-app';
  * and the Nest controller after it; now that the port is finished they keep
  * guarding the contract those handlers agreed on.
  */
-export async function createTestApp(): Promise<INestApplication> {
+export async function createTestApp(
+  options: ICreateTestAppOptions = {},
+): Promise<INestApplication> {
+  /*
+   * Uygulama kurulmadan ÖNCE yazılıyor: `ThrottlerModule.forRootAsync`
+   * bayrağı boot anında `ConfigService`ten okuyor.
+   *
+   * Yalnızca hız sınırı kapanıyor, yetkilendirme değil — `JwtAuthGuard` route
+   * başına `@UseGuards` ile bağlı ve bundan etkilenmiyor.
+   */
+  process.env['THROTTLE_SKIP'] = options.enforceRateLimit ? '0' : '1';
+
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();

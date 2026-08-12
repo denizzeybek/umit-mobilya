@@ -22,6 +22,7 @@ Shared pieces, reuse rather than reimplement:
 | `ParseObjectIdPipe` | `src/common/pipes/` | Every `:id` param. Without it a malformed id reaches mongoose and surfaces as 500. |
 | `AllExceptionsFilter` | `src/common/filters/` | The single error body. |
 | `ObjectStorageService` | `src/storage/` | The only place that talks to R2. |
+| `ThrottlerGuard` | registered as `APP_GUARD` in `AppModule` | Rate limiting, globally. |
 
 ## Layers
 
@@ -58,6 +59,34 @@ These held before the port and hold after it. They live in `product.controller.j
 - **Validate before you upload.** `create` checks the category exists first; the reverse order leaves an object in the bucket on every rejected request.
 - **Uploads stay in memory** — `multer.memoryStorage()` → `sharp` resize → `PutObjectCommand`. Nothing touches local disk.
 - Deletion failures are logged and swallowed so a storage outage cannot block a database delete. Keep that ordering.
+
+## Rate limiting — a decorator without a guard does nothing
+
+`ThrottlerModule.forRootAsync()` builds the counters and `@Throttle` writes
+metadata, but neither of them enforces anything on its own. Until a
+`ThrottlerGuard` reads that metadata, both sides are inert.
+
+That is exactly what happened here: `POST /api/quotes` carried
+`@Throttle({ limit: 5 })` and the controller's own comment justified the
+endpoint being public by pointing at it — while no guard was registered, so the
+sixth request answered 201 like every other. A dedicated spec
+(`test/characterization/throttle.characterization.spec.ts`) now pins it.
+
+- The guard is registered **globally** as `APP_GUARD`, not per route. A limit
+  you have to remember to attach is a limit you will forget; opting out is the
+  visible decision (`@SkipThrottle()`), not opting in.
+- The global floor is 300/min per IP; the public quote endpoint narrows itself
+  to 5/min with `@Throttle`. Pick the floor from real traffic — a page load
+  costs ~4 requests, so the previous 60 would have cut an ordinary browsing
+  session.
+- `setup-app.ts` sets `trust proxy` to `1`. Without it every visitor behind
+  Railway's proxy shares one bucket, because `ThrottlerGuard` counts by
+  `req.ip`. `1` rather than `true`: only the first hop is trusted, otherwise a
+  forged `X-Forwarded-For` walks straight past the limit.
+- Tests turn the limit off through `THROTTLE_SKIP` (`createTestApp()` writes it;
+  pass `{ enforceRateLimit: true }` when the limit *is* the subject). Overriding
+  the guard through DI does **not** work — an instance living under `APP_GUARD`
+  is not reachable by `overrideProvider`/`overrideGuard`.
 
 ## CORS
 

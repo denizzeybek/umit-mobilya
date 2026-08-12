@@ -48,6 +48,15 @@ export class EnvironmentVariables {
   @IsOptional()
   @IsString()
   readonly ALLOWED_ORIGINS?: string;
+
+  /**
+   * `1` ise hız sınırı uygulanmaz. Yalnızca testler için — canlıda
+   * TANIMLANMAZ. Varsayılanın "sınır açık" olması bilinçli: unutulan bir
+   * değişken korumayı kaldırmamalı.
+   */
+  @IsOptional()
+  @IsString()
+  readonly THROTTLE_SKIP?: string;
 }
 
 export function validateEnvironment(
