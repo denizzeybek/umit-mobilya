@@ -36,7 +36,7 @@ test('teklif verilince ekrandaki tutar sunucunun hesabıyla aynı', async ({
 
   const displayed = await shownTotal(page);
 
-  await page.getByTestId('request-quote').click();
+  await page.getByTestId('download-quote').click();
   await page.getByTestId('quote-name').locator('input').fill('E2E Müşteri');
   await page.getByTestId('quote-phone').locator('input').fill('0500 000 00 00');
   await page.getByTestId('quote-submit').click();

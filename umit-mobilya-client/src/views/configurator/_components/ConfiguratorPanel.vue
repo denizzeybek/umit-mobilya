@@ -22,7 +22,7 @@
     -->
     <component :is="definition.fields" v-model="config" :active="active" />
 
-    <PriceSummary :price="price" @request-quote="showQuote = true" />
+    <PriceSummary :price="price" @download-quote="showQuote = true" />
 
     <QuoteDialog
       v-if="showQuote"

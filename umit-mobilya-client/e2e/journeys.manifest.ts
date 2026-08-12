@@ -12,6 +12,9 @@ export const APPROVED_JOURNEYS = [
   /* Ekranda gördüğü tutarla teklifine yazılan tutar aynı olmalı. */
   'quote-price-roundtrip',
 
+  /* "İndir"e bastığında belge gerçekten inmeli. */
+  'quote-download',
+
   /* Paylaştığı bağlantıyı açan kişi aynı dolabı görmeli. */
   'share-link-restore',
 

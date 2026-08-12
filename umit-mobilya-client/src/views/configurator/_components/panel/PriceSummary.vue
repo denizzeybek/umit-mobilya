@@ -28,11 +28,12 @@
 
     <button
       type="button"
-      class="mt-7 block w-full bg-f-bone py-4 text-center text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-primary transition-colors duration-300 hover:bg-f-brass-light"
-      data-testid="request-quote"
-      @click="emit('requestQuote')"
+      class="mt-7 flex w-full items-center justify-center gap-3 bg-f-bone py-4 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-primary transition-colors duration-300 hover:bg-f-brass-light"
+      data-testid="download-quote"
+      @click="emit('downloadQuote')"
     >
-      Bu Tasarım İçin Teklif Al
+      <i class="pi pi-download !text-sm" aria-hidden="true" />
+      Teklifi İndir
     </button>
 
     <p class="mt-4 text-sm text-f-bone/60">
@@ -56,7 +57,7 @@ const props = defineProps<IProps>();
 const emit = defineEmits<IEmits>();
 
 interface IEmits {
-  (event: 'requestQuote'): void;
+  (event: 'downloadQuote'): void;
 }
 
 /*

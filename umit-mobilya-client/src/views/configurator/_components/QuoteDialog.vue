@@ -2,7 +2,7 @@
   <Dialog
     v-model:visible="open"
     modal
-    header="Bu tasarım için teklif al"
+    header="Teklifi indir"
     class="w-[min(32rem,92vw)]"
   >
     <form v-if="!created" class="flex flex-col gap-4" @submit="submitHandler">
@@ -22,13 +22,15 @@
       <FInput name="note" label="Not (isteğe bağlı)" placeholder="Eklemek istedikleriniz" />
 
       <p class="text-sm text-f-ink-muted">
-        Tasarımın ölçüleri ve seçimleri teklife otomatik ekleniyor. Fiyat
-        keşiften sonra netleşir.
+        Tasarımın ölçüleri ve seçimleri belgeye otomatik ekleniyor. Adın ve
+        telefonun belgenin üstünde yer alıyor; bir kopyası bize de ulaşıyor ki
+        keşif için arayabilelim. Fiyat keşiften sonra netleşir.
       </p>
 
       <Button
         type="submit"
-        label="Teklif Gönder"
+        label="Teklifi Oluştur ve İndir"
+        icon="pi pi-download"
         data-testid="quote-submit"
         :disabled="isSubmitting"
         :loading="isSubmitting"
@@ -37,22 +39,28 @@
     </form>
 
     <div v-else class="flex flex-col gap-4">
-      <p class="text-f-ink">
-        Teklif talebin alındı. Referans numaran:
-      </p>
+      <p class="text-f-ink">Teklifin hazır, indirme başladı. Referans numaran:</p>
       <p class="display text-display-sm text-f-primary" data-testid="quote-code">
         {{ created.code }}
       </p>
       <p class="text-sm text-f-ink-muted">
         Bu numarayı sakla — teklifini bu numarayla tekrar açabilirsin.
       </p>
+
+      <!--
+        İndirme kendiliğinden başlıyor ama bağlantı duruyor: tarayıcı ayarı,
+        eklenti ya da yavaş bir bağlantı otomatik indirmeyi yutabilir ve geriye
+        "başladı" yazan ama hiçbir şey inmemiş bir ekran kalır.
+      -->
       <a
         :href="documentUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="block bg-f-primary py-3 text-center text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-paper transition-colors duration-300 hover:bg-f-primary-hovered"
+        data-testid="quote-document-link"
+        class="flex items-center justify-center gap-3 bg-f-primary py-3 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-paper transition-colors duration-300 hover:bg-f-primary-hovered"
       >
-        Teklifi PDF indir
+        <i class="pi pi-download !text-sm" aria-hidden="true" />
+        İnmediyse tekrar indir
       </a>
 
       <Button label="Kapat" severity="secondary" outlined @click="handleClose" />
@@ -117,6 +125,24 @@ const validationSchema = yup.object({
 
 const { handleSubmit, isSubmitting, resetForm } = useForm({ validationSchema });
 
+/**
+ * İndirmeyi başlatır. Uç `Content-Disposition: attachment` gönderdiği için
+ * bağlantıya gitmek sayfayı terk etmiyor, dosyayı indiriyor.
+ *
+ * Gizli bir `<a>` kullanılıyor, `window.open` değil: açılır pencere
+ * engelleyicileri `open` çağrısını yutabiliyor ve kullanıcı hiçbir şey
+ * olmadığını görüyor.
+ */
+const startDownload = (url: string): void => {
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.rel = 'noopener noreferrer';
+
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+};
+
 const submitHandler = handleSubmit(async (values) => {
   try {
     created.value = await quotesStore.create({
@@ -129,7 +155,9 @@ const submitHandler = handleSubmit(async (values) => {
         note: values.note || undefined,
       },
     });
-    showSuccessMessage('Teklif talebin alındı.');
+
+    startDownload(documentUrl.value);
+    showSuccessMessage('Teklifin hazır, indirme başladı.');
   } catch (error) {
     showErrorMessage(error);
   }
