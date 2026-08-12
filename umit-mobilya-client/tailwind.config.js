@@ -12,7 +12,14 @@ export default {
       textColor: colors,
       colors,
       fontFamily: {
-        sans: ['Schibsted Grotesk', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        /* LiraSign yalnizca U+20BA'yi kapsar; gerekcesi styles/index.scss'te. */
+        sans: [
+          'LiraSign',
+          'Schibsted Grotesk',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
         serif: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
       },
       fontSize: {

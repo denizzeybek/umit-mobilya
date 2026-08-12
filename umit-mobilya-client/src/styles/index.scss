@@ -1,5 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Schibsted+Grotesk:wght@400..700&display=swap');
 
+/*
+ * Schibsted Grotesk'in U+20BA (₺) glifi YANLIŞ çizilmiş: ekranda sterlin (£)
+ * gibi görünüyor. Fiyat gösteren bir sitede bu, rakamın para birimini yanlış
+ * söylemesi demek — dolabın fiyatı sterlin sanılıyor.
+ *
+ * Tarayıcı kendiliğinden yedeğe düşmüyor, çünkü glif dosyada VAR; sadece
+ * yanlış şekilde. Düşmesini `unicode-range` ile biz söylüyoruz: bu aile
+ * yalnızca tek karakteri kapsıyor, yazının geri kalanı Schibsted Grotesk
+ * olarak kalıyor.
+ *
+ * Kaynaklar yalnızca `local()`: hiçbiri bulunmazsa aile yüklenmez ve sıra
+ * Schibsted Grotesk'e döner — yani en kötü ihtimalde bugünkü davranış, bir
+ * gerileme değil.
+ *
+ * Fraunces'te aynı sorun YOK (glif adı `turkishlira`, doğru çiziliyor), o
+ * yüzden başlık ve büyük toplam yığınlarına dokunulmuyor.
+ */
+@font-face {
+  font-family: 'LiraSign';
+  src:
+    local('SFProText-Regular'),
+    local('SF Pro Text'),
+    local('Helvetica Neue'),
+    local('Segoe UI'),
+    local('Roboto'),
+    local('DejaVu Sans'),
+    local('Geneva');
+  unicode-range: U+20BA;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,7 +42,8 @@
 
   body {
     @apply bg-f-bone text-f-ink;
-    font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'LiraSign', 'Schibsted Grotesk', ui-sans-serif, system-ui,
+      sans-serif;
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -60,7 +92,7 @@
    */
   .eyebrow {
     @apply text-f-ink-faint uppercase;
-    font-family: 'Schibsted Grotesk', sans-serif;
+    font-family: 'LiraSign', 'Schibsted Grotesk', sans-serif;
     font-size: 0.6875rem;
     font-weight: 500;
     letter-spacing: 0.18em;
