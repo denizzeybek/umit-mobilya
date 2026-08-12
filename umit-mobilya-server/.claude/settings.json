@@ -42,11 +42,28 @@
             "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/block-skip-and-only.sh",
             "timeout": 15,
             "statusMessage": "only/skip kontrolu..."
+          },
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-no-direct-env.sh",
+            "timeout": 15,
+            "statusMessage": "process.env kontrolu..."
           }
         ]
       }
     ],
     "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-spec-failing.sh",
+            "timeout": 180,
+            "statusMessage": "Yeni spec kirmizi mi..."
+          }
+        ]
+      },
       {
         "matcher": "Write|Edit",
         "hooks": [

@@ -28,6 +28,12 @@
             "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-client/.claude/hooks/enforce-no-any.sh",
             "timeout": 15,
             "statusMessage": "any kontrolu..."
+          },
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-client/.claude/hooks/enforce-no-api-in-components.sh",
+            "timeout": 15,
+            "statusMessage": "Component/API siniri kontrolu..."
           }
         ]
       }

@@ -32,20 +32,15 @@ The NestJS half (`src/`, `test/`):
 
 ```bash
 yarn test         # Jest; the spec you wrote must be green
+yarn test:cov     # same, plus the coverage floor — this is what the commit hook runs
 yarn type-check   # tsc --noEmit, strict
 yarn build        # nest build
 ```
 
-The not-yet-ported Express half (`routes/`, `controllers/`, `models/`):
+Changed an endpoint's shape? Run its script in `curls/` and read the response.
+The characterization suite proves the contract; the script shows it to you.
 
-```bash
-node --check <changed-file>   # syntax gate, also enforced by a PostToolUse hook
-```
-
-A domain is only migrated when its characterization spec is green against the
-**new** implementation and its line is gone from `routes/index.js`. Leaving the
-legacy mount in place means the old handler still shadows the new controller —
-Express middleware runs before Nest's router, and nothing errors.
+There is no Express half any more; every `.js` source file is gone.
 
 ## Both
 

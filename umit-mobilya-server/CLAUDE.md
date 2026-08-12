@@ -12,6 +12,11 @@ Index only. Every rule that governs code in `umit-mobilya-server/` is defined in
 | [`05-backend-architecture.md`](.claude/rules/05-backend-architecture.md) | Controller/service/schema/DTO split, R2 object-storage rules, CORS |
 | [`06-validation-and-errors.md`](.claude/rules/06-validation-and-errors.md) | DTOs + class-validator, global `ValidationPipe`, one error shape, JSDoc feeding the OpenAPI schema |
 | [`07-config-and-secrets.md`](.claude/rules/07-config-and-secrets.md) | `ConfigModule` validation at boot, the nine required variables, Railway dashboard |
+| [`08-testing-patterns.md`](.claude/rules/08-testing-patterns.md) | Where a spec lives, how to name it, what to assert, the shared harness |
+| [`09-mocking-discipline.md`](.claude/rules/09-mocking-discipline.md) | Never mock the database, always mock R2, when a collaborator double is honest |
+| [`10-mongoose-schema-rules.md`](.claude/rules/10-mongoose-schema-rules.md) | `@Schema()` classes, refs vs embedded, idempotent hooks, keys not URLs |
+| [`11-logging.md`](.claude/rules/11-logging.md) | Nest `Logger`, log what you swallow, never log credentials |
+| [`12-coverage-gates.md`](.claude/rules/12-coverage-gates.md) | Where the thresholds are, what is excluded and why, how to raise them |
 
 Repo-wide rules that also apply here: [`comment-policy.md`](../.claude/rules/comment-policy.md),
 [`done-checklist.md`](../.claude/rules/done-checklist.md),
@@ -23,6 +28,7 @@ NestJS + TypeScript, single application. The Express/CommonJS version is gone â€
 all three domains are ported and no `.js` source remains.
 
 ```
+curls/               replay-ready call for every endpoint â€” see curls/README.md
 src/
   main.ts            entry point; boots Nest and applies setup-app
   setup-app.ts       body parsers, ValidationPipe, exception filter, CORS, Swagger
@@ -43,6 +49,8 @@ yarn start        # node dist/main (PORT env, default 5000)
 yarn build        # nest build
 yarn type-check   # tsc --noEmit, strict
 yarn test         # jest
+yarn test:cov     # jest + coverage thresholds
+yarn schema:dump  # nest build && write openapi.json (no database needed)
 ```
 
 Specs run against an in-memory mongod (`test/global-setup.ts`) with deliberately

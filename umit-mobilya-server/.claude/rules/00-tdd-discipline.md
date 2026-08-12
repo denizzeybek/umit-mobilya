@@ -67,7 +67,8 @@ Rules for touching them:
 ## Hook enforcement
 
 - `enforce-spec-first` (PreToolUse on Write/Edit) — denies creating `foo.service.ts` when `foo.service.spec.ts` does not exist.
-- `run-related-tests` (PostToolUse on Write/Edit) — runs the specs related to the file you just touched.
+- `enforce-spec-failing` (PostToolUse on Write) — runs a **brand-new** spec and denies it if it passes on the first run. Characterization specs are exempt by filename, and an already-committed spec is exempt because adding a case to a green suite is ordinary work.
+- `run-related-tests` (PostToolUse on Write/Edit) — runs the specs related to the file you just touched. It reports rather than blocks: during Red the spec is *supposed* to fail.
 - `block-skip-and-only` (PreToolUse on Write/Edit) — denies `.only` / `.skip` / `xit` landing in a spec.
 
 Related: [[05-backend-architecture]] (where code lives), [[06-validation-and-errors]] (what to assert on failure paths).

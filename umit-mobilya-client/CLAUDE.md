@@ -14,6 +14,7 @@ Index only. Every rule that governs code in `umit-mobilya-client/` is defined in
 | [`04-generated-code.md`](.claude/rules/04-generated-code.md) | `components.d.ts` and `src/client/` — never hand-edited, how to regenerate |
 | [`05-forms-and-tables.md`](.claude/rules/05-forms-and-tables.md) | vee-validate + yup wiring, `DataTable` defaults, client vs server filtering |
 | [`06-routing-and-config.md`](.claude/rules/06-routing-and-config.md) | `ERouteNames` as identity, router guard, `EStorageKeys`, `VITE_*` vars, Netlify, i18n reality |
+| [`07-naming-and-files.md`](.claude/rules/07-naming-and-files.md) | Where a file goes, what it is called, which names are identities |
 
 Repo-wide rules that also apply here: [`comment-policy.md`](../.claude/rules/comment-policy.md),
 [`done-checklist.md`](../.claude/rules/done-checklist.md),

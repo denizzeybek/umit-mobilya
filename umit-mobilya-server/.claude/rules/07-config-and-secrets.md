@@ -51,5 +51,17 @@ Adding a deploy domain is a Railway variable change, not a code change.
   Non-secret values (`PORT`, `ALLOWED_ORIGINS`) may have defaults.
 - ❌ Commit a real credential to `.env.example`. Placeholder only.
 
+## Hook enforcement
+
+`enforce-no-direct-env` (PreToolUse on Write/Edit) denies `process.env` anywhere
+under `src/` except `config/`, `main.ts`, `setup-app.ts`, `tools/` and specs.
+Those five are the places where reading the environment directly is the job;
+everywhere else it is a value no test can substitute.
+
+`NODE_ENV` is allowed everywhere, and it is a genuine exception rather than a
+convenience: it decides how `ConfigModule` itself loads, so it has to be
+readable before the container exists. It is also not a secret.
+
 Related: [[05-backend-architecture]] (where R2 config is consumed),
-[[06-validation-and-errors]] (request-level validation, a different layer).
+[[06-validation-and-errors]] (request-level validation, a different layer),
+[[11-logging]] (never log what this protects).

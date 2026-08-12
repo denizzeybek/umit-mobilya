@@ -59,6 +59,13 @@ interceptor made every successful request throw
   the source of truth, and note the generated type says `string | null`
   because the server means it.
 
+## Hook enforcement
+
+`enforce-no-api-in-components` (PreToolUse on Write/Edit) denies a
+`SomethingService.method(...)` call inside `components/`, `views/` or
+`layouts/`. Importing a *type* from `@/client` there is fine and expected —
+that is the point of codegen; calling a service is not.
+
 ## Example
 
 ```ts

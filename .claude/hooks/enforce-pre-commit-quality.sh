@@ -35,7 +35,7 @@ fi
 if printf '%s\n' "$staged" | grep -qE '^umit-mobilya-server/(src|test)/' \
   && [[ -d "$server/node_modules" ]]; then
   run_gate "$server" type-check /tmp/umb-server-tsc.log
-  run_gate "$server" test /tmp/umb-server-test.log
+  run_gate "$server" test:cov /tmp/umb-server-test.log
 fi
 
 if [[ -n "$failures" ]]; then
