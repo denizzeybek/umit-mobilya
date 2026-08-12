@@ -31,10 +31,19 @@ const PRODUCTS_LABEL = 'İşler';
  */
 const DESIGN_LABEL = 'Tasarla';
 
+/*
+ * Yönetim ekranları menüde YOKTU ve adresleri ezberlemek gerekiyordu. Tek bir
+ * "Kategoriler" bağlantısı yerine açılır: fiyat kitabı ve teklifler de aynı
+ * yerde toplanıyor, ve giriş yapılmadan hiçbiri görünmüyor.
+ */
+const ADMIN_LABEL = 'Yönetim';
+
 export const useSiteNav = (): {
   productsLabel: string;
   designLabel: string;
   designItems: ComputedRef<INavDropdownItem[]>;
+  adminLabel: string;
+  adminItems: ComputedRef<INavDropdownItem[]>;
   navLinks: ComputedRef<INavLink[]>;
   mobileLinks: ComputedRef<INavLink[]>;
 } => {
@@ -43,15 +52,28 @@ export const useSiteNav = (): {
   const navLinks = computed<INavLink[]>(() => [
     { name: ERouteNames.About, label: ERouteNames.About },
     { name: ERouteNames.Contact, label: ERouteNames.Contact },
-    ...(usersStore.isAuthenticated
+  ]);
+
+  /** Yalnızca giriş yapılmışken; boşsa başlık açılırı hiç çizmiyor. */
+  const adminItems = computed<INavDropdownItem[]>(() =>
+    usersStore.isAuthenticated
       ? [
           {
-            name: ERouteNames.CategoriesList,
+            label: ERouteNames.AdminQuotes,
+            to: { name: ERouteNames.AdminQuotes },
+          },
+          {
+            label: ERouteNames.AdminPricebook,
+            to: { name: ERouteNames.AdminPricebook },
+          },
+          {
             label: ERouteNames.CategoriesList,
+            to: { name: ERouteNames.CategoriesList },
+            separatorBefore: true,
           },
         ]
-      : []),
-  ]);
+      : [],
+  );
 
   /** Konfigüratörü olan her ürün tipi; registry'ye eklenen otomatik görünür. */
   const designItems = computed<INavDropdownItem[]>(() =>
@@ -72,12 +94,27 @@ export const useSiteNav = (): {
       params: { product: product.id },
     })),
     ...navLinks.value,
+    ...(usersStore.isAuthenticated
+      ? [
+          { name: ERouteNames.AdminQuotes, label: ERouteNames.AdminQuotes },
+          {
+            name: ERouteNames.AdminPricebook,
+            label: ERouteNames.AdminPricebook,
+          },
+          {
+            name: ERouteNames.CategoriesList,
+            label: ERouteNames.CategoriesList,
+          },
+        ]
+      : []),
   ]);
 
   return {
     productsLabel: PRODUCTS_LABEL,
     designLabel: DESIGN_LABEL,
     designItems,
+    adminLabel: ADMIN_LABEL,
+    adminItems,
     navLinks,
     mobileLinks,
   };

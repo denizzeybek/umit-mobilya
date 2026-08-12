@@ -31,6 +31,13 @@
 
         <NavDropdown :label="designLabel" :items="designItems" :tone="tone" />
 
+        <NavDropdown
+          v-if="adminItems.length"
+          :label="adminLabel"
+          :items="adminItems"
+          :tone="tone"
+        />
+
         <RouterLink
           v-for="link in navLinks"
           :key="link.name"
@@ -118,7 +125,15 @@ const route = useRoute();
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const categoriesStore = useCategoriesStore();
-const { productsLabel, designLabel, designItems, navLinks, mobileLinks } =
+const {
+  productsLabel,
+  designLabel,
+  designItems,
+  adminLabel,
+  adminItems,
+  navLinks,
+  mobileLinks,
+} =
   useSiteNav();
 
 const isScrolled = ref(false);
