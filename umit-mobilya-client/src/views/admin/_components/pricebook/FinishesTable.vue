@@ -8,7 +8,7 @@
       </p>
     </header>
 
-    <DataTable :value="rows" data-key="id" size="small" class="text-sm">
+    <DataTable :value="rows" data-key="id" size="small" class="admin-table">
       <Column field="label" header="Etiket">
         <template #body="{ data }">
           <InputText v-model="data.label" class="w-44" />
@@ -44,3 +44,17 @@ import type { IFinish } from '@/views/configurator/_etc/pricing/priceBook';
 
 const rows = defineModel<IFinish[]>({ required: true });
 </script>
+
+<style scoped>
+.admin-table :deep(.p-datatable-thead > tr > th) {
+  @apply border-b border-f-rule bg-transparent text-[0.68rem] font-medium uppercase tracking-[0.14em] text-f-ink-muted;
+}
+
+.admin-table :deep(.p-datatable-tbody > tr > td) {
+  @apply border-b border-f-rule/60 py-2.5;
+}
+
+.admin-table :deep(.p-datatable-tbody > tr:last-child > td) {
+  @apply border-b-0;
+}
+</style>
