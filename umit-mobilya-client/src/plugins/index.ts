@@ -4,6 +4,7 @@ import primeVue from './primeVue/primeVue';
 import globalComponents from './globalComponents';
 import i18n from './i18n';
 import pinia from './pinia';
+import reveal from './reveal';
 import toast from './toast';
 
 import type { App } from 'vue';
@@ -15,6 +16,7 @@ export default {
     app.use(globalComponents);
     app.use(primeVue);
     app.use(toast);
+    app.use(reveal);
     app.use(vClickOutside as any);
   },
 };

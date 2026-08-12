@@ -1,19 +1,135 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Schibsted+Grotesk:wght@400..700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body {
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
+  html {
+    scroll-behavior: smooth;
   }
 
-  @font-face {
-    font-family: 'Poppins', sans-serif;
-    src: url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap')
-    format('woff2');
+  body {
+    @apply bg-f-bone text-f-ink;
+    font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'Fraunces', ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    @apply bg-f-primary text-f-paper;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-f-primary ring-offset-2 ring-offset-f-bone;
   }
 }
 
+@layer components {
+  /*
+   * Fraunces'in SOFT/WONK eksenleri yalnızca iri başlıklarda açılır — küçük
+   * puntoda okunurluğu düşürüyor, iri puntoda karakteri veren şey bu.
+   */
+  .display {
+    font-family: 'Fraunces', ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    font-variation-settings:
+      'SOFT' 28,
+      'WONK' 1;
+    font-weight: 350;
+    line-height: 1.04;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
 
+  /*
+   * Katalog künyesi: bölüm başlıkları ve proje numaraları. Grotesk, iri harf
+   * aralığı, küçük punto — basılı bir kataloğun sayfa kenarı gibi.
+   */
+  .eyebrow {
+    @apply text-f-ink-faint uppercase;
+    font-family: 'Schibsted Grotesk', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    line-height: 1;
+  }
+
+  .index-numeral {
+    font-family: 'Fraunces', ui-serif, Georgia, serif;
+    font-variation-settings: 'SOFT' 20;
+    font-variant-numeric: tabular-nums;
+    font-weight: 300;
+  }
+
+  .prose-lede {
+    @apply text-f-ink-muted;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+
+  /*
+   * Görsellerin üstüne çok ince bir tanecik. Yapay zekâ ile üretilmiş
+   * karelerin fazla pürüzsüz yüzeyini basılı bir baskıya yaklaştırıyor.
+   */
+  .grain::after {
+    content: '';
+    @apply pointer-events-none absolute inset-0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+    opacity: 0.16;
+  }
+
+  /*
+   * Açılışta gizli durum SADECE keyframe'in içinde tanımlı — `.reveal`in
+   * kendisi hiçbir şeyi gizlemiyor. Tarayıcı kaydırma zaman çizelgesini
+   * desteklemiyorsa ya da animasyon çalışmazsa öğe olduğu gibi görünür kalır.
+   * Bunun tersi, yani "gizle, sonra JS ile aç", içeriği kaybetme riski
+   * taşıyordu.
+   */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation: reveal-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0%
+          cover calc(18% + var(--reveal-step, 0) * 3.5%);
+      }
+    }
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-ken-burns {
+    animation: none;
+  }
+}

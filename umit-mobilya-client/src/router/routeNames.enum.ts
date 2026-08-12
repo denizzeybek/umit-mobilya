@@ -9,4 +9,6 @@ export enum ERouteNames {
   CategoriesList = 'Kategoriler',
   About = 'Hakkımızda',
   Contact = 'İletişim',
+  Configurator = 'Dolabını Tasarla',
+  NotFound = 'Sayfa Bulunamadı',
 }

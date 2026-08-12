@@ -10,7 +10,19 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
+    /*
+     * `dirs: []` bilincli: varsayilan olarak eklenti src/components/ altini
+     * tarayip her dosyayi CIPLAK adiyla kaydediyordu. Select.vue bu yuzden
+     * PrimeVue'nun <Select>'ini golgeliyor, sablonlarda kullanilan <Select>
+     * sessizce vee-validate sarmalayicisina cozumleniyordu — secili deger
+     * gorunmeden, hata da vermeden.
+     *
+     * O klasordeki bilesenler zaten plugins/globalComponents.ts tarafindan
+     * F onekiyle kayitli (<FSelect>). Ciplak ad kaydi gereksiz bir ikinci
+     * kayitti; kaldirildi.
+     */
     Components({
+      dirs: [],
       resolvers: [PrimeVueResolver()]
     })
   ],

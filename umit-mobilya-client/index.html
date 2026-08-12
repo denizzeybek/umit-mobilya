@@ -1,14 +1,24 @@
 <!doctype html>
-<html lang="en">
+<!--
+  lang="tr" kozmetik değil: CSS `text-transform: uppercase` büyük harf kuralını
+  belgenin diline göre uyguluyor. lang="en" iken "Teklif" → "TEKLIF" oluyordu,
+  doğrusu "TEKLİF". Arayüzdeki her versal başlık buna bağlı.
+-->
+<html lang="tr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preload" href="/banner-img.jpg" as="image">
-    <link rel="preload" href="/carousel/banyo.jpg" as="image">
-    <link rel="preload" href="/carousel/mutfak.jpg" as="image">
-    <link rel="preload" href="/carousel/tv.jpg" as="image">
-    <title>Umit Mobilya</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/img/hero-home.webp" as="image" type="image/webp" />
+
+    <title>Ümit Mobilya Dekorasyon — Kuşadası’nda ısmarlama mobilya</title>
+    <meta
+      name="description"
+      content="Kuşadası’nda mutfak, gardırop, TV ünitesi, banyo dolabı ve kitaplığı mekâna göre üreten ahşap atölyesi. Keşif ücretsiz, çizim üretimden önce."
+    />
   </head>
   <body>
     <div id="app"></div>
