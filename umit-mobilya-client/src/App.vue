@@ -2,10 +2,6 @@
   <router-view />
 </template>
 
-<script setup lang="ts">
-console.log('test fe 2');
-</script>
-
 <style>
 /* #region megamenu */
 .p-megamenu {
