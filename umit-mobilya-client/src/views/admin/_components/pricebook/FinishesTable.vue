@@ -6,7 +6,9 @@
         <p class="mt-1 text-sm text-f-ink-muted">
           Yüzey işlemi; ek ücret panel alanı üstünden işler. Buradaki renkler
           <strong>ürün kaplaması</strong>, arayüz teması değil — seçilen renk
-          hem paneldeki daireye hem 3B sahnedeki panele gidiyor.
+          hem paneldeki daireye hem 3B sahnedeki panele gidiyor. Desen
+          yüklenirse dolap o desenle çiziliyor; renk o zaman deseni tonlayan
+          bir çarpan oluyor.
         </p>
       </div>
 
@@ -60,6 +62,12 @@
           </div>
         </template>
       </Column>
+      <Column header="Desen">
+        <template #body="{ data }">
+          <FinishTextureCell :finish="data" @update="replaceRow" />
+        </template>
+      </Column>
+
       <Column field="surchargePerM2" header="₺ / m² fark">
         <template #body="{ data }">
           <InputNumber v-model="data.surchargePerM2" :min="0" class="w-32" />
@@ -84,6 +92,8 @@ import {
   toSwatch,
 } from '@/views/admin/_etc/colorValue';
 
+import FinishTextureCell from './FinishTextureCell.vue';
+
 import type { IFinish } from '@/views/configurator/_etc/pricing/priceBook';
 
 const rows = defineModel<IFinish[]>({ required: true });
@@ -103,6 +113,14 @@ const applyColor = (row: IFinish, value?: string): void => {
 
   row.color = color;
   row.swatch = toSwatch(color);
+};
+
+/**
+ * Desen hücresi satırı yerinde değiştirmiyor, yenisini veriyor; burada kimliğe
+ * göre takas ediliyor. Kimlik hiç değişmediği için eşleşme güvenli.
+ */
+const replaceRow = (finish: IFinish): void => {
+  rows.value = rows.value.map((row) => (row.id === finish.id ? finish : row));
 };
 
 /** Metin kutusundan gelen değer; `event.target` daraltılıyor, cast yok. */

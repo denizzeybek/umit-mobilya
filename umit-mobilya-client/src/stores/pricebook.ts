@@ -4,6 +4,7 @@ import { PricebookService } from '@/client';
 import { EStoreNames } from '@/stores/storeNames.enum';
 import { DEFAULT_PRICE_BOOK } from '@/views/configurator/_etc/pricing/defaults';
 
+import type { TextureUploadResponseDto } from '@/client';
 import type { IPriceBook } from '@/views/configurator/_etc/pricing/priceBook';
 
 interface State {
@@ -11,6 +12,7 @@ interface State {
   loaded: boolean;
   loading: boolean;
   saving: boolean;
+  uploading: boolean;
 }
 
 /**
@@ -28,6 +30,7 @@ export const usePricebookStore = defineStore(EStoreNames.PRICEBOOK, {
     loaded: false,
     loading: false,
     saving: false,
+    uploading: false,
   }),
   actions: {
     async fetch(): Promise<IPriceBook> {
@@ -43,6 +46,24 @@ export const usePricebookStore = defineStore(EStoreNames.PRICEBOOK, {
         return this.book;
       } finally {
         this.loading = false;
+      }
+    },
+
+    /**
+     * Kaplama desenini yükler ve kitaba yazılacak ANAHTARI döner.
+     *
+     * Yayınlamadan ayrı: görsel kovaya hemen gidiyor, kitaba girmesi adminin
+     * "Yeni sürüm yayınla" kararına kalıyor. Birleşik olsaydı tek bir desen
+     * denemesi bütün fiyat kitabını yeni bir sürüme iterdi.
+     */
+    async uploadTexture(image: Blob): Promise<TextureUploadResponseDto> {
+      this.uploading = true;
+      try {
+        return await PricebookService.priceBookControllerUploadTexture({
+          image,
+        });
+      } finally {
+        this.uploading = false;
       }
     },
 

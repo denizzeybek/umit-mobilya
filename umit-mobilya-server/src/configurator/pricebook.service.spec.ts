@@ -2,10 +2,13 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { connect, Model } from 'mongoose';
 
+import { ObjectStorageService } from '../storage/object-storage.service';
+
 import { DEFAULT_PRICE_BOOK } from './generated/pricing/defaults';
 import { PriceBookService } from './pricebook.service';
 import { PriceBook, PriceBookSchema } from './schemas/pricebook.schema';
 
+import type { IPriceBook } from './generated/pricing/priceBook';
 import type { Connection } from 'mongoose';
 
 /**
@@ -27,14 +30,35 @@ describe('PriceBookService', () => {
     await connection.close();
   });
 
+  /*
+   * R2 asla gerçek değil (Rule 09). Kova çağrısı kaydediliyor ki "hangi
+   * anahtarla yüklendi" iddia edilebilsin.
+   */
+  const storage = {
+    buildKey: jest.fn((name: string) => `${name}-key`),
+    uploadTexture: jest.fn(async () => undefined),
+    publicUrl: jest.fn((key: string | null | undefined) =>
+      key ? `https://img.test/${key}` : null,
+    ),
+  };
+
+  const withTexture = (book: IPriceBook): IPriceBook => ({
+    ...book,
+    finishes: book.finishes.map((finish, index) =>
+      index === 0 ? { ...finish, textureName: 'ceviz-damar-key' } : finish,
+    ),
+  });
+
   beforeEach(async () => {
     model = connection.model(PriceBook.name, PriceBookSchema);
     await model.deleteMany({});
+    jest.clearAllMocks();
 
     const moduleRef = await Test.createTestingModule({
       providers: [
         PriceBookService,
         { provide: getModelToken(PriceBook.name), useValue: model },
+        { provide: ObjectStorageService, useValue: storage },
       ],
     }).compile();
 
@@ -99,5 +123,73 @@ describe('PriceBookService', () => {
 
     expect(publicView).not.toHaveProperty('margin');
     expect(publicView.materials.length).toBeGreaterThan(0);
+  });
+
+  /*
+   * Doku görseli için kural ürün görselleriyle aynı (Rule 10): kitapta
+   * ANAHTAR durur, URL okuma anında kurulur.
+   */
+  it('public görünüm doku anahtarını URL e çevirir', async () => {
+    await service.publish(withTexture(DEFAULT_PRICE_BOOK));
+
+    const publicView = await service.activePublic();
+
+    expect(publicView.finishes[0]?.textureName).toBe('ceviz-damar-key');
+    expect(publicView.finishes[0]?.textureUrl).toBe(
+      'https://img.test/ceviz-damar-key',
+    );
+  });
+
+  it('dokusu olmayan kaplamanın URL i null olur', async () => {
+    await service.publish(DEFAULT_PRICE_BOOK);
+
+    const publicView = await service.activePublic();
+
+    expect(publicView.finishes[1]?.textureUrl).toBeNull();
+  });
+
+  /*
+   * Admin paneli okuduğu kitabı geri yayınlıyor. URL sökülmezse ilk
+   * kaydetmede kalıcı hâle gelir ve "DB'de URL tutulmaz" kuralı sessizce
+   * delinir — public alan adı değiştiği gün bütün dokular kırılırdı.
+   */
+  it('yayınlanan kitaba URL yazılmaz, yalnızca anahtar', async () => {
+    const book = withTexture(DEFAULT_PRICE_BOOK);
+    book.finishes[0] = {
+      ...book.finishes[0]!,
+      textureUrl: 'https://img.test/ceviz-damar-key',
+    };
+
+    await service.publish(book);
+
+    const stored = await model.findOne({ active: true }).lean().exec();
+    const finishes = (stored?.data as unknown as IPriceBook).finishes;
+
+    expect(finishes[0]?.textureName).toBe('ceviz-damar-key');
+    expect(finishes[0]).not.toHaveProperty('textureUrl');
+  });
+
+  /*
+   * Anahtar VE URL birlikte dönüyor: admin yüklediği deseni yayınlamadan
+   * önce görebilmeli, yoksa "yükledim ama göremiyorum" durumu kalıyor.
+   */
+  it('doku yükler, anahtarı ve önizleme URL ini döner', async () => {
+    const file = {
+      buffer: Buffer.from('doku'),
+      originalname: 'ceviz damar.jpg',
+      mimetype: 'image/jpeg',
+    } as Express.Multer.File;
+
+    const saved = await service.saveTexture(file);
+
+    expect(saved).toEqual({
+      textureName: 'ceviz damar.jpg-key',
+      textureUrl: 'https://img.test/ceviz damar.jpg-key',
+    });
+    expect(storage.uploadTexture).toHaveBeenCalledWith(
+      file.buffer,
+      saved.textureName,
+      'image/jpeg',
+    );
   });
 });

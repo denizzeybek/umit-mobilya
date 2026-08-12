@@ -58,6 +58,7 @@ describe('Service bootstrap', () => {
       '/api/categories/filter',
       '/api/categories/{id}',
       '/api/pricebook',
+      '/api/pricebook/texture',
       '/api/pricebook/versions',
       '/api/pricebook/versions/{version}',
       '/api/products',

@@ -41,6 +41,13 @@ export interface IProductBuildInput {
   config: IBaseConfig;
   parts: IPart[];
   book: IPriceBook;
+  /**
+   * Kaplama deseni ağdan geldiğinde çağrılır. Sahne kurulumu senkron; desen
+   * ilk kez yüklenirken panel düz renk çiziliyor ve görsel geldiğinde bir kare
+   * daha isteniyor. Bu olmadan desen ancak kullanıcı başka bir şeye
+   * dokunduğunda beliriyordu.
+   */
+  onTextureLoad?: () => void;
 }
 
 const meshFor = (
@@ -186,6 +193,7 @@ export const buildFromParts = (input: IProductBuildInput): IProductBuild => {
     config.material,
     book,
     config.doorType,
+    input.onTextureLoad,
   );
 
   const doors = parts.filter((part) => part.kind === 'kapak');

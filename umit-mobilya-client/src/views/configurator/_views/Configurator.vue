@@ -117,6 +117,14 @@ const rebuild = () => {
     config: config.value,
     parts: parts.value,
     book: book.value,
+    /*
+     * Desen ağdan geliyor; geldiğinde sahne yeniden kurulmuyor, yalnızca bir
+     * kare daha isteniyor. Sayacı artırmak görüntüleyiciden yeniden çizim
+     * istemenin tek yolu.
+     */
+    onTextureLoad: () => {
+      version.value += 1;
+    },
   });
 
   build = next;

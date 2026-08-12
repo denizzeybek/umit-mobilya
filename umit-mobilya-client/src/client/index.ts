@@ -32,6 +32,8 @@ export type { QuotePriceDto } from './models/QuotePriceDto';
 export type { QuotePriceLineDto } from './models/QuotePriceLineDto';
 export type { QuoteResponseDto } from './models/QuoteResponseDto';
 export type { SignupDto } from './models/SignupDto';
+export type { TextureUploadBodyDto } from './models/TextureUploadBodyDto';
+export type { TextureUploadResponseDto } from './models/TextureUploadResponseDto';
 export type { UpdateCategoryDto } from './models/UpdateCategoryDto';
 export type { UpdatePriceBookDto } from './models/UpdatePriceBookDto';
 export type { UpdateProductDto } from './models/UpdateProductDto';

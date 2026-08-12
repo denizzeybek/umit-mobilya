@@ -689,6 +689,43 @@
         ]
       }
     },
+    "/api/pricebook/texture": {
+      "post": {
+        "operationId": "PriceBookController_uploadTexture",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/TextureUploadBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextureUploadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kaplama deseni yükler.\n\nYükleme yayınlamadan AYRI: görsel kovaya hemen gidiyor, anahtarı kitaba\nyazmak adminin \"Yeni sürüm yayınla\" kararına kalıyor. Birleştirilseydi tek\nbir desen denemesi bütün fiyat kitabını yeni bir sürüme itecekti.",
+        "tags": [
+          "pricebook"
+        ]
+      }
+    },
     "/api/quotes": {
       "post": {
         "operationId": "QuoteController_create",
@@ -1252,6 +1289,36 @@
         "required": [
           "version",
           "createdAt"
+        ]
+      },
+      "TextureUploadBodyDto": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "image"
+        ]
+      },
+      "TextureUploadResponseDto": {
+        "type": "object",
+        "properties": {
+          "textureUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Yüklenen desenin public adresi. Yalnızca adminin yüklediğini hemen\ngörebilmesi için; kitaba YAZILMAZ, okuma anında yeniden kurulur."
+          },
+          "textureName": {
+            "type": "string",
+            "description": "Kitaba yazılacak olan R2 nesne anahtarı."
+          }
+        },
+        "required": [
+          "textureUrl",
+          "textureName"
         ]
       },
       "UpdatePriceBookDto": {

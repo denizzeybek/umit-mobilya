@@ -70,7 +70,14 @@ async function main(): Promise<void> {
   process.env['JWT_SECRET'] = 'e2e-secret';
   process.env['BUCKET_NAME'] = 'e2e-bucket';
   process.env['S3_ENDPOINT'] = 'https://account.r2.cloudflarestorage.com';
-  process.env['PUBLIC_BUCKET_URL'] = 'https://img.e2e';
+  /*
+   * Kova adresi dışarıdan verilebiliyor: kaplama deseninin gerçekten çizildiğini
+   * görmek için tek yol, adresi görsel SERVİS EDEN bir yere (dev sunucusunun
+   * `public/` klasörü) yöneltmek. Varsayılan erişilemez bir alan adı, çünkü
+   * hermetik koşumda hiçbir istek dışarı çıkmamalı.
+   */
+  process.env['PUBLIC_BUCKET_URL'] =
+    process.env['E2E_PUBLIC_BUCKET_URL'] ?? 'https://img.e2e';
   process.env['ACCESS_KEY'] = 'e2e-access-key';
   process.env['SECRET_ACCESS_KEY'] = 'e2e-secret-key';
   process.env['ALLOWED_ORIGINS'] = WEB_ORIGIN;

@@ -104,6 +104,31 @@ describe('quote + pricebook HTTP sözleşmesi', () => {
     });
   });
 
+  /*
+   * Desen yükleme ucu. Başarılı yükleme birim spec'lerinde (R2 orada
+   * taklit ediliyor, Rule 09); ağda çivilenen iki şey var ve ikisi de
+   * yalnızca burada görülüyor: kimin girebildiği, ve dosyasız isteğin 500
+   * değil 400 aldığı.
+   */
+  describe('POST /api/pricebook/texture', () => {
+    it('auth olmadan 401 verir', async () => {
+      const response = await request(app.getHttpServer()).post(
+        '/api/pricebook/texture',
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    it('dosyasız istek 400 verir', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/pricebook/texture')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain('Desen görseli');
+    });
+  });
+
   describe('POST /api/quotes', () => {
     it('auth istemez ve 201 ile kod döner', async () => {
       const response = await createQuote();

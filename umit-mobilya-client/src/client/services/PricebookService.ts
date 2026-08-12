@@ -4,6 +4,8 @@
 /* eslint-disable */
 import type { PriceBookResponseDto } from '../models/PriceBookResponseDto';
 import type { PriceBookVersionDto } from '../models/PriceBookVersionDto';
+import type { TextureUploadBodyDto } from '../models/TextureUploadBodyDto';
+import type { TextureUploadResponseDto } from '../models/TextureUploadResponseDto';
 import type { UpdatePriceBookDto } from '../models/UpdatePriceBookDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -58,6 +60,26 @@ export class PricebookService {
             path: {
                 'version': version,
             },
+        });
+    }
+    /**
+     * Kaplama deseni yükler.
+     *
+     * Yükleme yayınlamadan AYRI: görsel kovaya hemen gidiyor, anahtarı kitaba
+     * yazmak adminin "Yeni sürüm yayınla" kararına kalıyor. Birleştirilseydi tek
+     * bir desen denemesi bütün fiyat kitabını yeni bir sürüme itecekti.
+     * @param formData
+     * @returns TextureUploadResponseDto
+     * @throws ApiError
+     */
+    public static priceBookControllerUploadTexture(
+        formData: TextureUploadBodyDto,
+    ): CancelablePromise<TextureUploadResponseDto> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/pricebook/texture',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
 }

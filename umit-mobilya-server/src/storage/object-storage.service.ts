@@ -12,6 +12,9 @@ const RANDOM_SUFFIX_BYTES = 32;
 const MAX_WIDTH = 900;
 const MAX_HEIGHT = 600;
 
+/** Tiled textures must be power-of-two; see `uploadTexture`. */
+const TEXTURE_SIZE = 1024;
+
 /**
  * Cloudflare R2, reached through the S3-compatible SDK.
  *
@@ -73,6 +76,36 @@ export class ObjectStorageService {
   ): Promise<void> {
     const resized = await sharp(buffer)
       .resize({ width: MAX_WIDTH, height: MAX_HEIGHT, fit: 'inside' })
+      .toBuffer();
+
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: resized,
+        ContentType: contentType,
+      }),
+    );
+  }
+
+  /**
+   * A finish texture, which is a different job from a product photo.
+   *
+   * Square and power-of-two on purpose: the texture is **tiled** across a
+   * panel, and a non-power-of-two image with `RepeatWrapping` renders black
+   * under WebGL 1 — which is exactly the fallback path old machines take. It
+   * would look right on the developer's machine and be broken on a customer's.
+   *
+   * `cover` rather than `inside`: letterboxing a texture puts the background
+   * colour into the tile and produces a visible grid on the panel.
+   */
+  async uploadTexture(
+    buffer: Buffer,
+    key: string,
+    contentType: string,
+  ): Promise<void> {
+    const resized = await sharp(buffer)
+      .resize({ width: TEXTURE_SIZE, height: TEXTURE_SIZE, fit: 'cover' })
       .toBuffer();
 
     await this.client.send(

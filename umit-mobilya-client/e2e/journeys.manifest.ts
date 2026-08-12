@@ -20,6 +20,9 @@ export const APPROVED_JOURNEYS = [
 
   /* Dolabı 3B görebilmeli; göremiyorsa bunu söyleyen bir ekran görmeli. */
   'viewer-3d',
+
+  /* Yüklenen kaplama deseni dolabın üstünde görünmeli. */
+  'finish-texture',
 ] as const;
 
 export type TApprovedJourney = (typeof APPROVED_JOURNEYS)[number];

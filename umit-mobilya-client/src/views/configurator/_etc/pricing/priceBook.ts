@@ -36,6 +36,24 @@ export interface IFinish {
   /** Panel alanı üstünden ek ücret. Tohumda 0. */
   surchargePerM2: number;
   hidden?: boolean;
+  /**
+   * Desen görselinin R2 nesne ANAHTARI — URL değil. Kitapta saklanan budur;
+   * ürün görselleriyle aynı kural, aynı sebeple: public alan adı ya da kova
+   * değişirse kayıtlar taşınabilir kalsın.
+   */
+  textureName?: string;
+  /**
+   * Anahtardan okuma anında kurulan public URL. **Kitaba yazılmaz** —
+   * `publish` bu alanı söküyor, yoksa ilk kaydetmede URL kalıcı hâle gelir ve
+   * yukarıdaki kural sessizce delinir.
+   */
+  textureUrl?: string | null;
+  /**
+   * Desenin kaç santimetrede bir tekrarladığı. Ölçek olmadan aynı görsel
+   * kapakta dev bir leke, yan panelde toz gibi çıkıyor — ceviz damarı ile
+   * mermer aynı sayıyı istemiyor.
+   */
+  textureScaleCm?: number;
 }
 
 export interface IDoorTypeRender {

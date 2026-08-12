@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -6,16 +7,29 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 import {
   PriceBookResponseDto,
   PriceBookVersionDto,
+  TextureUploadBodyDto,
+  TextureUploadResponseDto,
   UpdatePriceBookDto,
 } from './dto/pricebook.dto';
 import { PriceBookService } from './pricebook.service';
@@ -58,6 +72,33 @@ export class PriceBookController {
       version: book?.version ?? version,
       data: (book ?? {}) as unknown as Record<string, unknown>,
     };
+  }
+
+  /**
+   * Kaplama deseni yükler.
+   *
+   * Yükleme yayınlamadan AYRI: görsel kovaya hemen gidiyor, anahtarı kitaba
+   * yazmak adminin "Yeni sürüm yayınla" kararına kalıyor. Birleştirilseydi tek
+   * bir desen denemesi bütün fiyat kitabını yeni bir sürüme itecekti.
+   */
+  @Post('texture')
+  @ApiCreatedResponse({ type: TextureUploadResponseDto })
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: TextureUploadBodyDto })
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadTexture(
+    @UploadedFile() file: Express.Multer.File | undefined,
+  ): Promise<TextureUploadResponseDto> {
+    /*
+     * FileInterceptor dosya gelmediğinde hata vermiyor, `undefined` bırakıyor.
+     * Kontrol edilmezse `file.buffer` okunurken 500 patlıyor — "dosya seçmeyi
+     * unuttum" bir sunucu hatasına dönüşürdü.
+     */
+    if (!file) throw new BadRequestException('Desen görseli gerekli');
+
+    return this.service.saveTexture(file);
   }
 
   @Put()

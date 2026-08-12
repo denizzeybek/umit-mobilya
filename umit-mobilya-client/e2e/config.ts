@@ -53,7 +53,17 @@ export const webServers: PlaywrightTestConfig['webServer'] = [
     timeout: 180_000,
     stdout: 'pipe',
     stderr: 'pipe',
-    env: { E2E_API_PORT: API_PORT, E2E_BASE_URL: BASE_URL },
+    env: {
+      E2E_API_PORT: API_PORT,
+      E2E_BASE_URL: BASE_URL,
+      /*
+       * Kova adresi web sunucusunun `public/img/doku` klasörüne bakıyor: R2
+       * hermetik koşumda yok, ama kaplama deseninin GERÇEKTEN indirilip
+       * çizildiğini görmenin tek yolu servis edilen bir görsel. Desen dosyası
+       * repoda duruyor, yani koşum yine dışarı çıkmıyor.
+       */
+      E2E_PUBLIC_BUCKET_URL: `${BASE_URL}/img/doku`,
+    },
   },
   {
     command: `vite --port ${WEB_PORT} --strictPort`,

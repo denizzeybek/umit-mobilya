@@ -15,13 +15,13 @@
         v-for="item in finishes"
         :key="item.id"
         type="button"
-        class="h-11 w-11 rounded-full border-2 transition-transform duration-200 hover:scale-105"
+        class="h-11 w-11 rounded-full border-2 bg-cover bg-center transition-transform duration-200 hover:scale-105"
         :class="
           config.finish === item.id
             ? 'border-f-ink ring-2 ring-f-brass ring-offset-2 ring-offset-f-paper'
             : 'border-f-rule-strong'
         "
-        :style="{ backgroundColor: item.swatch }"
+        :style="swatchStyle(item)"
         :aria-label="item.label"
         :aria-pressed="config.finish === item.id"
         @click="config.finish = item.id"
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { IPriceBook } from '../../_etc/pricing/priceBook';
+import type { IFinish, IPriceBook } from '../../_etc/pricing/priceBook';
 import type { IBaseConfig } from '../../_etc/types';
 
 const props = defineProps<IProps>();
@@ -54,4 +54,14 @@ const book = computed(() => props.book);
 const materials = computed(() => book.value.materials.filter((item) => !item.hidden));
 
 const finishes = computed(() => book.value.finishes.filter((item) => !item.hidden));
+
+/**
+ * Deseni olan kaplama daireyi de desenle gösteriyor: kullanıcı 3B'de göreceği
+ * şeyi seçim anında görmeli. Düz renk dairenin altında bir ahşap deseni
+ * çıkması, seçimin ne olduğunu ancak tıkladıktan sonra öğrenmek demekti.
+ */
+const swatchStyle = (item: IFinish): Record<string, string> =>
+  item.textureUrl
+    ? { backgroundImage: `url(${item.textureUrl})` }
+    : { backgroundColor: item.swatch };
 </script>

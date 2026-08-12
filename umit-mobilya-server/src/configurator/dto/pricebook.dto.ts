@@ -33,3 +33,25 @@ export class PriceBookResponseDto {
   @ApiProperty({ type: Object })
   readonly data!: Record<string, unknown>;
 }
+
+/**
+ * Yalnızca Swagger'ın multipart gövdesini tarif etmesi için. Alan adı
+ * `image` — ürün yüklemeleriyle aynı, ki istemci tarafında iki ayrı isim
+ * hatırlanmasın.
+ */
+export class TextureUploadBodyDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  readonly image!: unknown;
+}
+
+export class TextureUploadResponseDto {
+  /** Kitaba yazılacak olan R2 nesne anahtarı. */
+  readonly textureName!: string;
+
+  /**
+   * Yüklenen desenin public adresi. Yalnızca adminin yüklediğini hemen
+   * görebilmesi için; kitaba YAZILMAZ, okuma anında yeniden kurulur.
+   */
+  @ApiProperty({ type: String, nullable: true })
+  readonly textureUrl!: string | null;
+}
