@@ -26,12 +26,13 @@
       </div>
     </dl>
 
-    <RouterLink
-      :to="{ name: ERouteNames.Contact, query: { [CONFIG_QUERY_KEY]: configCode } }"
-      class="mt-7 block bg-f-bone py-4 text-center text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-primary transition-colors duration-300 hover:bg-f-brass-light"
+    <button
+      type="button"
+      class="mt-7 block w-full bg-f-bone py-4 text-center text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-primary transition-colors duration-300 hover:bg-f-brass-light"
+      @click="emit('requestQuote')"
     >
       Bu Tasarım İçin Teklif Al
-    </RouterLink>
+    </button>
 
     <p class="mt-4 text-sm text-f-bone/60">
       Bu bir ön tahmindir, bağlayıcı teklif değildir. Kesin fiyat ücretsiz
@@ -43,19 +44,19 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { ERouteNames } from '@/router/routeNames.enum';
-
-import { CONFIG_QUERY_KEY } from '../../_etc/configUrl';
-
 import type { IPriceBreakdown } from '../../_etc/pricing/priceBook';
 
 interface IProps {
   price: IPriceBreakdown;
-  /** Tasarımı taşıyan kod; teklif bağlantısına iliştirilir. */
-  configCode: string;
 }
 
 const props = defineProps<IProps>();
+
+const emit = defineEmits<IEmits>();
+
+interface IEmits {
+  (event: 'requestQuote'): void;
+}
 
 /*
  * Yuvarlama SUNUMDA yapılıyor, motorda değil: `priceOf` tam sayıyı veriyor,

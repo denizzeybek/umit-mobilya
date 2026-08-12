@@ -39,20 +39,25 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { DEFAULT_PRICE_BOOK } from '../../_etc/pricing/defaults';
-
+import type { IPriceBook } from '../../_etc/pricing/priceBook';
 import type { IBaseConfig } from '../../_etc/types';
 
+const props = defineProps<IProps>();
+
 const config = defineModel<IBaseConfig>({ required: true });
+
+interface IProps {
+  book: IPriceBook;
+}
 
 /*
  * Katalog artık fiyat kitabından geliyor; admin paneli gelince aynı yapı
  * API'den beslenecek. `hidden` olanlar listede çıkmaz ama kataloğda durur —
  * eski bir config o kimliği taşıyorsa hâlâ çözümlenebilsin diye.
  */
-const book = DEFAULT_PRICE_BOOK;
+const book = computed(() => props.book);
 
 const doorTypes = computed(() =>
-  book.doorTypes.filter((item) => !item.hidden),
+  book.value.doorTypes.filter((item) => !item.hidden),
 );
 </script>

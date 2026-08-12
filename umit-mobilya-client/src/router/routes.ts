@@ -98,6 +98,39 @@ const routes: RouteRecordRaw[] = [
           name: ERouteNames.Configurator,
         },
       },
+      /*
+       * Yönetim alanı kendi layout'unda. Mevcut /categories ve /products
+       * yönetimi buraya TAŞINMADI: `ERouteNames` değeri route kimliği ve
+       * değiştirmek her `router.push`u kırardı. İkisi yan yana yaşıyor.
+       */
+      {
+        path: '/admin',
+        component: () => import('@/layouts/admin/AdminLayout.vue'),
+        meta: { requiresAuth: true },
+        children: [
+          { path: '', redirect: { name: ERouteNames.AdminQuotes } },
+          {
+            path: 'teklifler',
+            name: ERouteNames.AdminQuotes,
+            component: () => import('@/views/admin/_views/AdminQuotes.vue'),
+            meta: {
+              requiresAuth: true,
+              title: ERouteNames.AdminQuotes,
+              name: ERouteNames.AdminQuotes,
+            },
+          },
+          {
+            path: 'fiyat-kitabi',
+            name: ERouteNames.AdminPricebook,
+            component: () => import('@/views/admin/_views/AdminPricebook.vue'),
+            meta: {
+              requiresAuth: true,
+              title: ERouteNames.AdminPricebook,
+              name: ERouteNames.AdminPricebook,
+            },
+          },
+        ],
+      },
       {
         path: '/categories',
         name: ERouteNames.CategoriesList,

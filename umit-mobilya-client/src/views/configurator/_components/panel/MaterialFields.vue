@@ -33,20 +33,25 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { DEFAULT_PRICE_BOOK } from '../../_etc/pricing/defaults';
-
+import type { IPriceBook } from '../../_etc/pricing/priceBook';
 import type { IBaseConfig } from '../../_etc/types';
 
+const props = defineProps<IProps>();
+
 const config = defineModel<IBaseConfig>({ required: true });
+
+interface IProps {
+  book: IPriceBook;
+}
 
 /*
  * Malzeme TEK seçim ve gövdeyle kapağı birlikte fiyatlar. Kapak tipi ayrı bir
  * eksen ve `CarcassFields`'te; ikisi bilerek ayrı, çünkü aynı MDF High Gloss
  * panel aynalı kapak olarak farklı fiyatlanıyor.
  */
-const book = DEFAULT_PRICE_BOOK;
+const book = computed(() => props.book);
 
-const materials = computed(() => book.materials.filter((item) => !item.hidden));
+const materials = computed(() => book.value.materials.filter((item) => !item.hidden));
 
-const finishes = computed(() => book.finishes.filter((item) => !item.hidden));
+const finishes = computed(() => book.value.finishes.filter((item) => !item.hidden));
 </script>

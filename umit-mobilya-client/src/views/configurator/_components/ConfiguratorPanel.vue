@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col divide-y divide-f-rule border border-f-rule bg-f-paper">
-    <MaterialFields v-model="config" />
+    <MaterialFields v-model="config" :book="book" />
     <DimensionFields v-model="config" :limits="definition.limits" />
-    <CarcassFields v-model="config" />
+    <CarcassFields v-model="config" :book="book" />
     <SectionCountFields
       v-model="config"
       v-model:active="active"
@@ -16,7 +16,14 @@
     -->
     <component :is="definition.fields" v-model="config" :active="active" />
 
-    <PriceSummary :price="price" :config-code="configCode" />
+    <PriceSummary :price="price" @request-quote="showQuote = true" />
+
+    <QuoteDialog
+      v-if="showQuote"
+      v-model:open="showQuote"
+      :config="config"
+      :product-type="definition.id"
+    />
 
     <ShareLink :config="config" :definition="definition" />
   </div>
@@ -25,8 +32,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 
-import { encodeConfig } from '../_etc/configUrl';
-import { DEFAULT_PRICE_BOOK } from '../_etc/pricing/defaults';
 import { priceOf } from '../_etc/pricing/priceOf';
 
 import CarcassFields from './panel/CarcassFields.vue';
@@ -35,7 +40,9 @@ import MaterialFields from './panel/MaterialFields.vue';
 import PriceSummary from './panel/PriceSummary.vue';
 import SectionCountFields from './panel/SectionCountFields.vue';
 import ShareLink from './panel/ShareLink.vue';
+import QuoteDialog from './QuoteDialog.vue';
 
+import type { IPriceBook } from '../_etc/pricing/priceBook';
 import type { IPart } from '../_etc/pricing/types';
 import type { IBaseConfig, IProductDefinition } from '../_etc/types';
 
@@ -43,6 +50,8 @@ interface IProps {
   definition: IProductDefinition;
   /** Sahneyi çizen listenin AYNISI — fiyat da ondan çıkıyor. */
   parts: IPart[];
+  /** Aktif fiyat kitabı; katalog ve fiyatlar buradan. */
+  book: IPriceBook;
 }
 
 const props = defineProps<IProps>();
@@ -56,7 +65,7 @@ const config = defineModel<IBaseConfig>({ required: true });
 const active = ref(0);
 
 const price = computed(() =>
-  priceOf(props.parts, DEFAULT_PRICE_BOOK, {
+  priceOf(props.parts, props.book, {
     material: config.value.material,
     finish: config.value.finish,
     doorType: config.value.doorType,
@@ -64,14 +73,7 @@ const price = computed(() =>
   }),
 );
 
-/**
- * Teklif bağlantısına iliştirilen tasarım kodu. Bugün İletişim sayfası bunu
- * okumuyor — teklif formu Faz 3'te geliyor. Şimdiden taşınmasının sebebi,
- * o forma kadar tasarımın en azından adres çubuğunda kalması.
- */
-const configCode = computed(() =>
-  encodeConfig(props.definition.id, config.value),
-);
+const showQuote = ref(false);
 
 watch(
   () => config.value.sectionCount,

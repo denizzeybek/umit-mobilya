@@ -21,6 +21,7 @@
       <ConfiguratorPanel
         v-model="config"
         :definition="definition"
+        :book="book"
         :parts="parts"
       />
     </div>
@@ -28,8 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
+import { usePricebookStore } from '@/stores/pricebook';
 
 import ConfiguratorPanel from '../_components/ConfiguratorPanel.vue';
 import ProductViewer from '../_components/ProductViewer.vue';
@@ -39,7 +42,6 @@ import {
   encodeConfig,
 } from '../_etc/configUrl';
 import { applyDoorOpen, buildFromParts } from '../_etc/geometry/buildFromParts';
-import { DEFAULT_PRICE_BOOK } from '../_etc/pricing/defaults';
 import { sanitizeConfig } from '../_etc/sanitizeConfig';
 
 import type {
@@ -62,6 +64,14 @@ const props = defineProps<IProps>();
 
 const route = useRoute();
 const router = useRouter();
+
+/*
+ * Katalog API'den geliyor; istek düşerse store tohum kitapta kalıyor. Boş bir
+ * katalogla açılmak konfigüratörü kullanılamaz yapardı, o yüzden hata
+ * yutuluyor ve site ayakta kalıyor.
+ */
+const pricebookStore = usePricebookStore();
+const book = computed(() => pricebookStore.book);
 
 /**
  * Adresteki tasarım, varsayılandan önce gelir. Başka bir ürüne ait ya da
@@ -97,7 +107,7 @@ let build: IProductBuild | null = null;
  * besliyor, o yüzden burada bir kez üretilip ikisine de veriliyor.
  */
 const parts = computed(() =>
-  props.definition.parts(config.value, DEFAULT_PRICE_BOOK),
+  props.definition.parts(config.value, book.value),
 );
 
 const rebuild = () => {
@@ -105,7 +115,7 @@ const rebuild = () => {
   const next = buildFromParts({
     config: config.value,
     parts: parts.value,
-    book: DEFAULT_PRICE_BOOK,
+    book: book.value,
   });
 
   build = next;
@@ -167,6 +177,10 @@ const writeConfigToUrl = () => {
 };
 
 watch(config, writeConfigToUrl, { deep: true });
+
+onMounted(() => {
+  void pricebookStore.fetch().catch(() => undefined);
+});
 
 onBeforeUnmount(() => {
   clearTimeout(urlTimer);

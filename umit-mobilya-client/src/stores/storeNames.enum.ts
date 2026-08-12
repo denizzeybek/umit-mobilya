@@ -4,4 +4,6 @@ export enum EStoreNames {
   CATEGORIES= 'categories',
   PROFILE = 'profile',
   COMMON_USERS = 'users',
+  QUOTES = 'quotes',
+  PRICEBOOK = 'pricebook',
 }

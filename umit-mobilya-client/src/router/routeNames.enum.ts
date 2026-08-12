@@ -10,5 +10,7 @@ export enum ERouteNames {
   About = 'Hakkımızda',
   Contact = 'İletişim',
   Configurator = 'Dolabını Tasarla',
+  AdminPricebook = 'Fiyat Kitabı',
+  AdminQuotes = 'Teklifler',
   NotFound = 'Sayfa Bulunamadı',
 }
