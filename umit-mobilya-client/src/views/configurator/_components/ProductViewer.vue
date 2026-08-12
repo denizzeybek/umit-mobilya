@@ -1,0 +1,88 @@
+<template>
+  <div
+    ref="container"
+    class="relative touch-none overflow-hidden bg-f-linen"
+    :class="$attrs.class"
+  >
+    <canvas
+      ref="canvas"
+      class="block h-full w-full cursor-grab active:cursor-grabbing"
+    />
+
+    <ProductViewerControls
+      :label="`${size.width} × ${size.height} × ${size.depth} cm`"
+      :zoom="orbit.zoom.value"
+      :min-zoom="orbit.minZoom"
+      :max-zoom="orbit.maxZoom"
+      @step="orbit.stepZoom"
+      @reset="orbit.resetView"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref, watch } from 'vue';
+
+import { Vector3 } from 'three';
+
+import { useOrbitZoom } from '@/composables/useOrbitZoom';
+import { useThreeScene } from '@/composables/useThreeScene';
+
+import ProductViewerControls from './ProductViewerControls.vue';
+
+import type { Object3D } from 'three';
+
+/**
+ * Ürün bilmeyen görüntüleyici: verilen `Object3D`'yi çizer, ölçüsüne göre
+ * kamerayı çerçeveler. Neyin çizildiğini bilmediği için gardırop, vestiyer ve
+ * mutfak aynı bileşeni paylaşır.
+ */
+interface IProps {
+  content: Object3D | null;
+  size: { width: number; height: number; depth: number };
+  /**
+   * İçerik yerinde değiştirildiğinde (kapak açısı gibi) referans aynı kaldığı
+   * için `content` izleyicisi tetiklenmez. Bu sayacı artırmak yeniden çizim
+   * istemenin tek yolu.
+   */
+  version: number;
+}
+
+const props = defineProps<IProps>();
+
+defineOptions({ inheritAttrs: false });
+
+const CM = 0.01;
+
+const container = ref<HTMLDivElement | null>(null);
+const canvas = ref<HTMLCanvasElement | null>(null);
+
+const frame = () => {
+  const size = new Vector3(
+    props.size.width * CM,
+    props.size.height * CM,
+    props.size.depth * CM,
+  );
+  orbit.frameBounds(size, size.y / 2);
+};
+
+const scene = useThreeScene(container, canvas, () => frame());
+const orbit = useOrbitZoom(scene.camera, scene.requestRender);
+
+watch(() => props.content, scene.setContent);
+
+watch(() => props.version, scene.requestRender);
+
+watch(
+  () => [props.size.width, props.size.height, props.size.depth],
+  frame,
+);
+
+onMounted(() => {
+  scene.mount();
+  if (canvas.value) orbit.attach(canvas.value);
+  scene.setContent(props.content);
+  scene.resize();
+  frame();
+});
+</script>
