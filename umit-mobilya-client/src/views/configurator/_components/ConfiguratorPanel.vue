@@ -10,6 +10,12 @@
       :create-section="definition.createSection"
     />
 
+    <DoorLeafFields
+      v-model="config"
+      :active="active"
+      :limits="definition.limits"
+    />
+
     <!--
       Ürüne özel bölümler. Panel kabuğu hangi ürünü gösterdiğini bilmiyor;
       tanım hangi bileşeni çizeceğini kendisi söylüyor.
@@ -36,6 +42,7 @@ import { priceOf } from '../_etc/pricing/priceOf';
 
 import CarcassFields from './panel/CarcassFields.vue';
 import DimensionFields from './panel/DimensionFields.vue';
+import DoorLeafFields from './panel/DoorLeafFields.vue';
 import MaterialFields from './panel/MaterialFields.vue';
 import PriceSummary from './panel/PriceSummary.vue';
 import SectionCountFields from './panel/SectionCountFields.vue';
