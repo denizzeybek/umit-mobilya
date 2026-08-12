@@ -1,7 +1,7 @@
 <template>
   <div class="relative flex min-h-screen h-screen">
     <AuthAside :ad="ads[adName]" />
-    <main class="flex w-full overflow-auto flex-col items-center min-h-screen bg-f-tertiary-purple">
+    <main class="flex w-full overflow-auto flex-col items-center min-h-screen bg-f-bone">
       <div class="px-4 flex justify-between items-center w-full lg:pt-3 mb-10">
         <FSelect
           name="language"

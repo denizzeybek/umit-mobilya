@@ -3,7 +3,7 @@
     v-model:visible="open"
     modal
     header="Resim Galerisi"
-    class="!bg-f-secondary-purple"
+    class="!bg-f-paper"
     :style="{ width: '50rem' }"
   >
     <div

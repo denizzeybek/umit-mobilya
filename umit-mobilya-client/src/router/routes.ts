@@ -5,6 +5,7 @@ import Login from '@/views/auth/Login.vue';
 import CategoriesList from '@/views/categories/_views/CategoriesList.vue';
 import Contact from '@/views/contact/_views/Contact.vue';
 import Dashboard from '@/views/dashboard/_views/Dashboard.vue';
+import NotFound from '@/views/errors/_views/NotFound.vue';
 import ProductDetails from '@/views/products/_views/ProductDetails.vue';
 import ProductsList from '@/views/products/_views/ProductsList.vue';
 
@@ -25,6 +26,7 @@ const routes: RouteRecordRaw[] = [
           requiresUnAuth: true,
           title: ERouteNames.Dashboard,
           name: ERouteNames.Dashboard,
+          hasHero: true,
         },
       },
       {
@@ -45,6 +47,7 @@ const routes: RouteRecordRaw[] = [
           requiresUnAuth: true,
           title: ERouteNames.About,
           name: ERouteNames.About,
+          hasHero: true,
         },
       },
       {
@@ -55,6 +58,7 @@ const routes: RouteRecordRaw[] = [
           requiresUnAuth: true,
           title: ERouteNames.Contact,
           name: ERouteNames.Contact,
+          hasHero: true,
         },
       },
       // required AUTH
@@ -78,6 +82,22 @@ const routes: RouteRecordRaw[] = [
           name: ERouteNames.ProductDetails,
         },
       },
+      /*
+       * Tek tembel yüklenen route. Three.js ana pakete girdiğinde her sayfa
+       * ~480 kB fazladan indiriyordu; konfigüratör kendi parçasına ayrılınca
+       * bu yük yalnızca bu sayfayı açanlara biniyor.
+       */
+      {
+        path: '/tasarla/:product',
+        name: ERouteNames.Configurator,
+        component: () =>
+          import('@/views/configurator/_views/ConfiguratorRoute.vue'),
+        meta: {
+          requiresUnAuth: true,
+          title: ERouteNames.Configurator,
+          name: ERouteNames.Configurator,
+        },
+      },
       {
         path: '/categories',
         name: ERouteNames.CategoriesList,
@@ -88,11 +108,24 @@ const routes: RouteRecordRaw[] = [
           name: ERouteNames.CategoriesList,
         },
       },
+      /*
+       * Yakalayıcı, DefaultLayout'un çocuğu olmak zorunda: dışarıda tanımlanırsa
+       * bilinmeyen adres başlıksız ve altbilgisiz açılır. Yorumda kaldığı sürece
+       * bilinmeyen her adres bomboş beyaz sayfa veriyordu — _redirects her yolu
+       * index.html'e döndürdüğü için canlıda da öyleydi.
+       */
+      {
+        path: '/:pathMatch(.*)*',
+        name: ERouteNames.NotFound,
+        component: NotFound,
+        meta: {
+          requiresUnAuth: true,
+          title: ERouteNames.NotFound,
+          name: ERouteNames.NotFound,
+        },
+      },
     ],
   },
-
-  // { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
-  // { path: '/:pathMatch(.*)', name: 'bad-not-found', component: NotFound }
 ];
 
 export default routes;

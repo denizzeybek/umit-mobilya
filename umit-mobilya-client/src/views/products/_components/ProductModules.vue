@@ -1,45 +1,46 @@
 <template>
-  <Card>
-    <template #content>
-      <DataView :value="fields" dataKey="_id">
-        <template #list="slotProps">
-          <div class="flex flex-col">
-            <div v-for="(item, idx) in slotProps.items" :key="idx">
-              <div
-                class="flex flex-col sm:flex-row sm:items-center p-6 gap-4"
-                :class="{
-                  'border-t border-surface-200 dark:border-surface-700':
-                    idx !== 0,
-                }"
-              >
-                <div class="md:w-40 relative">
-                  <img
-                    class="block xl:block mx-auto rounded-md w-full sm:w-80"
-                    :src="item?.value?.imageUrl"
-                    :alt="item?.value?.name"
-                  />
-                </div>
-                <div
-                  class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6"
-                >
-                  <ProductItemContent :product="item.value" />
-                  <div class="flex flex-col md:items-end gap-8 max-w-fit">
-                    <FInput
-                      :name="`modules[${idx}].quantity`"
-                      :showAdjustmentButtons="true"
-                      :isReturnNumber="true"
-                      :disabled="true"
-                      customClass="!w-11"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+  <section>
+    <div class="border-b border-f-rule pb-5">
+      <p class="eyebrow">Kurulum</p>
+      <h2 class="display mt-4 text-display-sm text-f-ink">
+        Bu iş şu modüllerden oluşuyor
+      </h2>
+    </div>
+
+    <ol class="flex flex-col">
+      <li
+        v-for="(item, idx) in fields"
+        :key="item.key"
+        class="flex flex-col gap-5 border-b border-f-rule py-6 sm:flex-row sm:items-center"
+      >
+        <span class="index-numeral shrink-0 text-sm text-f-brass">
+          {{ String(idx + 1).padStart(2, '0') }}
+        </span>
+
+        <div class="w-full shrink-0 sm:w-32">
+          <FImage
+            :src="item.value.imageUrl"
+            :alt="item.value.name"
+            ratio="4 / 3"
+          />
+        </div>
+
+        <div class="flex flex-1 flex-col gap-4 sm:flex-row sm:items-center">
+          <div class="min-w-0 flex-1">
+            <ProductItemContent :product="toModuleDto(item.value)" />
           </div>
-        </template>
-      </DataView>
-    </template>
-  </Card>
+
+          <FInput
+            :name="`modules[${idx}].quantity`"
+            :showAdjustmentButtons="true"
+            :isReturnNumber="true"
+            :disabled="true"
+            customClass="!w-11"
+          />
+        </div>
+      </li>
+    </ol>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -115,6 +116,22 @@ const getInitialFormData = computed(() => {
 });
 
 /*
+ * Form satırı ile API şekli arasındaki tek fark anahtar adı: satır `id`
+ * tutuyor, DTO `_id`. Hem sepet hem de listede aynı dönüşüm gerektiği için
+ * tek yerde duruyor.
+ */
+const toModuleDto = (row: IModuleRow): ProductModuleResponseDto => ({
+  _id: row.id,
+  name: row.name,
+  price: row.price,
+  currency: row.currency,
+  imageUrl: row.imageUrl,
+  quantity: row.quantity,
+  sizes: row.sizes,
+  category: row.category,
+});
+
+/*
  * The basket is the base product plus every module with a quantity, both in
  * the same shape, so the total is one reduce and ProductItemContent renders
  * either without knowing which it got.
@@ -138,16 +155,7 @@ const submitHandler = handleSubmit((values) => {
   const rows = (values.modules ?? []) as IModuleRow[];
   const selected: ProductModuleResponseDto[] = rows
     .filter((module) => module.quantity > 0)
-    .map((module) => ({
-      _id: module.id,
-      name: module.name,
-      price: module.price,
-      currency: module.currency,
-      imageUrl: module.imageUrl,
-      quantity: module.quantity,
-      sizes: module.sizes,
-      category: module.category,
-    }));
+    .map(toModuleDto);
 
   productsStore.setCurrentProductBasket([base, ...selected]);
 });

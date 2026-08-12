@@ -3,11 +3,12 @@
     v-model:visible="open"
     modal
     :header="isEditing ? 'Ürünü Güncelle' : 'Ürün Ekle'"
-    class="!bg-f-secondary-purple lg:!w-[700px] !w-full"
+    class="!bg-f-paper lg:!w-[700px] !w-full"
     :style="{ width: '50rem' }"
   >
     <form class="flex flex-col gap-6" @submit="submitHandler">
       <div v-if="!isEditing" class="flex justify-center gap-4 flex-1">
+        <!-- raw-control: PrimeVue FileUpload kendi yukleme akisini dayatiyor; burada dosya store'a multipart olarak elle veriliyor -->
         <input type="file" accept="image/*" @change="fileSelected" />
       </div>
       <div class="flex gap-4 flex-1">

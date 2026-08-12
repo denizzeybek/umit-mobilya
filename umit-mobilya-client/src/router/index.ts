@@ -42,6 +42,13 @@ router.beforeEach(async (to, from, next) => {
 const DEFAULT_TITLE = 'Umit Mobilya';
 router.afterEach((to) => {
   nextTick(() => {
+    /*
+     * Konfigüratör başlığını BURASI kurmuyor: ürün adını okumak registry'yi
+     * import etmek demek, o da Three.js'i ana pakete geri sokuyordu
+     * (1.741 kB → 2.237 kB). Başlığı ConfiguratorRoute kendisi ayarlıyor.
+     */
+    if (to.name === ERouteNames.Configurator) return;
+
     document.title =
       typeof to.meta.title === 'string'
         ? `${to.meta.title} - Umit Mobilya`

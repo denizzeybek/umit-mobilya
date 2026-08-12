@@ -9,14 +9,14 @@
       />
     </template>
     <template #details>
-      <Skeleton v-if="isLoading" width="100%" height="615px"></Skeleton>
-      <div v-else class="flex flex-col gap-4">
+      <Skeleton v-if="isLoading" class="!h-[28rem] !w-full" />
+      <div v-else class="flex flex-col gap-14">
         <ProductGalleria />
         <ProductModules v-if="hasModules" :key="updateKey" />
       </div>
     </template>
     <template #basket>
-      <Skeleton v-if="isLoading" width="100%" height="615px"></Skeleton>
+      <Skeleton v-if="isLoading" class="!h-[26rem] !w-full" />
       <ProductBasket v-else :hasModules="hasModules" />
     </template>
   </ProductDetailLayout>
@@ -43,6 +43,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
+import { useFToast } from '@/composables/useFToast';
 import ProductDetailLayout from '@/layouts/product/ProductDetailLayout.vue';
 import { useProductsStore } from '@/stores/products';
 import ProductBasket from '@/views/products/_components/ProductBasket.vue';
@@ -56,6 +57,7 @@ import UpdateModulesModal from '@/views/products/_modals/UpdateModulesModal.vue'
 
 const productsStore = useProductsStore();
 const route = useRoute();
+const { showErrorMessage } = useFToast();
 
 const showProductModal = ref(false);
 const showProductImagesModal = ref(false);
@@ -78,13 +80,14 @@ const fetchProduct = async () => {
 };
 
 const fetchAll = async () => {
+  isLoading.value = true;
   try {
-    isLoading.value = true;
     await fetchProduct();
     await fetchProducts();
+  } catch (error) {
+    showErrorMessage(error);
+  } finally {
     isLoading.value = false;
-  } catch (e: any) {
-    console.error(e);
   }
 };
 

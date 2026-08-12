@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="min-w-[400px] max-w-[400] h-full hidden lg:flex relative flex-col min-h-screen bg-f-light-purple"
+    class="min-w-[400px] max-w-[400] h-full hidden lg:flex relative flex-col min-h-screen bg-f-linen"
   >
     <RouterLink
       :to="{ name: ERouteNames.Login }"

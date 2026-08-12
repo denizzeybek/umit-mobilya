@@ -1,154 +1,187 @@
 <template>
-  <div class="card">
-    <MegaMenu
-      :model="items"
-      class="p-4 bg-surface-0 !w-full"
-      style="border-radius: 3rem"
+  <header
+    class="fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-editorial"
+    :class="
+      isTransparent
+        ? 'bg-transparent'
+        : 'bg-f-bone/95 backdrop-blur-sm border-b border-f-rule'
+    "
+  >
+    <div
+      class="mx-auto flex h-[72px] max-w-editorial items-center justify-between gap-6 px-5 md:h-[88px] md:px-10"
     >
-      <template #start>
+      <RouterLink
+        :to="{ name: ERouteNames.Dashboard }"
+        class="shrink-0"
+        :aria-label="`${COMPANY_NAME} — ana sayfa`"
+      >
+        <img
+          :src="isTransparent ? logoLight : logoDark"
+          :alt="COMPANY_NAME"
+          class="h-8 w-auto md:h-11"
+        />
+      </RouterLink>
+
+      <nav class="hidden items-center gap-1 lg:flex" aria-label="Ana menü">
+        <NavDropdown
+          :label="productsLabel"
+          :items="categoryItems"
+          :tone="tone"
+        />
+
+        <NavDropdown :label="designLabel" :items="designItems" :tone="tone" />
+
         <RouterLink
-          :to="{ name: ERouteNames.Dashboard }"
-          class="!w-60 lg:mr-10"
+          v-for="link in navLinks"
+          :key="link.name"
+          :to="{ name: link.name, params: link.params }"
+          class="nav-link"
+          :class="tone"
         >
-          <img
-            class="!w-60 lg:mr-10"
-            src="@/assets/images/umit-mobilya-logo.png"
-          />
+          {{ link.label }}
         </RouterLink>
-      </template>
-      <template #item="{ item }">
-        <Button
-          v-if="item.root && !item?.items?.length"
-          class="w-full"
-          severity="secondary"
-          :variant="item.isActive ? undefined : 'text'"
-          @click="
-            item?.method && !item?.items?.length
-              ? item.method()
-              : router.push(item.route)
+
+        <button
+          v-if="usersStore.isAuthenticated"
+          type="button"
+          class="nav-link"
+          :class="tone"
+          @click="authStore.logout()"
+        >
+          {{ ERouteNames.Logout }}
+        </button>
+
+        <RouterLink
+          :to="{ name: ERouteNames.Contact }"
+          class="ml-4 border px-5 py-2.5 text-[0.7rem] font-medium uppercase tracking-[0.16em] transition-colors duration-300"
+          :class="
+            isTransparent
+              ? 'border-f-paper/70 text-f-paper hover:bg-f-paper hover:text-f-ink'
+              : 'border-f-primary bg-f-primary text-f-paper hover:bg-f-primary-hovered'
           "
         >
-          <span>{{ item.label }}</span>
-        </Button>
-        <Button
-          v-else
-          class="w-full"
-          :severity="item.root ? 'secondary' : 'contrast'"
-          :variant="item.isActive ? undefined : 'text'"
-          @click="item?.method"
-        >
-          {{ item.label }}
-        </Button>
-      </template>
-    </MegaMenu>
-  </div>
+          Teklif Al
+        </RouterLink>
+      </nav>
+
+      <button
+        type="button"
+        class="relative z-50 flex h-10 w-10 items-center justify-center lg:hidden"
+        :aria-expanded="isMenuOpen"
+        aria-label="Menü"
+        @click="isMenuOpen = !isMenuOpen"
+      >
+        <span class="sr-only">Menü</span>
+        <span
+          class="block h-px w-7 transition-all duration-300"
+          :class="[
+            isMenuOpen || !isTransparent ? 'bg-f-ink' : 'bg-f-paper',
+            isMenuOpen ? 'translate-y-px rotate-45' : '-translate-y-1',
+          ]"
+        />
+        <span
+          class="absolute block h-px w-7 transition-all duration-300"
+          :class="[
+            isMenuOpen || !isTransparent ? 'bg-f-ink' : 'bg-f-paper',
+            isMenuOpen ? '-rotate-45' : 'translate-y-1',
+          ]"
+        />
+      </button>
+    </div>
+
+    <MobileMenu v-model:open="isMenuOpen" :links="mobileLinks" />
+  </header>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-import MegaMenu from 'primevue/megamenu';
-
+import logoDark from '@/assets/images/umit-mobilya-logo.png';
+import { useSiteNav } from '@/composables/useSiteNav';
+import { COMPANY_NAME } from '@/constants/company';
 import { ERouteNames } from '@/router/routeNames.enum';
 import { useAuthStore } from '@/stores/auth';
 import { useCategoriesStore } from '@/stores/categories';
 import { useUsersStore } from '@/stores/users';
 
-interface IEmits {
-  (event: 'drawerChange', val: boolean): void;
-}
+import MobileMenu from './MobileMenu.vue';
+import NavDropdown from './NavDropdown.vue';
 
-defineEmits<IEmits>();
+import type { INavDropdownItem } from './NavDropdown.vue';
 
+const logoLight = '/umit-mobilya-logo-beyaz.png';
+const SOLID_AFTER_PX = 24;
+
+
+const route = useRoute();
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
-const route = useRoute();
-const router = useRouter();
 const categoriesStore = useCategoriesStore();
+const { productsLabel, designLabel, designItems, navLinks, mobileLinks } =
+  useSiteNav();
 
-const categoryTypeOptions = computed(() => {
-  return categoriesStore.list?.map((category) => ({
+const isScrolled = ref(false);
+const isMenuOpen = ref(false);
+
+const categoryItems = computed<INavDropdownItem[]>(() => [
+  { label: 'Tüm projeler', to: { name: ERouteNames.ProductsList } },
+  ...(categoriesStore.list ?? []).map((category, index) => ({
     label: category.name,
-    root: false,
-    route: { name: ERouteNames.ProductsList },
-    method: () => {
-      router.push({
-        name: ERouteNames.ProductsList,
-        query: { categoryId: category._id },
-      });
+    to: {
+      name: ERouteNames.ProductsList,
+      query: { categoryId: category._id },
     },
-  }));
-});
+    separatorBefore: index === 0,
+  })),
+]);
 
-const items = computed(() => {
-  return [
-    {
-      label: 'Ürünler',
-      root: true,
-      route: { name: ERouteNames.ProductsList },
-      items: [[{ items: [...categoryTypeOptions.value] }]],
-    },
-    {
-      label: 'Hakkımızda',
-      root: true,
-      route: { name: ERouteNames.About },
-    },
-    {
-      label: 'İletişim',
-      root: true,
-      route: { name: ERouteNames.Contact },
-    },
-    // ...(!usersStore.isAuthenticated
-    //   ? [
-    //       {
-    //         label: 'Giriş Yap',
-    //         root: true,
-    //         route: { name: ERouteNames.Login },
-    //       },
-    //     ]
-    //   : []),
-    ...(usersStore.isAuthenticated
-      ? [
-          {
-            label: 'Kategoriler',
-            root: true,
-            route: { name: ERouteNames.CategoriesList },
-          },
-          {
-            label: 'Çıkış Yap',
-            route: { name: ERouteNames.Login },
-            root: true,
-            method: () => {
-              console.log('here!!');
-              authStore.logout();
-            },
-          },
-        ]
-      : []),
-  ].map((item) => {
-    return {
-      ...item,
-      isActive: item.route.name === route.name,
-    };
-  });
+/*
+ * Hero'lu sayfalarda başlık görselin üstünde yüzer; ilk kaydırmada zemine
+ * oturur. Hero'suz sayfalarda en baştan katı, yoksa başlık kağıt zemine
+ * kağıt renginde binerdi.
+ */
+const isTransparent = computed(
+  () => Boolean(route.meta.hasHero) && !isScrolled.value && !isMenuOpen.value,
+);
+
+const tone = computed(() =>
+  isTransparent.value
+    ? 'text-f-paper hover:text-f-paper/70'
+    : 'text-f-ink-muted hover:text-f-ink',
+);
+
+
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > SOLID_AFTER_PX;
+};
+
+watch(
+  () => route.fullPath,
+  () => {
+    isMenuOpen.value = false;
+  },
+);
+
+watch(isMenuOpen, (open) => {
+  document.body.style.overflow = open ? 'hidden' : '';
 });
 
 onMounted(async () => {
+  handleScroll();
+  window.addEventListener('scroll', handleScroll, { passive: true });
   await categoriesStore.fetch();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+  document.body.style.overflow = '';
 });
 </script>
 
-<style>
-.p-megamenu-overlay {
-  min-width: fit-content !important;
-  left: unset !important;
-}
-.p-megamenu-submenu-label {
-  padding: 0 !important;
-}
-
-.p-megamenu-item-content:hover {
-  background: transparent !important;
+<style scoped lang="scss">
+.nav-link {
+  @apply px-4 py-2 text-[0.7rem] font-medium uppercase tracking-[0.16em] transition-colors duration-300;
 }
 </style>

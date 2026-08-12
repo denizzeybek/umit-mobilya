@@ -3,11 +3,12 @@
     v-model:visible="open"
     modal
     header="Galeriye Resim Ekle"
-    class="!bg-f-secondary-purple lg:!w-[700px] !w-full"
+    class="!bg-f-paper lg:!w-[700px] !w-full"
     :style="{ width: '50rem' }"
   >
     <form class="flex flex-col gap-6" @submit="submitHandler">
       <div class="flex justify-center gap-4 flex-1">
+        <!-- raw-control: PrimeVue FileUpload kendi yukleme akisini dayatiyor; burada dosyalar store'a multipart olarak elle veriliyor -->
         <input type="file" accept="image/*" multiple @change="fileSelected" />
       </div>
 

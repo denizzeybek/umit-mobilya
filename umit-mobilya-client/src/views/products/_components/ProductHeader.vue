@@ -1,32 +1,30 @@
 <template>
-  <Card>
-    <template #content>
-      <div class="flex justify-between items-center">
-        <Breadcrumb :model="items">
-          <template #item="{ item }">
-            <a
-              :class="[item?.goBack ? 'cursor-pointer' : '']"
-              @click="item?.goBack ? router.go(-1) : ''"
-            >
-              <span class="text-surface-700 dark:text-surface-0">{{
-                item.label
-              }}</span>
-            </a>
-          </template>
-        </Breadcrumb>
-        <FActionsMenu
-          v-if="usersStore.isAuthenticated"
-          :menuItems="menuItems"
-        />
-      </div>
-    </template>
-  </Card>
+  <div
+    class="flex items-center justify-between gap-4 border-b border-f-rule pb-5"
+  >
+    <nav class="flex items-center gap-3 text-sm" aria-label="Konum">
+      <RouterLink
+        :to="{ name: ERouteNames.ProductsList }"
+        class="text-f-ink-muted transition-colors duration-300 hover:text-f-ink"
+      >
+        İşler
+      </RouterLink>
+      <span class="text-f-rule-strong" aria-hidden="true">/</span>
+      <span class="truncate text-f-ink">
+        {{ productsStore.currentProduct?.name ?? 'Ürün' }}
+      </span>
+    </nav>
+
+    <FActionsMenu v-if="usersStore.isAuthenticated" :menuItems="menuItems" />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useRoute,useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
+import { useFToast } from '@/composables/useFToast';
+import { ERouteNames } from '@/router/routeNames.enum';
 import { useProductsStore } from '@/stores/products';
 import { useUsersStore } from '@/stores/users';
 
@@ -36,12 +34,14 @@ interface IEmits {
   (event: 'handleImagesModal'): void;
   (event: 'handleEditImagesModal'): void;
 }
+
 const emit = defineEmits<IEmits>();
 
 const usersStore = useUsersStore();
 const productsStore = useProductsStore();
 const router = useRouter();
 const route = useRoute();
+const { showErrorMessage } = useFToast();
 
 const menuItems = ref([
   {
@@ -50,47 +50,38 @@ const menuItems = ref([
       {
         label: 'Ürünü Güncelle',
         icon: 'pi pi-cog',
-        method: () => {
-          emit('handleUpdateProduct');
-        },
+        method: () => emit('handleUpdateProduct'),
       },
       {
         label: 'Modülleri Güncelle',
         icon: 'pi pi-pencil',
-        method: () => {
-          emit('handleUpdateModal');
-        },
+        method: () => emit('handleUpdateModal'),
       },
       {
         label: 'Galeriye Resim Ekle',
         icon: 'pi pi-plus',
-        method: () => {
-          emit('handleImagesModal');
-        },
+        method: () => emit('handleImagesModal'),
       },
-
       {
         label: 'Galeriyi Düzenle',
         icon: 'pi pi-pencil',
-        method: () => {
-          emit('handleEditImagesModal');
-        },
+        method: () => emit('handleEditImagesModal'),
       },
       {
         label: 'Ürünü Sil',
         icon: 'pi pi-trash',
         method: async () => {
-          await productsStore.remove(route.params.id.toString());
-          router.push('/products');
+          try {
+            await productsStore.remove(route.params.id.toString());
+            router.push({ name: ERouteNames.ProductsList });
+          } catch (error) {
+            showErrorMessage(error);
+          }
         },
       },
     ],
   },
 ]);
-
-const items = computed(() => {
-  return [{ label: 'Ürünler', goBack: true }, { label: 'Ürün Detayı' }];
-});
 </script>
 
 <style>

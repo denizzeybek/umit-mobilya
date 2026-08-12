@@ -58,7 +58,7 @@ const navItems = ref<IModel[]>([
 
 <style>
 .itemClass {
-  @apply flex items-center cursor-pointer  px-2 hover:border hover:border-purple-600 hover:rounded-md py-2;
+  @apply flex items-center cursor-pointer  px-2 hover:border hover:border-f-rule-strong hover:rounded-md py-2;
 }
 
 .activeItemClass {

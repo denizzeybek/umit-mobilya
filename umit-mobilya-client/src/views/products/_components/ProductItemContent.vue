@@ -1,19 +1,17 @@
 <template>
-  <div class="flex flex-col items-start justify-between gap-1 w-full max-w-sm">
-    <div
-      class="font-semibold uppercase text-xl leading-8 text-black max-[550px]:text-center"
-    >
+  <div class="flex w-full flex-col items-start gap-1.5">
+    <p v-if="product?.category?.name" class="eyebrow">
+      {{ product.category.name }}
+    </p>
+    <h3 class="display text-xl text-f-ink">
       {{ product?.name }}
-    </div>
-    <div class="font-semibold text-black">
+    </h3>
+    <p v-if="product?.sizes && product.sizes !== '0'" class="text-sm text-f-ink-faint">
+      {{ product.sizes }}
+    </p>
+    <p class="text-sm text-f-ink-muted">
       {{ productPrice }}
-    </div>
-    <div v-if="product?.sizes !== '0'" class="font-normal text-f-light-black">
-      {{ product?.sizes }}
-    </div>
-    <Tag>
-      <span class="uppercase">{{ product?.category?.name }}</span>
-    </Tag>
+    </p>
   </div>
 </template>
 
@@ -48,7 +46,7 @@ const productPrice = computed(() => {
       )
     : (product?.price ?? 0);
 
-  return `${price} ${product?.currency ?? ''}`;
+  return `${new Intl.NumberFormat('tr-TR').format(price)} ${product?.currency ?? ''}`.trim();
 });
 </script>
 
