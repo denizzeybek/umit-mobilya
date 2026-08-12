@@ -24,7 +24,7 @@
 
       <ol class="mt-14 grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-x-8">
         <li
-          v-for="(project, index) in PROJECTS"
+          v-for="(project, index) in projects"
           :key="project.slug"
           v-reveal
           :class="LAYOUT[index % LAYOUT.length]"
@@ -79,8 +79,39 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from 'vue';
+
 import { PROJECTS } from '@/constants/projects';
 import { ERouteNames } from '@/router/routeNames.enum';
+import { useProductsStore } from '@/stores/products';
+
+import type { IProject } from '@/constants/projects';
+
+/*
+ * Vitrin `product` API'sinden besleniyor; istek düşerse ya da katalog BOŞSA
+ * statik listeye düşüyor. Yedeği atmak, veritabanı henüz boşken ana sayfayı
+ * bomboş bırakırdı — ve ana sayfa sitenin ilk izlenimi.
+ *
+ * Hata bilerek yutuluyor: vitrin bir hata mesajı gösterecek yer değil.
+ */
+const productsStore = useProductsStore();
+
+const projects = computed<IProject[]>(() => {
+  const list = productsStore.list;
+  if (!list.length) return PROJECTS;
+
+  return list.slice(0, PROJECTS.length).map((product) => ({
+    slug: product._id,
+    title: product.name,
+    category: (product.category as { name?: string } | undefined)?.name ?? 'İş',
+    detail: product.sizes ?? product.description ?? '',
+    image: product.imageUrl ?? '',
+  }));
+});
+
+onMounted(() => {
+  void productsStore.fetch().catch(() => undefined);
+});
 
 /*
  * Sütun yerleşimi ve en-boy oranları kasıtlı olarak düzensiz: eşit kartlardan

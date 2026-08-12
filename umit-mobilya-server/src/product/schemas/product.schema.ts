@@ -6,28 +6,22 @@ import { Category } from '../../category/schemas/category.schema';
 
 export type ProductDocument = HydratedDocument<Product>;
 
-@Schema({ _id: false })
-export class ProductModuleRef {
-  @Prop({ type: Types.ObjectId, ref: 'Product', required: true })
-  productId!: Types.ObjectId;
-
-  @Prop({ type: Number, default: 1 })
-  quantity!: number;
-}
-
-export const ProductModuleRefSchema =
-  SchemaFactory.createForClass(ProductModuleRef);
-
+/**
+ * Portfolyo kaydı: yapılan işin fotoğrafı, açıklaması, kategorisi.
+ *
+ * `price`, `currency`, `quantity` ve `modules[]` KALDIRILDI. Modül sistemi
+ * ("bu ürün şu parçalardan oluşur, toplamı şu eder") konfigüratörün düzgün
+ * yaptığı işin ilkel bir versiyonuydu; ikisini birden tutmak "bir mobilya
+ * neyden oluşur" sorusuna iki ayrı cevap demekti ve hangisinin doğru olduğu
+ * zamanla belirsizleşirdi.
+ *
+ * Sabit fiyat da ısmarlama üretimde yanlış: fiyat ölçüden çıkıyor, katalogdan
+ * değil. Portfolyo artık fiyat göstermiyor, her şey teklife gidiyor.
+ */
 @Schema({ collection: 'products' })
 export class Product {
   @Prop({ type: String, required: true })
   name!: string;
-
-  @Prop({ type: Number, required: true })
-  price!: number;
-
-  @Prop({ type: String, default: 'TRY' })
-  currency!: string;
 
   /** R2 object key of the main image. Never a URL — see ObjectStorageService. */
   @Prop({ type: String })
@@ -46,16 +40,16 @@ export class Product {
   @Prop({ type: Types.ObjectId, ref: Category.name })
   category?: Types.ObjectId;
 
-  @Prop({ type: Number, default: 1 })
-  quantity!: number;
-
   /**
-   * A product is both a standalone item and a possible module of another one.
-   * Stored as `{ productId, quantity }`; the read path flattens it into a very
-   * different shape — see ProductService.toReadModel.
+   * Portfolyodan konfigüratöre köprü: "bu mutfağı beğendin mi? benzerini
+   * kendi ölçünle kur". Portfolyoyu vitrin olmaktan çıkarıp huniye çeviriyor —
+   * fotoğraf ilgi çekiyor, tek tık konfigüratöre, oradan teklife.
+   *
+   * `{ productType, config }` şeklinde; arayüz bunu URL'e kodlayıp
+   * konfigüratöre gönderiyor, ek bir mekanizma gerekmiyor.
    */
-  @Prop({ type: [ProductModuleRefSchema], default: [] })
-  modules!: ProductModuleRef[];
+  @Prop({ type: Object })
+  configuratorPreset?: Record<string, unknown>;
 
   @Prop({ type: Date, default: Date.now })
   createdAt!: Date;

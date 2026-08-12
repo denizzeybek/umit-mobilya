@@ -2,16 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AddModuleDto } from '../models/AddModuleDto';
 import type { CreateProductBodyDto } from '../models/CreateProductBodyDto';
 import type { DeleteImageDto } from '../models/DeleteImageDto';
 import type { FilterProductDto } from '../models/FilterProductDto';
 import type { ImageListResponseDto } from '../models/ImageListResponseDto';
 import type { MessageResponseDto } from '../models/MessageResponseDto';
 import type { ProductDocumentDto } from '../models/ProductDocumentDto';
-import type { ProductEnvelopeDto } from '../models/ProductEnvelopeDto';
 import type { ProductResponseDto } from '../models/ProductResponseDto';
-import type { UpdateModulesDto } from '../models/UpdateModulesDto';
 import type { UpdateProductDto } from '../models/UpdateProductDto';
 import type { UploadImagesDto } from '../models/UploadImagesDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -19,8 +16,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ProductsService {
     /**
-     * Every product, in the read shape: modules flattened, image URLs composed,
-     * totalPrice added.
+     * Every product, in the read shape: image URLs composed from stored keys.
      *
      * Answers **201**, not 200. That is what the Express version did and the
      * frontend has been living with it; changing it is a separate decision.
@@ -95,63 +91,6 @@ export class ProductsService {
     }
     /**
      * Replaces the whole module list of a product.
-     * @param id
-     * @param requestBody
-     * @returns ProductEnvelopeDto
-     * @throws ApiError
-     */
-    public static productControllerUpdateModules(
-        id: string,
-        requestBody: UpdateModulesDto,
-    ): CancelablePromise<ProductEnvelopeDto> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/products/update-modules/{id}',
-            path: {
-                'id': id,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-    /**
-     * Adds one product to another as a module.
-     * @param requestBody
-     * @returns ProductEnvelopeDto
-     * @throws ApiError
-     */
-    public static productControllerAddModule(
-        requestBody: AddModuleDto,
-    ): CancelablePromise<ProductEnvelopeDto> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/products/add-module',
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-    /**
-     * Removes a module from a product.
-     * @param productId
-     * @param moduleId
-     * @returns ProductEnvelopeDto
-     * @throws ApiError
-     */
-    public static productControllerRemoveModule(
-        productId: string,
-        moduleId: string,
-    ): CancelablePromise<ProductEnvelopeDto> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/products/remove-module/{productId}/{moduleId}',
-            path: {
-                'productId': productId,
-                'moduleId': moduleId,
-            },
-        });
-    }
-    /**
-     * Removes one gallery image, from both the record and the bucket.
      * @param id
      * @param requestBody
      * @returns MessageResponseDto

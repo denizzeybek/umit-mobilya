@@ -12,30 +12,14 @@ import { Category } from '../category/schemas/category.schema';
 import { ObjectStorageService } from '../storage/object-storage.service';
 import type { CreateProductDto } from './dto/create-product.dto';
 import type { FilterProductDto } from './dto/filter-product.dto';
-import type { ModuleEntryDto } from './dto/module.dto';
 import type { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './schemas/product.schema';
 import type { ProductDocument } from './schemas/product.schema';
-
-/** A module as the API returns it — flattened, not the `{ productId, quantity }` that is stored. */
-export interface ProductModuleView {
-  _id: Types.ObjectId | undefined;
-  name: string | undefined;
-  price: number | undefined;
-  currency: string | undefined;
-  imageUrl: string | null;
-  quantity: number;
-  sizes: string | undefined;
-  description: string | undefined;
-  category: unknown;
-}
 
 /** A product as the API returns it. Differs from the stored document. */
 export interface ProductView {
   _id: Types.ObjectId;
   name: string;
-  price: number;
-  currency: string;
   imageName: string | undefined;
   imageUrl: string | null;
   imageUrlList: (string | null)[];
@@ -43,9 +27,7 @@ export interface ProductView {
   sizes: string | undefined;
   description: string | undefined;
   category: unknown;
-  quantity: number;
-  modules: ProductModuleView[];
-  totalPrice: number;
+  configuratorPreset: Record<string, unknown> | undefined;
 }
 
 function escapeRegex(value: string): string {
@@ -72,7 +54,6 @@ export class ProductService {
 
     const products = await this.productModel
       .find(query)
-      .populate({ path: 'modules.productId', populate: { path: 'category' } })
       .populate('category')
       .exec();
 
@@ -82,7 +63,6 @@ export class ProductService {
   async findById(id: string): Promise<ProductView> {
     const product = await this.productModel
       .findById(id)
-      .populate({ path: 'modules.productId', populate: { path: 'category' } })
       .populate('category')
       .exec();
 
@@ -116,15 +96,11 @@ export class ProductService {
 
     return this.productModel.create({
       name: dto.name,
-      price: dto.price,
-      ...(dto.currency ? { currency: dto.currency } : {}),
       ...(dto.sizes ? { sizes: dto.sizes } : {}),
       ...(dto.description ? { description: dto.description } : {}),
-      ...(dto.quantity === undefined ? {} : { quantity: dto.quantity }),
       category: new Types.ObjectId(dto.category),
       imageName,
       imageNameList: [],
-      modules: [],
     });
   }
 
@@ -132,11 +108,8 @@ export class ProductService {
     const product = await this.requireProduct(id);
 
     if (dto.name !== undefined) product.name = dto.name;
-    if (dto.price !== undefined) product.price = dto.price;
-    if (dto.currency !== undefined) product.currency = dto.currency;
     if (dto.sizes !== undefined) product.sizes = dto.sizes;
     if (dto.description !== undefined) product.description = dto.description;
-    if (dto.quantity !== undefined) product.quantity = dto.quantity;
     if (dto.category !== undefined) {
       product.category = new Types.ObjectId(dto.category);
     }
@@ -146,21 +119,6 @@ export class ProductService {
 
   async remove(id: string): Promise<void> {
     const product = await this.requireProduct(id);
-
-    /*
-     * One indexed query instead of loading every product with a deep populate
-     * just to scan their module lists, which is what the Express version did.
-     */
-    const usedBy = await this.productModel
-      .findOne({ 'modules.productId': new Types.ObjectId(id) })
-      .select('name')
-      .exec();
-
-    if (usedBy) {
-      throw new ConflictException(
-        `Bu ürün ${usedBy.name} içerisinde kullanıldığı için silinemez`,
-      );
-    }
 
     await this.storage.removeMany([
       product.imageName,
@@ -214,72 +172,6 @@ export class ProductService {
     return product.imageNameList;
   }
 
-  async addModule(
-    productId: string,
-    entry: ModuleEntryDto,
-  ): Promise<ProductDocument> {
-    if (productId === entry.productId) {
-      throw new BadRequestException('Aynı ürünü ekleyemezsiniz');
-    }
-
-    const product = await this.requireProduct(productId);
-
-    const moduleProduct = await this.productModel
-      .findById(entry.productId)
-      .exec();
-    if (!moduleProduct) {
-      throw new NotFoundException('Modül olarak eklenecek ürün bulunamadı');
-    }
-
-    const already = product.modules.some(
-      (module) => module.productId.toString() === entry.productId,
-    );
-    if (already) {
-      throw new ConflictException('Bu modül zaten eklenmiş');
-    }
-
-    product.modules.push({
-      productId: new Types.ObjectId(entry.productId),
-      quantity: entry.quantity,
-    });
-
-    return product.save();
-  }
-
-  async removeModule(
-    productId: string,
-    moduleId: string,
-  ): Promise<ProductDocument> {
-    const product = await this.requireProduct(productId);
-
-    const before = product.modules.length;
-    product.modules = product.modules.filter(
-      (module) => module.productId.toString() !== moduleId,
-    );
-
-    if (product.modules.length === before) {
-      throw new NotFoundException(
-        'Bu modül ürün içinde bulunamadı veya zaten kaldırılmış',
-      );
-    }
-
-    return product.save();
-  }
-
-  async replaceModules(
-    productId: string,
-    entries: ModuleEntryDto[],
-  ): Promise<ProductDocument> {
-    const product = await this.requireProduct(productId);
-
-    product.modules = entries.map((entry) => ({
-      productId: new Types.ObjectId(entry.productId),
-      quantity: entry.quantity,
-    }));
-
-    return product.save();
-  }
-
   private async requireProduct(id: string): Promise<ProductDocument> {
     const product = await this.productModel.findById(id).exec();
 
@@ -291,34 +183,9 @@ export class ProductService {
   }
 
   private toView(product: ProductDocument): ProductView {
-    const modules = product.modules.map((module) => {
-      const source = module.productId as unknown as Partial<Product> & {
-        _id?: Types.ObjectId;
-      };
-
-      return {
-        _id: source?._id,
-        name: source?.name,
-        price: source?.price,
-        currency: source?.currency,
-        imageUrl: this.storage.publicUrl(source?.imageName),
-        quantity: module.quantity,
-        sizes: source?.sizes,
-        description: source?.description,
-        category: source?.category,
-      };
-    });
-
-    const moduleTotal = modules.reduce(
-      (sum, module) => sum + (module.price ?? 0) * (module.quantity || 1),
-      0,
-    );
-
     return {
       _id: product._id,
       name: product.name,
-      price: product.price,
-      currency: product.currency,
       imageName: product.imageName,
       imageUrl: this.storage.publicUrl(product.imageName),
       imageUrlList: product.imageNameList.map((key) =>
@@ -328,9 +195,7 @@ export class ProductService {
       sizes: product.sizes,
       description: product.description,
       category: product.category,
-      quantity: product.quantity,
-      modules,
-      totalPrice: (product.price || 0) + moduleTotal,
+      configuratorPreset: product.configuratorPreset,
     };
   }
 }

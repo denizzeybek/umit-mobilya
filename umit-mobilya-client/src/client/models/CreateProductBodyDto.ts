@@ -12,14 +12,6 @@ export type CreateProductBodyDto = {
      */
     name: string;
     /**
-     * Base price, before modules are added.
-     */
-    price: number;
-    /**
-     * ISO currency code. Defaults to TRY when omitted.
-     */
-    currency?: string;
-    /**
      * Free-text dimensions, e.g. "200x90x75".
      */
     sizes?: string;
@@ -28,6 +20,5 @@ export type CreateProductBodyDto = {
      * Id of an existing category. The request is rejected if it does not exist.
      */
     category: string;
-    quantity?: number;
 };
 

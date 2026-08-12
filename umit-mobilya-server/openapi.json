@@ -308,7 +308,7 @@
             }
           }
         },
-        "summary": "Every product, in the read shape: modules flattened, image URLs composed,\ntotalPrice added.\n\nAnswers **201**, not 200. That is what the Express version did and the\nfrontend has been living with it; changing it is a separate decision.",
+        "summary": "Every product, in the read shape: image URLs composed from stored keys.\n\nAnswers **201**, not 200. That is what the Express version did and the\nfrontend has been living with it; changing it is a separate decision.",
         "tags": [
           "products"
         ]
@@ -430,133 +430,6 @@
         ]
       }
     },
-    "/api/products/update-modules/{id}": {
-      "put": {
-        "operationId": "ProductController_updateModules",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateModulesDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductEnvelopeDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Replaces the whole module list of a product.",
-        "tags": [
-          "products"
-        ]
-      }
-    },
-    "/api/products/add-module": {
-      "post": {
-        "operationId": "ProductController_addModule",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddModuleDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductEnvelopeDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Adds one product to another as a module.",
-        "tags": [
-          "products"
-        ]
-      }
-    },
-    "/api/products/remove-module/{productId}/{moduleId}": {
-      "delete": {
-        "operationId": "ProductController_removeModule",
-        "parameters": [
-          {
-            "name": "productId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "moduleId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductEnvelopeDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Removes a module from a product.",
-        "tags": [
-          "products"
-        ]
-      }
-    },
     "/api/products/delete-image/{id}": {
       "post": {
         "operationId": "ProductController_deleteImage",
@@ -597,7 +470,7 @@
             "bearer": []
           }
         ],
-        "summary": "Removes one gallery image, from both the record and the bucket.",
+        "summary": "Replaces the whole module list of a product.",
         "tags": [
           "products"
         ]
@@ -1137,49 +1010,6 @@
           "name"
         ]
       },
-      "ProductModuleResponseDto": {
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "price": {
-            "type": "number"
-          },
-          "currency": {
-            "type": "string"
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true,
-            "description": "Permanent public R2 URL, or null when that product has no image."
-          },
-          "quantity": {
-            "type": "number",
-            "description": "How many of this module the parent product contains."
-          },
-          "sizes": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "category": {
-            "$ref": "#/components/schemas/CategoryResponseDto"
-          }
-        },
-        "required": [
-          "_id",
-          "name",
-          "price",
-          "currency",
-          "imageUrl",
-          "quantity"
-        ]
-      },
       "ProductResponseDto": {
         "type": "object",
         "properties": {
@@ -1191,17 +1021,15 @@
             },
             "description": "Public URLs matching `imageNameList`, position for position."
           },
+          "configuratorPreset": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Konfigüratör başlangıç noktası: `{ productType, config }`. Arayüz bunu\nURL'e kodlayıp \"benzerini kendi ölçünle kur\" bağlantısını kuruyor;\nportfolyoyu vitrin olmaktan çıkarıp huniye çeviriyor."
+          },
           "_id": {
             "type": "string"
           },
           "name": {
-            "type": "string"
-          },
-          "price": {
-            "type": "number",
-            "description": "Base price, before modules are added."
-          },
-          "currency": {
             "type": "string"
           },
           "imageName": {
@@ -1228,32 +1056,14 @@
           },
           "category": {
             "$ref": "#/components/schemas/CategoryResponseDto"
-          },
-          "quantity": {
-            "type": "number"
-          },
-          "modules": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductModuleResponseDto"
-            }
-          },
-          "totalPrice": {
-            "type": "number",
-            "description": "`price` plus, for every module, its price times its quantity."
           }
         },
         "required": [
           "imageUrlList",
           "_id",
           "name",
-          "price",
-          "currency",
           "imageUrl",
-          "imageNameList",
-          "quantity",
-          "modules",
-          "totalPrice"
+          "imageNameList"
         ]
       },
       "FilterProductDto": {
@@ -1283,16 +1093,6 @@
             "description": "Display name in the catalogue.",
             "maxLength": 200
           },
-          "price": {
-            "type": "number",
-            "description": "Base price, before modules are added.",
-            "minimum": 0
-          },
-          "currency": {
-            "type": "string",
-            "description": "ISO currency code. Defaults to TRY when omitted.",
-            "maxLength": 8
-          },
           "sizes": {
             "type": "string",
             "description": "Free-text dimensions, e.g. \"200x90x75\".",
@@ -1305,33 +1105,12 @@
           "category": {
             "type": "string",
             "description": "Id of an existing category. The request is rejected if it does not exist."
-          },
-          "quantity": {
-            "type": "number",
-            "minimum": 0
           }
         },
         "required": [
           "image",
           "name",
-          "price",
           "category"
-        ]
-      },
-      "StoredModuleDto": {
-        "type": "object",
-        "properties": {
-          "productId": {
-            "type": "string",
-            "description": "Id of the product used as a module."
-          },
-          "quantity": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "productId",
-          "quantity"
         ]
       },
       "ProductDocumentDto": {
@@ -1341,12 +1120,6 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
-          },
-          "price": {
-            "type": "number"
-          },
-          "currency": {
             "type": "string"
           },
           "imageName": {
@@ -1368,15 +1141,6 @@
             "type": "string",
             "description": "Category id. Not populated on the write path."
           },
-          "quantity": {
-            "type": "number"
-          },
-          "modules": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StoredModuleDto"
-            }
-          },
           "createdAt": {
             "type": "string"
           }
@@ -1384,11 +1148,7 @@
         "required": [
           "_id",
           "name",
-          "price",
-          "currency",
           "imageNameList",
-          "quantity",
-          "modules",
           "createdAt"
         ]
       },
@@ -1427,75 +1187,6 @@
           "imageNameList"
         ]
       },
-      "ModuleEntryDto": {
-        "type": "object",
-        "properties": {
-          "productId": {
-            "type": "string",
-            "description": "Id of the product being used as a module."
-          },
-          "quantity": {
-            "type": "number",
-            "description": "How many of that product this bundle contains.",
-            "minimum": 1
-          }
-        },
-        "required": [
-          "productId",
-          "quantity"
-        ]
-      },
-      "UpdateModulesDto": {
-        "type": "object",
-        "properties": {
-          "modules": {
-            "description": "The complete new module list. Replaces whatever was stored.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ModuleEntryDto"
-            }
-          }
-        },
-        "required": [
-          "modules"
-        ]
-      },
-      "ProductEnvelopeDto": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          },
-          "product": {
-            "$ref": "#/components/schemas/ProductDocumentDto"
-          }
-        },
-        "required": [
-          "message",
-          "product"
-        ]
-      },
-      "AddModuleDto": {
-        "type": "object",
-        "properties": {
-          "productId": {
-            "type": "string",
-            "description": "Id of the product the module is added to."
-          },
-          "module": {
-            "description": "The module to add.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ModuleEntryDto"
-              }
-            ]
-          }
-        },
-        "required": [
-          "productId",
-          "module"
-        ]
-      },
       "DeleteImageDto": {
         "type": "object",
         "properties": {
@@ -1515,14 +1206,6 @@
             "type": "string",
             "maxLength": 200
           },
-          "price": {
-            "type": "number",
-            "minimum": 0
-          },
-          "currency": {
-            "type": "string",
-            "maxLength": 8
-          },
           "sizes": {
             "type": "string",
             "maxLength": 200
@@ -1533,10 +1216,6 @@
           },
           "category": {
             "type": "string"
-          },
-          "quantity": {
-            "type": "number",
-            "minimum": 0
           }
         }
       },

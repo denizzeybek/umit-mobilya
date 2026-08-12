@@ -132,40 +132,4 @@ describe('ProductController', () => {
     expect(service.removeImage).toHaveBeenCalledWith('p-1', 'k');
   });
 
-  it('addModule wraps the updated product in the legacy envelope', async () => {
-    const product = { name: 'Set' };
-    service.addModule.mockResolvedValue(product);
-
-    await expect(
-      controller.addModule({
-        productId: 'p-1',
-        module: { productId: 'p-2', quantity: 2 },
-      }),
-    ).resolves.toEqual({ message: 'Modül başarıyla eklendi', product });
-  });
-
-  it('removeModule wraps the updated product in the legacy envelope', async () => {
-    const product = { name: 'Set' };
-    service.removeModule.mockResolvedValue(product);
-
-    await expect(controller.removeModule('p-1', 'p-2')).resolves.toEqual({
-      message: 'Modül başarıyla kaldırıldı',
-      product,
-    });
-    expect(service.removeModule).toHaveBeenCalledWith('p-1', 'p-2');
-  });
-
-  it('updateModules wraps the updated product in the legacy envelope', async () => {
-    const product = { name: 'Set' };
-    service.replaceModules.mockResolvedValue(product);
-
-    await expect(
-      controller.updateModules('p-1', {
-        modules: [{ productId: 'p-2', quantity: 5 }],
-      }),
-    ).resolves.toEqual({
-      message: 'Tüm modüller başarıyla güncellendi',
-      product,
-    });
-  });
 });

@@ -3,43 +3,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CategoryResponseDto } from '../../category/dto/category-response.dto';
 
 /**
- * A module as the API returns it.
+ * Portfolyo kaydı, okuma şekliyle.
  *
- * Note the shape: the database stores `{ productId, quantity }`, but the read
- * path replaces `productId` with the fields of the product it points at. So
- * `_id` here is the **module product's** id, not an id of the module entry.
+ * `price`, `currency`, `quantity` ve `modules[]` KALDIRILDI: modül sistemi
+ * konfigüratörün düzgün yaptığı işin ilkel bir versiyonuydu, sabit fiyat da
+ * ısmarlama üretimde yanlış. Portfolyo artık fiyat göstermiyor.
  */
-export class ProductModuleResponseDto {
-  _id!: string;
-
-  name!: string;
-
-  price!: number;
-
-  currency!: string;
-
-  /** Permanent public R2 URL, or null when that product has no image. */
-  imageUrl!: string | null;
-
-  /** How many of this module the parent product contains. */
-  quantity!: number;
-
-  sizes?: string;
-
-  description?: string;
-
-  category?: CategoryResponseDto;
-}
-
 export class ProductResponseDto {
   _id!: string;
 
   name!: string;
-
-  /** Base price, before modules are added. */
-  price!: number;
-
-  currency!: string;
 
   /** R2 object key of the main image. Never send this back as a URL. */
   imageName?: string;
@@ -70,27 +43,23 @@ export class ProductResponseDto {
 
   category?: CategoryResponseDto;
 
-  quantity!: number;
-
-  modules!: ProductModuleResponseDto[];
-
-  /** `price` plus, for every module, its price times its quantity. */
-  totalPrice!: number;
+  /**
+   * Konfigüratör başlangıç noktası: `{ productType, config }`. Arayüz bunu
+   * URL'e kodlayıp "benzerini kendi ölçünle kur" bağlantısını kuruyor;
+   * portfolyoyu vitrin olmaktan çıkarıp huniye çeviriyor.
+   */
+  @ApiProperty({ type: Object, required: false })
+  configuratorPreset?: Record<string, unknown>;
 }
 
 /**
- * What the write endpoints return: the stored document, not the read shape.
- * There is no `totalPrice`, no `imageUrl` and no flattened `modules` here —
- * refetch through a read endpoint if you need those.
+ * Yazma uçlarının döndürdüğü şey: saklanan belge, okuma şekli değil.
+ * Burada `imageUrl` yok — ihtiyaç varsa okuma ucundan tekrar çekilir.
  */
 export class ProductDocumentDto {
   _id!: string;
 
   name!: string;
-
-  price!: number;
-
-  currency!: string;
 
   imageName?: string;
 
@@ -103,18 +72,7 @@ export class ProductDocumentDto {
   /** Category id. Not populated on the write path. */
   category?: string;
 
-  quantity!: number;
-
-  modules!: StoredModuleDto[];
-
   createdAt!: string;
-}
-
-export class StoredModuleDto {
-  /** Id of the product used as a module. */
-  productId!: string;
-
-  quantity!: number;
 }
 
 export class ProductEnvelopeDto {

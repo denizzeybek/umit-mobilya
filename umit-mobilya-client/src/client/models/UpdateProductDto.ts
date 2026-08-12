@@ -4,11 +4,8 @@
 /* eslint-disable */
 export type UpdateProductDto = {
     name?: string;
-    price?: number;
-    currency?: string;
     sizes?: string;
     description?: string;
     category?: string;
-    quantity?: number;
 };
 

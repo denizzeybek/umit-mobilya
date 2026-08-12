@@ -4,24 +4,16 @@ import { ProductsService } from '@/client';
 import { EStoreNames } from '@/stores/storeNames.enum';
 
 import type {
-  AddModuleDto,
   CreateProductBodyDto,
   FilterProductDto,
   ProductDocumentDto,
-  ProductModuleResponseDto,
   ProductResponseDto,
-  UpdateModulesDto,
   UpdateProductDto,
 } from '@/client';
 
 interface State {
   list: ProductResponseDto[];
   currentProduct: ProductResponseDto | null;
-  currentProductBasket: ProductModuleResponseDto[];
-  currentProductTotal: {
-    price: number;
-    currency: string;
-  };
   loading: boolean;
   saving: boolean;
 }
@@ -30,11 +22,6 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
   state: (): State => ({
     list: [],
     currentProduct: null,
-    currentProductBasket: [],
-    currentProductTotal: {
-      price: 0,
-      currency: '',
-    },
     loading: false,
     saving: false,
   }),
@@ -127,52 +114,6 @@ export const useProductsStore = defineStore(EStoreNames.PRODUCTS, {
       } finally {
         this.saving = false;
       }
-    },
-
-    async addModule(payload: AddModuleDto): Promise<void> {
-      this.saving = true;
-      try {
-        await ProductsService.productControllerAddModule(payload);
-      } finally {
-        this.saving = false;
-      }
-    },
-
-    async removeModule(productId: string, moduleId: string): Promise<void> {
-      this.saving = true;
-      try {
-        await ProductsService.productControllerRemoveModule(
-          productId,
-          moduleId,
-        );
-      } finally {
-        this.saving = false;
-      }
-    },
-
-    async updateModules(id: string, payload: UpdateModulesDto): Promise<void> {
-      this.saving = true;
-      try {
-        await ProductsService.productControllerUpdateModules(id, payload);
-      } finally {
-        this.saving = false;
-      }
-    },
-
-    setCurrentProductBasket(modules: ProductModuleResponseDto[]): void {
-      this.currentProductBasket = modules;
-      this.currentProductTotal = {
-        price: modules.reduce(
-          (total, module) => total + module.price * module.quantity,
-          0,
-        ),
-        currency: modules[0]?.currency ?? '',
-      };
-    },
-
-    resetBasket(): void {
-      this.currentProductBasket = [];
-      this.currentProductTotal = { price: 0, currency: '' };
     },
   },
 });

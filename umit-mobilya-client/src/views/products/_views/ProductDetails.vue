@@ -2,7 +2,6 @@
   <ProductDetailLayout>
     <template #breadcrumb>
       <ProductHeader
-        @handleUpdateModal="showUpdateModal = true"
         @handleUpdateProduct="showProductModal = true"
         @handleImagesModal="showProductImagesModal = true"
         @handleEditImagesModal="showProductEditImagesModal = true"
@@ -12,15 +11,13 @@
       <Skeleton v-if="isLoading" class="!h-[28rem] !w-full" />
       <div v-else class="flex flex-col gap-14">
         <ProductGalleria />
-        <ProductModules v-if="hasModules" :key="updateKey" />
       </div>
     </template>
     <template #basket>
       <Skeleton v-if="isLoading" class="!h-[26rem] !w-full" />
-      <ProductBasket v-else :hasModules="hasModules" />
+      <ProductCta v-else :preset="productsStore.currentProduct?.configuratorPreset" />
     </template>
   </ProductDetailLayout>
-  <UpdateModulesModal v-if="showUpdateModal" v-model:open="showUpdateModal" />
   <ProductModal
     v-if="showProductModal"
     v-model:open="showProductModal"
@@ -40,20 +37,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useFToast } from '@/composables/useFToast';
 import ProductDetailLayout from '@/layouts/product/ProductDetailLayout.vue';
 import { useProductsStore } from '@/stores/products';
-import ProductBasket from '@/views/products/_components/ProductBasket.vue';
+import ProductCta from '@/views/products/_components/ProductCta.vue';
 import ProductGalleria from '@/views/products/_components/ProductGalleria.vue';
 import ProductHeader from '@/views/products/_components/ProductHeader.vue';
-import ProductModules from '@/views/products/_components/ProductModules.vue';
 import ProductEditImagesModal from '@/views/products/_modals/ProductEditImagesModal.vue';
 import ProductImagesModal from '@/views/products/_modals/ProductImagesModal.vue';
 import ProductModal from '@/views/products/_modals/ProductModal.vue';
-import UpdateModulesModal from '@/views/products/_modals/UpdateModulesModal.vue';
 
 const productsStore = useProductsStore();
 const route = useRoute();
@@ -61,14 +56,8 @@ const { showErrorMessage } = useFToast();
 
 const showProductModal = ref(false);
 const showProductImagesModal = ref(false);
-const showUpdateModal = ref(false);
 const showProductEditImagesModal = ref(false);
-const updateKey = ref(0);
 const isLoading = ref(false);
-
-const hasModules = computed(
-  () => (productsStore.currentProduct?.modules?.length ?? 0) > 0,
-);
 
 const fetchProducts = async () => {
   await productsStore.fetch();
@@ -76,7 +65,6 @@ const fetchProducts = async () => {
 
 const fetchProduct = async () => {
   await productsStore.find(route.params.id?.toString());
-  updateKey.value++;
 };
 
 const fetchAll = async () => {
@@ -90,16 +78,6 @@ const fetchAll = async () => {
     isLoading.value = false;
   }
 };
-
-watch(
-  showUpdateModal,
-  (newVal, oldVal) => {
-    if (oldVal === true && newVal === false) {
-      fetchProduct();
-    }
-  },
-  { immediate: true },
-);
 
 onMounted(() => {
   fetchAll();

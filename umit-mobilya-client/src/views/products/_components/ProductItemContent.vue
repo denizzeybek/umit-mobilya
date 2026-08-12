@@ -3,51 +3,35 @@
     <p v-if="product?.category?.name" class="eyebrow">
       {{ product.category.name }}
     </p>
+
     <h3 class="display text-xl text-f-ink">
       {{ product?.name }}
     </h3>
-    <p v-if="product?.sizes && product.sizes !== '0'" class="text-sm text-f-ink-faint">
+
+    <p
+      v-if="product?.sizes && product.sizes !== '0'"
+      class="text-sm text-f-ink-faint"
+    >
       {{ product.sizes }}
     </p>
-    <p class="text-sm text-f-ink-muted">
-      {{ productPrice }}
+
+    <p v-if="product?.description" class="text-sm text-f-ink-muted">
+      {{ product.description }}
     </p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import type { ProductResponseDto } from '@/client';
 
-import type {
-  ProductModuleResponseDto,
-  ProductResponseDto,
-} from '@/client';
-
+/**
+ * Fiyat satırı KALDIRILDI: portfolyo artık fiyat göstermiyor. Ismarlama
+ * üretimde vitrindeki sabit bir rakam, konfigüratörün ölçüden ürettiği gerçek
+ * fiyatla çelişirdi ve iki ayrı fiyat kavramı doğardı.
+ */
 interface IProps {
-  product: ProductResponseDto | ProductModuleResponseDto | null;
+  product: ProductResponseDto | null;
 }
 
-const props = defineProps<IProps>();
-
-/*
- * Takes either shape the API returns. A full product carries `modules` and its
- * price is the sum of them; a flattened module never does, and its own price is
- * already the whole story.
- */
-const productPrice = computed(() => {
-  const product = props.product;
-  const modules =
-    product && 'modules' in product ? product.modules : undefined;
-
-  const price = modules?.length
-    ? modules.reduce(
-        (total, module) => total + module.price * module.quantity,
-        0,
-      )
-    : (product?.price ?? 0);
-
-  return `${new Intl.NumberFormat('tr-TR').format(price)} ${product?.currency ?? ''}`.trim();
-});
+defineProps<IProps>();
 </script>
-
-<style scoped></style>

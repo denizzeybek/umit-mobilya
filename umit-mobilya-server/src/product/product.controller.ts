@@ -32,11 +32,6 @@ import {
 } from './dto/create-product.dto';
 import { FilterProductDto } from './dto/filter-product.dto';
 import {
-  AddModuleDto,
-  DeleteImageDto,
-  UpdateModulesDto,
-} from './dto/module.dto';
-import {
   ImageListResponseDto,
   ProductDocumentDto,
   ProductEnvelopeDto,
@@ -44,6 +39,7 @@ import {
 } from './dto/product-response.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UploadImagesDto } from './dto/upload-images.dto';
+import { DeleteImageDto } from './dto/delete-image.dto';
 import { ProductService } from './product.service';
 import type { ProductView } from './product.service';
 import type { ProductDocument } from './schemas/product.schema';
@@ -52,7 +48,7 @@ const MAX_GALLERY_FILES = 20;
 
 /*
  * Declaration order is load-bearing. Nest matches routes in the order the
- * handlers are declared, so `create-images/:id` and `update-modules/:id` must
+ * handlers are declared, so `create-images/:id` must
  * come before `:id` — otherwise `:id` swallows them and the request lands in
  * the wrong handler with id="create-images".
  */
@@ -62,8 +58,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   /**
-   * Every product, in the read shape: modules flattened, image URLs composed,
-   * totalPrice added.
+   * Every product, in the read shape: image URLs composed from stored keys.
    *
    * Answers **201**, not 200. That is what the Express version did and the
    * frontend has been living with it; changing it is a separate decision.
@@ -133,47 +128,8 @@ export class ProductController {
   }
 
   /** Replaces the whole module list of a product. */
-  @Put('update-modules/:id')
-  @ApiOkResponse({ type: ProductEnvelopeDto })
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  async updateModules(
-    @Param('id', ParseObjectIdPipe) id: string,
-    @Body() dto: UpdateModulesDto,
-  ): Promise<{ message: string; product: ProductDocument }> {
-    const product = await this.productService.replaceModules(id, dto.modules);
-    return { message: 'Tüm modüller başarıyla güncellendi', product };
-  }
-
   /** Adds one product to another as a module. */
-  @Post('add-module')
-  @ApiOkResponse({ type: ProductEnvelopeDto })
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  async addModule(
-    @Body() dto: AddModuleDto,
-  ): Promise<{ message: string; product: ProductDocument }> {
-    const product = await this.productService.addModule(
-      dto.productId,
-      dto.module,
-    );
-    return { message: 'Modül başarıyla eklendi', product };
-  }
-
   /** Removes a module from a product. */
-  @Delete('remove-module/:productId/:moduleId')
-  @ApiOkResponse({ type: ProductEnvelopeDto })
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  async removeModule(
-    @Param('productId', ParseObjectIdPipe) productId: string,
-    @Param('moduleId', ParseObjectIdPipe) moduleId: string,
-  ): Promise<{ message: string; product: ProductDocument }> {
-    const product = await this.productService.removeModule(productId, moduleId);
-    return { message: 'Modül başarıyla kaldırıldı', product };
-  }
-
   /** Removes one gallery image, from both the record and the bucket. */
   @Post('delete-image/:id')
   @ApiOkResponse({ type: MessageResponseDto })

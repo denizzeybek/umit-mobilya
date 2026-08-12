@@ -72,7 +72,6 @@ describe('ProductService', () => {
     const category = await seedCategory();
     const created = await productModel.create({
       name: 'Üçlü Koltuk',
-      price: 1000,
       category: new mongoose.Types.ObjectId(category),
       ...overrides,
     });
@@ -116,54 +115,6 @@ describe('ProductService', () => {
       expect((product?.category as { name?: string })?.name).toBe('Koltuk');
     });
 
-    it('flattens each module into the read shape, not the stored shape', async () => {
-      const moduleId = await seedProduct({
-        name: 'Puf',
-        price: 250,
-        imageName: 'puf-key',
-      });
-      await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 2 },
-        ],
-      });
-
-      const set = (await service.findAll({})).find((p) => p.name === 'Set');
-
-      expect(set?.modules[0]?._id?.toString()).toBe(moduleId);
-      expect(set?.modules[0]).toEqual(
-        expect.objectContaining({
-          name: 'Puf',
-          price: 250,
-          quantity: 2,
-          imageUrl: 'https://img.test/puf-key',
-        }),
-      );
-    });
-
-    it('totals the base price plus price times quantity of every module', async () => {
-      const moduleId = await seedProduct({ name: 'Puf', price: 250 });
-      await seedProduct({
-        name: 'Set',
-        price: 1000,
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 3 },
-        ],
-      });
-
-      const set = (await service.findAll({})).find((p) => p.name === 'Set');
-
-      expect(set?.totalPrice).toBe(1750);
-    });
-
-    it('reports totalPrice as the base price when there are no modules', async () => {
-      await seedProduct({ price: 1000 });
-
-      const [product] = await service.findAll({});
-
-      expect(product?.totalPrice).toBe(1000);
-    });
   });
 
   describe('findAll — filtering', () => {
@@ -215,7 +166,7 @@ describe('ProductService', () => {
       const category = await seedCategory();
 
       const created = await service.create(
-        { name: 'Koltuk', price: 1000, category },
+        { name: 'Koltuk', category },
         file,
       );
 
@@ -231,7 +182,7 @@ describe('ProductService', () => {
       const unknownCategory = new mongoose.Types.ObjectId().toString();
 
       await expect(
-        service.create({ name: 'Koltuk', price: 1000, category: unknownCategory }, file),
+        service.create({ name: 'Koltuk', category: unknownCategory }, file),
       ).rejects.toBeInstanceOf(NotFoundException);
       expect(storage.upload).not.toHaveBeenCalled();
     });
@@ -240,7 +191,7 @@ describe('ProductService', () => {
       const category = await seedCategory();
 
       await expect(
-        service.create({ name: 'Koltuk', price: 1000, category }, undefined),
+        service.create({ name: 'Koltuk', category }, undefined),
       ).rejects.toBeInstanceOf(BadRequestException);
     });
 
@@ -248,7 +199,7 @@ describe('ProductService', () => {
       const category = await seedCategory();
 
       const created = await service.create(
-        { name: 'Koltuk', price: 1000, category },
+        { name: 'Koltuk', category },
         file,
       );
 
@@ -258,12 +209,11 @@ describe('ProductService', () => {
 
   describe('update', () => {
     it('leaves fields that were not sent untouched', async () => {
-      const id = await seedProduct({ price: 1000, sizes: '200x90' });
+      const id = await seedProduct({ sizes: '200x90' });
 
       const updated = await service.update(id, { name: 'Dörtlü Koltuk' });
 
       expect(updated.name).toBe('Dörtlü Koltuk');
-      expect(updated.price).toBe(1000);
       expect(updated.sizes).toBe('200x90');
     });
 
@@ -291,33 +241,6 @@ describe('ProductService', () => {
         'gallery-2',
       ]);
       expect(await productModel.countDocuments()).toBe(0);
-    });
-
-    it('refuses to delete a product another product uses as a module', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 1 },
-        ],
-      });
-
-      await expect(service.remove(moduleId)).rejects.toThrow(
-        'Bu ürün Set içerisinde kullanıldığı için silinemez',
-      );
-    });
-
-    it('leaves the record in place when the delete was refused', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 1 },
-        ],
-      });
-
-      await expect(service.remove(moduleId)).rejects.toBeDefined();
-      expect(await productModel.countDocuments()).toBe(2);
     });
 
     it('throws NotFoundException for an unknown id', async () => {
@@ -352,101 +275,6 @@ describe('ProductService', () => {
         service.removeImage(id, 'belongs-to-another-product'),
       ).rejects.toBeInstanceOf(NotFoundException);
       expect(storage.remove).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('addModule', () => {
-    it('stores the module as { productId, quantity }', async () => {
-      const setId = await seedProduct({ name: 'Set' });
-      const moduleId = await seedProduct({ name: 'Puf' });
-
-      const updated = await service.addModule(setId, {
-        productId: moduleId,
-        quantity: 2,
-      });
-
-      expect(updated.modules).toHaveLength(1);
-      expect(updated.modules[0]?.quantity).toBe(2);
-    });
-
-    it('refuses to add a product to itself', async () => {
-      const id = await seedProduct();
-
-      await expect(
-        service.addModule(id, { productId: id, quantity: 1 }),
-      ).rejects.toThrow('Aynı ürünü ekleyemezsiniz');
-    });
-
-    it('refuses to add the same module twice', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      const setId = await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 1 },
-        ],
-      });
-
-      await expect(
-        service.addModule(setId, { productId: moduleId, quantity: 1 }),
-      ).rejects.toBeInstanceOf(ConflictException);
-    });
-
-    it('refuses a module product that does not exist', async () => {
-      const setId = await seedProduct({ name: 'Set' });
-      const unknownId = new mongoose.Types.ObjectId().toString();
-
-      await expect(
-        service.addModule(setId, { productId: unknownId, quantity: 1 }),
-      ).rejects.toBeInstanceOf(NotFoundException);
-    });
-  });
-
-  describe('removeModule', () => {
-    it('drops the module', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      const setId = await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 1 },
-        ],
-      });
-
-      expect((await service.removeModule(setId, moduleId)).modules).toEqual([]);
-    });
-
-    it('throws NotFoundException when the module is not part of the product', async () => {
-      const setId = await seedProduct({ name: 'Set' });
-      const strangerId = new mongoose.Types.ObjectId().toString();
-
-      await expect(
-        service.removeModule(setId, strangerId),
-      ).rejects.toBeInstanceOf(NotFoundException);
-    });
-  });
-
-  describe('replaceModules', () => {
-    it('replaces the whole list', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      const setId = await seedProduct({ name: 'Set' });
-
-      const updated = await service.replaceModules(setId, [
-        { productId: moduleId, quantity: 5 },
-      ]);
-
-      expect(updated.modules).toHaveLength(1);
-      expect(updated.modules[0]?.quantity).toBe(5);
-    });
-
-    it('empties the list when given an empty array', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      const setId = await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 1 },
-        ],
-      });
-
-      expect((await service.replaceModules(setId, [])).modules).toEqual([]);
     });
   });
 

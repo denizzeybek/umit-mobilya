@@ -82,7 +82,6 @@ describe('/api/products (characterization)', () => {
   ): Promise<string> => {
     const inserted = await mongoose.connection.collection('products').insertOne({
       name: 'Üçlü Koltuk',
-      price: 1000,
       currency: 'TRY',
       imageName: 'uclu-koltuk-abc',
       imageNameList: [],
@@ -159,70 +158,6 @@ describe('/api/products (characterization)', () => {
       expect(response.body[0].category.name).toBe('Koltuk');
     });
 
-    describe('modules[]', () => {
-      it('flattens each module so the API shape differs from the schema shape', async () => {
-        const moduleId = await seedProduct({
-          name: 'Puf',
-          price: 250,
-          imageName: 'puf-key',
-        });
-        await seedProduct({
-          name: 'Set',
-          price: 1000,
-          modules: [
-            { productId: new mongoose.Types.ObjectId(moduleId), quantity: 2 },
-          ],
-        });
-
-        const response = await request(app.getHttpServer()).get(
-          '/api/products',
-        );
-        const set = response.body.find(
-          (p: { name: string }) => p.name === 'Set',
-        );
-
-        expect(set.modules[0]).toEqual(
-          expect.objectContaining({
-            _id: moduleId,
-            name: 'Puf',
-            price: 250,
-            currency: 'TRY',
-            imageUrl: 'https://img.test/puf-key',
-            quantity: 2,
-          }),
-        );
-      });
-
-      it('adds totalPrice as the base price plus price × quantity of every module', async () => {
-        const moduleId = await seedProduct({ name: 'Puf', price: 250 });
-        await seedProduct({
-          name: 'Set',
-          price: 1000,
-          modules: [
-            { productId: new mongoose.Types.ObjectId(moduleId), quantity: 3 },
-          ],
-        });
-
-        const response = await request(app.getHttpServer()).get(
-          '/api/products',
-        );
-        const set = response.body.find(
-          (p: { name: string }) => p.name === 'Set',
-        );
-
-        expect(set.totalPrice).toBe(1000 + 250 * 3);
-      });
-
-      it('reports totalPrice equal to the base price when there are no modules', async () => {
-        await seedProduct({ price: 1000 });
-
-        const response = await request(app.getHttpServer()).get(
-          '/api/products',
-        );
-
-        expect(response.body[0].totalPrice).toBe(1000);
-      });
-    });
   });
 
   describe('GET /api/products/:id', () => {
@@ -290,8 +225,6 @@ describe('/api/products (characterization)', () => {
     const create = (): request.Test =>
       auth(request(app.getHttpServer()).post('/api/products'))
         .field('name', 'Üçlü Koltuk')
-        .field('price', '1000')
-        .field('currency', 'TRY')
         .field('category', categoryId)
         .attach('image', jpeg, 'Üçlü Koltuk.jpg');
 
@@ -302,12 +235,6 @@ describe('/api/products (characterization)', () => {
       expect(response.body.name).toBe('Üçlü Koltuk');
       expect(response.body).not.toHaveProperty('totalPrice');
       expect(response.body).not.toHaveProperty('imageUrl');
-    });
-
-    it('coerces the multipart price string into a number', async () => {
-      const response = await create();
-
-      expect(response.body.price).toBe(1000);
     });
 
     it('uploads the resized image to the bucket', async () => {
@@ -323,7 +250,6 @@ describe('/api/products (characterization)', () => {
         request(app.getHttpServer()).post('/api/products'),
       )
         .field('name', 'Üçlü Koltuk')
-        .field('price', '1000')
         .field('category', categoryId)
         .attach('image', jpeg, 'Living Room Sofa.JPG');
 
@@ -362,7 +288,6 @@ describe('/api/products (characterization)', () => {
         request(app.getHttpServer()).post('/api/products'),
       )
         .field('name', 'Üçlü Koltuk')
-        .field('price', '1000')
         .field('category', unknownCategory)
         .attach('image', jpeg, 'x.jpg');
 
@@ -389,8 +314,6 @@ describe('/api/products (characterization)', () => {
       const response = await auth(
         request(app.getHttpServer()).put(`/api/products/${id}`),
       ).send({ name: 'Dörtlü Koltuk' });
-
-      expect(response.body.price).toBe(1000);
       expect(response.body.sizes).toBe('200x90');
     });
 
@@ -471,24 +394,6 @@ describe('/api/products (characterization)', () => {
       expect(deleted.sort()).toEqual(['gallery-1', 'gallery-2', 'main-key']);
     });
 
-    it('refuses to delete a product that another product uses as a module', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 1 },
-        ],
-      });
-
-      const response = await auth(
-        request(app.getHttpServer()).delete(`/api/products/${moduleId}`),
-      );
-
-      expect(response.body.message).toBe(
-        'Bu ürün Set içerisinde kullanıldığı için silinemez',
-      );
-    });
-
     it('responds 404 when the id matches nothing', async () => {
       const unknownId = new mongoose.Types.ObjectId().toString();
 
@@ -522,129 +427,6 @@ describe('/api/products (characterization)', () => {
       const response = await auth(
         request(app.getHttpServer()).post(`/api/products/delete-image/${id}`),
       ).send({});
-
-      expect(response.status).toBe(400);
-    });
-  });
-
-  describe('POST /api/products/add-module', () => {
-    it('responds 200 and stores the module as { productId, quantity }', async () => {
-      const setId = await seedProduct({ name: 'Set' });
-      const moduleId = await seedProduct({ name: 'Puf' });
-
-      const response = await auth(
-        request(app.getHttpServer()).post('/api/products/add-module'),
-      ).send({ productId: setId, module: { productId: moduleId, quantity: 2 } });
-
-      expect(response.status).toBe(200);
-      expect(response.body.product.modules).toHaveLength(1);
-      expect(response.body.product.modules[0].quantity).toBe(2);
-    });
-
-    it('refuses to add a product to itself', async () => {
-      const id = await seedProduct();
-
-      const response = await auth(
-        request(app.getHttpServer()).post('/api/products/add-module'),
-      ).send({ productId: id, module: { productId: id, quantity: 1 } });
-
-      expect(response.status).toBe(400);
-      expect(response.body.message).toBe('Aynı ürünü ekleyemezsiniz');
-    });
-
-    it('refuses to add the same module twice', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      const setId = await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 1 },
-        ],
-      });
-
-      const response = await auth(
-        request(app.getHttpServer()).post('/api/products/add-module'),
-      ).send({ productId: setId, module: { productId: moduleId, quantity: 1 } });
-
-      expect(response.body.message).toBe('Bu modül zaten eklenmiş');
-    });
-  });
-
-  describe('DELETE /api/products/remove-module/:productId/:moduleId', () => {
-    it('responds 200 and drops the module', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      const setId = await seedProduct({
-        name: 'Set',
-        modules: [
-          { productId: new mongoose.Types.ObjectId(moduleId), quantity: 1 },
-        ],
-      });
-
-      const response = await auth(
-        request(app.getHttpServer()).delete(
-          `/api/products/remove-module/${setId}/${moduleId}`,
-        ),
-      );
-
-      expect(response.status).toBe(200);
-      expect(response.body.product.modules).toEqual([]);
-    });
-
-    it('responds 404 when the module is not part of the product', async () => {
-      const setId = await seedProduct({ name: 'Set' });
-      const strangerId = new mongoose.Types.ObjectId().toString();
-
-      const response = await auth(
-        request(app.getHttpServer()).delete(
-          `/api/products/remove-module/${setId}/${strangerId}`,
-        ),
-      );
-
-      expect(response.status).toBe(404);
-    });
-  });
-
-  describe('PUT /api/products/update-modules/:id', () => {
-    it('responds 200 and replaces the whole module list', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      const setId = await seedProduct({ name: 'Set' });
-
-      const response = await auth(
-        request(app.getHttpServer()).put(
-          `/api/products/update-modules/${setId}`,
-        ),
-      ).send({ modules: [{ productId: moduleId, quantity: 5 }] });
-
-      expect(response.status).toBe(200);
-      expect(response.body.product.modules[0].quantity).toBe(5);
-    });
-
-    /*
-     * Status unchanged at 400. The Express version answered the flat
-     * "Geçersiz modül listesi" for every malformed list; the message now names
-     * the entry and the field, which is what makes it actionable.
-     */
-    it('responds 400 and names the offending entry when quantity is missing', async () => {
-      const moduleId = await seedProduct({ name: 'Puf' });
-      const setId = await seedProduct({ name: 'Set' });
-
-      const response = await auth(
-        request(app.getHttpServer()).put(
-          `/api/products/update-modules/${setId}`,
-        ),
-      ).send({ modules: [{ productId: moduleId }] });
-
-      expect(response.status).toBe(400);
-      expect(response.body.message).toContain('modules.0.quantity');
-    });
-
-    it('responds 400 when an entry has a productId that is not an id', async () => {
-      const setId = await seedProduct({ name: 'Set' });
-
-      const response = await auth(
-        request(app.getHttpServer()).put(
-          `/api/products/update-modules/${setId}`,
-        ),
-      ).send({ modules: [{ productId: 'not-an-id', quantity: 1 }] });
 
       expect(response.status).toBe(400);
     });

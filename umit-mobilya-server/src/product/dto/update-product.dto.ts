@@ -1,13 +1,9 @@
-import { Type } from 'class-transformer';
 import {
-  IsInt,
   IsMongoId,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
-  Min,
 } from 'class-validator';
 
 /**
@@ -27,17 +23,6 @@ export class UpdateProductDto {
   readonly name?: string;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(0)
-  readonly price?: number;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(8)
-  readonly currency?: string;
-
-  @IsOptional()
   @IsString()
   @MaxLength(200)
   readonly sizes?: string;
@@ -50,10 +35,4 @@ export class UpdateProductDto {
   @IsOptional()
   @IsMongoId()
   readonly category?: string;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  readonly quantity?: number;
 }

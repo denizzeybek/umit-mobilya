@@ -33,12 +33,6 @@
       </div>
     </div>
 
-    <div
-      class="mt-4 flex items-baseline justify-between border-t border-f-rule pt-3 transition-colors duration-500 group-hover:border-f-brass"
-    >
-      <span class="eyebrow">Fiyat</span>
-      <span class="text-sm text-f-ink-muted">{{ price }}</span>
-    </div>
   </RouterLink>
 </template>
 
@@ -64,12 +58,4 @@ const hasSizes = computed(
  * Modüllü bir ürünün fiyatı modüllerin toplamı; modülsüz ürünün kendi fiyatı
  * zaten tam hikâye. ProductItemContent'te de aynı kural geçerli.
  */
-const price = computed(() => {
-  const modules = props.product.modules;
-  const total = modules?.length
-    ? modules.reduce((sum, module) => sum + module.price * module.quantity, 0)
-    : (props.product.price ?? 0);
-
-  return `${new Intl.NumberFormat('tr-TR').format(total)} ${props.product.currency ?? ''}`.trim();
-});
 </script>
