@@ -26,7 +26,13 @@ const HINGE_STEPS = [
 const GARDIROP: IProductSettings = {
   width: { min: 60, max: 400, step: 5 },
   height: { min: 160, max: 280, step: 5 },
-  depth: { min: 40, max: 80, step: 5 },
+  /*
+   * Tavan 80'den 120'ye çıktı. 80 gardırop için tipik derinliğin (60) çok
+   * üstünde ama yürümeli/giyinme odası dolapları ve raflı depo çözümleri
+   * daha derin isteniyor — atölye bunu zaten yapıyordu, sınır arayüzde
+   * duruyordu.
+   */
+  depth: { min: 40, max: 120, step: 5 },
   sectionCount: { min: 1, max: 8 },
   maxModuleWidthCm: 200,
   maxDoorLeafWidthCm: 119,
