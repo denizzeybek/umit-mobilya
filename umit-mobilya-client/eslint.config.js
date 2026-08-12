@@ -18,6 +18,14 @@ export default [
       '**/node_modules/**',
       'components.d.ts',
       'src/client/**',
+      /*
+       * `vue-tsc -b` derleme çıktısı: gitignore'da ama diskte duruyor ve
+       * eslint onu kaynak sanıp import sırasından şikâyet ediyordu. Bir
+       * `yarn build`den sonra `yarn lint` kırmızıya dönüyordu, üstelik
+       * kimsenin yazmadığı bir dosya yüzünden.
+       */
+      'vite.config.{js,d.ts}',
+      'vitest.config.{js,d.ts}',
     ],
   },
   ...vue.configs['flat/essential'],
