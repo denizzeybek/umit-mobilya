@@ -89,6 +89,24 @@ expect 0 enforce-lazy-boundary "$ROOT/src/router/routes.ts" \
 expect 0 enforce-lazy-boundary "$ROOT/src/views/configurator/_views/Configurator.vue" \
   "import { PRODUCTS } from '../_etc/registry';" "konfiguratorun kendi ici"
 
+# Three.js sinirinin kendisi: kural bugune kadar YALNIZCA konfigurator
+# yollarini ariyordu, `three` paketini hic gormuyordu. Ana sayfaya
+# `import * as THREE from 'three'` yazilabiliyordu ve hicbir sey otmuyordu.
+expect 2 enforce-lazy-boundary "$ROOT/src/views/dashboard/_components/HomeHero.vue" \
+  "import * as THREE from 'three';" "ana sayfada three importu"
+expect 2 enforce-lazy-boundary "$ROOT/src/layouts/default/DefaultLayout.vue" \
+  "import { Group } from 'three';" "layout'ta three importu"
+expect 2 enforce-lazy-boundary "$ROOT/src/composables/useSiteNav.ts" \
+  "import { useThreeScene } from '@/composables/useThreeScene';" "sahne composable importu"
+# Dinamik import ve type import zaten kapsam disi.
+expect 0 enforce-lazy-boundary "$ROOT/src/views/dashboard/_components/HomeHero.vue" \
+  "const THREE = await import('three');" "dinamik three importu"
+expect 0 enforce-lazy-boundary "$ROOT/src/views/dashboard/_components/HomeHero.vue" \
+  "import type { Group } from 'three';" "three tip importu"
+# Sahneye ayrilmis tembel klasor serbest.
+expect 0 enforce-lazy-boundary "$ROOT/src/components/three/lazy/HeroScene.vue" \
+  "import * as THREE from 'three';" "tembel sahne klasoru"
+
 printf '\n— mevcut kaynak agaci —\n'
 while IFS= read -r file; do
   body="$(cat "$file")"

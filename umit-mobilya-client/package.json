@@ -14,7 +14,8 @@
     "format": "prettier --write src/",
     "generate-icon-names": "node ./scripts/iconNameGenerator.js",
     "gcl": "openapi --input ../umit-mobilya-server/openapi.json --output ./src/client --client axios",
-    "gcl:live": "openapi --input http://localhost:3000/docs-json --output ./src/client --client axios"
+    "gcl:live": "openapi --input http://localhost:3000/docs-json --output ./src/client --client axios",
+    "size-check": "node scripts/size-check.mjs"
   },
   "dependencies": {
     "@primevue/themes": "^4.2.0",

@@ -21,7 +21,13 @@ yarn lint            # must be clean; lint:fix only for mechanical fixes
 yarn type-check      # vue-tsc, must pass
 yarn test:unit run   # vitest; the configurator's pure functions
 yarn build           # catches what type-check misses
+yarn size-check      # ana paket tavanı — build'den SONRA
 ```
+
+`size-check` bir alarm: bu repoda CI yok ve paket boyutu sessizce şişiyor.
+Ölçüldü — menüye ürün listesi eklerken bir composable `registry`'yi import
+etti ve ana paket 1 741 kB'den 2 237 kB'ye çıktı; hiçbir test kırılmadı,
+hiçbir uyarı çıkmadı.
 
 Touched a `.claude/hooks/` script? Run its own suite — the hooks have no other
 coverage and a broken matcher fails open, which is worse than failing loud:

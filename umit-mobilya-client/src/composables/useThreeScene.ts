@@ -28,6 +28,12 @@ import type { Ref } from 'vue';
  */
 export interface IThreeScene {
   camera: Ref<PerspectiveCamera | null>;
+  /**
+   * WebGL kurulamadıysa `false`. Görüntüleyici bunu görüp poster/uyarı
+   * gösterebilsin diye var — eskiden kırık, boş bir canvas kalıyordu ve
+   * kullanıcı sayfanın bozuk olduğunu sanıyordu.
+   */
+  supported: Ref<boolean>;
   requestRender: () => void;
   setContent: (next: Object3D | null) => void;
   resize: () => void;
@@ -40,6 +46,7 @@ export const useThreeScene = (
   onResize?: () => void,
 ): IThreeScene => {
   const camera = shallowRef<PerspectiveCamera | null>(null);
+  const supported = shallowRef(true);
 
   let renderer: WebGLRenderer | null = null;
   let scene: Scene | null = null;
@@ -118,7 +125,19 @@ export const useThreeScene = (
   const mount = () => {
     if (!canvas.value || !container.value) return;
 
-    renderer = new WebGLRenderer({ canvas: canvas.value, antialias: true });
+    /*
+     * WebGL her yerde yok: eski cihazlar, kurumsal politikalar ve donanım
+     * hızlandırması kapalı tarayıcılar bağlamı vermiyor. `new WebGLRenderer`
+     * o durumda fırlatıyor; yakalamazsak bileşen kuruluşu patlıyor ve geriye
+     * boş bir canvas kalıyordu.
+     */
+    try {
+      renderer = new WebGLRenderer({ canvas: canvas.value, antialias: true });
+    } catch {
+      supported.value = false;
+      return;
+    }
+
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = SRGBColorSpace;
     renderer.toneMapping = ACESFilmicToneMapping;
@@ -152,5 +171,5 @@ export const useThreeScene = (
     camera.value = null;
   });
 
-  return { camera, requestRender, setContent, resize, mount };
+  return { camera, supported, requestRender, setContent, resize, mount };
 };

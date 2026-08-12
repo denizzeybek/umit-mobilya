@@ -28,8 +28,13 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      vue: 'vue/dist/vue.esm-bundler.js'
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+      /*
+       * `vue: 'vue/dist/vue.esm-bundler.js'` KALDIRILDI. O yapi calisma
+       * zamaninda sablon derleyicisini de tasiyor; bu uygulamada calisma
+       * zamaninda derlenen sablon yok (hepsi SFC), yani sadece agirlikti.
+       * Olculdu: ana paket 1 742.88 -> 1 648.21 kB, yani 94.67 kB.
+       */
     }
   }
 })

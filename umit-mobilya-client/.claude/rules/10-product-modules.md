@@ -74,6 +74,25 @@ Menü, başlık gibi yerlerde ihtiyaç duyulan hafif veri için:
 Dinamik `import()` ve `import type` kapsam dışı: ilki zaten tembel parçayı
 oluşturan şey, ikincisi derlemede siliniyor.
 
+### Sınır yalnızca konfigüratör değil, her 3D sahne
+
+Hook başlangıçta yalnızca `configurator/` yollarını arıyordu ve `three`
+paketinin kendisini **hiç görmüyordu**: ana sayfaya `import * as THREE from
+'three'` yazmak serbestti, 494 kB sessizce ana pakete giriyordu ve hiçbir test
+kırılmıyordu. Korumak için var olduğu senaryo tam da buydu.
+
+Artık `from 'three'`, `useThreeScene` ve `useOrbitZoom` de engelleniyor.
+Muaf olanlar:
+
+| Yol | Neden |
+|---|---|
+| `src/views/configurator/**` | zaten tembel parçanın içinde |
+| `src/components/three/lazy/**` | 3D sahnelere ayrılmış tembel klasör |
+| `composables/useThreeScene.ts`, `useOrbitZoom.ts` | sahnenin ta kendisi; kural onları *import edenlere* karşı |
+
+Marketing tarafındaki her 3D sahne `src/components/three/lazy/` altında
+yaşar ve dinamik `import('three')` ile yüklenir.
+
 ## Sınırlar import edilmez, geçirilir
 
 Ölçü aralıkları ürüne göre değişir — gardırop 160–280 cm yüksekliğinde, mutfak

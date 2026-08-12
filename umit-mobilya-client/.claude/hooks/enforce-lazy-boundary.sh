@@ -22,6 +22,13 @@ file_path="$(printf '%s' "$payload" | jq -r '.tool_input.file_path // ""')"
 case "$file_path" in
   # Konfiguratorun kendisi zaten tembel parcanin icinde.
   */src/views/configurator/*) exit 0 ;;
+  # 3D sahneler icin ayrilmis tembel klasor — her biri kendi parcasinda.
+  */src/components/three/lazy/*) exit 0 ;;
+  # Three.js sarmalayicilarinin KENDISI. Bunlar sahnenin ta kendisi ve
+  # yalnizca tembel parcadan cagriliyorlar; kendilerini yasaklamak anlamsiz.
+  # Kural, HER ZAMAN YUKLENEN bir dosyanin bunlari import etmesine karsi.
+  */src/composables/useThreeScene.ts) exit 0 ;;
+  */src/composables/useOrbitZoom.ts) exit 0 ;;
   */umit-mobilya-client/src/*.vue | */umit-mobilya-client/src/*.ts) ;;
   *) exit 0 ;;
 esac
@@ -38,6 +45,12 @@ violations="$(printf '%s\n' "$content" | awk '
   /import[[:space:]]*\(/ { next }
   /configurator\/_etc\/registry|configurator\/_etc\/products|configurator\/_components|configurator\/_views/ {
     printf "  %d: %s\n", NR, $0
+    next
+  }
+  # Three.js ve sahne kurulumu: 494 kB. Konfigurator disindaki her 3D de kendi
+  # tembel parcasinda olmali, yoksa her sayfa o yuku indirir.
+  /from[[:space:]]*['"'"'"]three['"'"'"]|from[[:space:]]*['"'"'"]three\/|useThreeScene|useOrbitZoom/ {
+    printf "  %d: %s\n", NR, $0
   }
 ')"
 
@@ -53,6 +66,10 @@ tembel yuklenmesi anlamsizlasir.
 Menu, baslik gibi yerlerde ihtiyac duyulan kimlik ve ad icin:
   @/views/configurator/_etc/productList   PRODUCT_SUMMARIES, productLabel
   @/views/configurator/_etc/types         EProductType
+
+Three.js icin de ayni kural: sahne kodu ya `src/components/three/lazy/`
+altinda ya da tembel bir route'un icinde olmali, ve dinamik `import('three')`
+ile yuklenmeli.
 
 Urun tanimina gercekten ihtiyac varsa, o kodun kendisi tembel route'un
 icinde olmali.

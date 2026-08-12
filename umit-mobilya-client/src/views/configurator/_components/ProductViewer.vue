@@ -5,11 +5,29 @@
     :class="$attrs.class"
   >
     <canvas
+      v-show="scene.supported.value"
       ref="canvas"
       class="block h-full w-full cursor-grab active:cursor-grabbing"
     />
 
+    <!--
+      WebGL yoksa boş bir canvas bırakmak, kullanıcıya sayfanın bozuk olduğunu
+      düşündürüyordu. Ölçüler ve fiyat zaten sağdaki panelde; kayıp olan
+      yalnızca görsel.
+    -->
+    <div
+      v-if="!scene.supported.value"
+      class="flex h-full w-full flex-col items-center justify-center gap-3 p-8 text-center"
+    >
+      <p class="eyebrow">Önizleme görüntülenemiyor</p>
+      <p class="max-w-prose text-sm text-f-ink-muted">
+        Tarayıcın 3B görüntülemeyi desteklemiyor. Ölçüleri ve fiyatı yandaki
+        panelden değiştirmeye devam edebilirsin; teklifin bundan etkilenmez.
+      </p>
+    </div>
+
     <ProductViewerControls
+      v-if="scene.supported.value"
       :label="`${size.width} × ${size.height} × ${size.depth} cm`"
       :zoom="orbit.zoom.value"
       :min-zoom="orbit.minZoom"
