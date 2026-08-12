@@ -33,10 +33,13 @@ curls/               replay-ready call for every endpoint — see curls/README.m
 src/
   main.ts            entry point; boots Nest and applies setup-app
   setup-app.ts       body parsers, ValidationPipe, exception filter, CORS, Swagger
-  app.module.ts      ConfigModule + MongooseModule + the four feature modules
+  app.module.ts      ConfigModule + MongooseModule + ThrottlerModule (APP_GUARD)
+                     + the feature modules
   auth/              signup, login, logout, me — plus the global JwtAuthGuard
   category/          the reference domain: schema, dto, service, controller
-  product/           the largest: R2 images, modules[] flattening
+  configurator/      price book + the price engine copied from the client
+  quote/             quote requests, the frozen price, the PDF
+  product/           the portfolio: R2 images, filtering
   storage/           ObjectStorageService — the only place that talks to R2
   common/            AllExceptionsFilter, ParseObjectIdPipe
 test/                shared harness + the characterization suite
@@ -75,9 +78,15 @@ fake credentials (`test/setup-env.ts`), and `ConfigModule` skips `.env` when
 - Mutating routes sit behind `JwtAuthGuard`. The deliberate exceptions are the
   whole `auth` domain and `POST /api/products/filter`, which uses a mutation
   verb to run a read.
-- `modules[]` is stored as `{ productId, quantity }` and **flattened** on read
-  into `{ _id, name, price, currency, imageUrl, quantity, … }` plus a computed
-  `totalPrice` — the API shape is not the schema shape.
+- `ThrottlerGuard` is registered globally as `APP_GUARD`: 300/min per IP, and
+  5/min on the public `POST /api/quotes`. Tests disable it via `THROTTLE_SKIP`
+  — DI overrides do not reach a guard living under `APP_GUARD`.
+- A product carries no `price`, `quantity` or `modules[]` any more. Made-to-measure
+  work is priced from dimensions, so the portfolio links to the configurator and
+  everything routes to a quote.
+- The quote amount is computed **on the server** and frozen into the record with
+  the parts list and `priceBookVersion`. A `price` in the request body is
+  rejected, not ignored.
 - Errors always come back as `{ statusCode, message, path, errors? }`.
 - A `@Body()` parameter must be annotated with the DTO itself. Writing
   `Dto | undefined` makes Nest resolve the metatype to `Object`, and the global
