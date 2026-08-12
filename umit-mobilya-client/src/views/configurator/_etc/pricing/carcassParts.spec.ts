@@ -8,7 +8,7 @@ import { priceOf } from './priceOf';
 import type { ICarcassInput } from './carcassParts';
 
 const input = (extra: Partial<ICarcassInput> = {}): ICarcassInput => ({
-  bayWidths: [56.4],
+  modules: [{ width: 56.4 }],
   height: 180,
   depth: 60,
   backPanel: 8,
@@ -56,6 +56,35 @@ describe('doorLeafCount', () => {
   it('yukarı yuvarlar: 130 cm üç kanat eder, iki değil', () => {
     expect(doorLeafCount(130, 60)).toBe(3);
   });
+
+  /*
+   * 119 cm tavanı bilinçli: 120 cm'lik bir modül tam iki kanat etsin diye.
+   * 120'de bırakılsaydı `ceil(120/120)` bir kanat verirdi.
+   */
+  it('119 tavanında 119 tek, 120 iki kanat eder', () => {
+    expect(doorLeafCount(119, 119)).toBe(1);
+    expect(doorLeafCount(120, 119)).toBe(2);
+  });
+
+  /*
+   * Kullanıcının kararı tavanı EZER: atölye bazen tavanı bilerek zorluyor ya
+   * da simetri için farklı bölüyor. Tavan bir varsayım; kullanıcı atölyeyi
+   * tanıyan taraf.
+   */
+  it('elle seçilen kanat sayısı tavanı ezer', () => {
+    expect(doorLeafCount(240, 119, 1)).toBe(1);
+    expect(doorLeafCount(60, 119, 3)).toBe(3);
+  });
+
+  it('elle seçim makul aralığa sıkıştırılır', () => {
+    expect(doorLeafCount(120, 119, 0)).toBe(1);
+    expect(doorLeafCount(120, 119, 99)).toBe(4);
+  });
+
+  it('null ve tanımsız otomatik demektir', () => {
+    expect(doorLeafCount(240, 119, null)).toBe(3);
+    expect(doorLeafCount(240, 119, undefined)).toBe(3);
+  });
 });
 
 describe('hingeCountFor', () => {
@@ -86,7 +115,7 @@ describe('carcassParts', () => {
 
   /* G1'in kanıtı: üç bölüm 12 gövde paneli + 3 arkalık demek. */
   it('üç modül on iki gövde paneli ve üç arkalık üretir', () => {
-    const { parts } = build({ bayWidths: [96.4, 96.4, 96.4] });
+    const { parts } = build({ modules: [{ width: 96.4 }, { width: 96.4 }, { width: 96.4 }] });
 
     const govde =
       countOf(parts, 'yan-panel') + countOf(parts, 'ust') + countOf(parts, 'alt');
@@ -121,9 +150,9 @@ describe('carcassParts', () => {
    * 3.3c'nin asıl bedeli: 200 cm modülü tek kanat sayan bir hesap menteşeyi
    * ve kulpu DÖRTTE BİR gösterirdi. Kapak alanı ise değişmez.
    */
-  it('200 cm modül dört kanat, menteşe ve kulp buna göre artar', () => {
-    const dar = build({ bayWidths: [56.4], doorType: 'standart' });
-    const genis = build({ bayWidths: [196.4], doorType: 'standart' });
+  it('geniş modül birden çok kanada bölünür, menteşe ve kulp buna göre artar', () => {
+    const dar = build({ modules: [{ width: 56.4 }], doorType: 'standart' });
+    const genis = build({ modules: [{ width: 196.4 }], doorType: 'standart' });
 
     expect(countOf(dar.parts, 'kapak')).toBe(1);
     expect(countOf(genis.parts, 'kapak')).toBe(4);
@@ -157,8 +186,8 @@ describe('carcassParts', () => {
       vat: { rate: 0, included: false },
     };
 
-    const tekKanat = carcassParts(input({ bayWidths: [116.4], doorType: 'standart' }), book, 200);
-    const ucKanat = carcassParts(input({ bayWidths: [116.4], doorType: 'standart' }), book, 40);
+    const tekKanat = carcassParts(input({ modules: [{ width: 116.4 }], doorType: 'standart' }), book, 200);
+    const ucKanat = carcassParts(input({ modules: [{ width: 116.4 }], doorType: 'standart' }), book, 40);
 
     const kapakTutari = (parts: typeof tekKanat.parts) =>
       priceOf(parts.filter((p) => p.kind === 'kapak'), book, selection).total;
@@ -173,8 +202,24 @@ describe('carcassParts', () => {
     expect(parts.find((p) => p.kind === 'mentese')?.qty).toBeGreaterThan(0);
   });
 
+  /* Bölümün kendi kararı, o bölümün kapaklarını belirler; diğerlerini değil. */
+  it('bölüm başına kanat sayısı ayrı ayrı uygulanır', () => {
+    const { parts } = build(
+      {
+        modules: [{ width: 116.4, doorLeaves: 1 }, { width: 116.4 }],
+        doorType: 'standart',
+      },
+      60,
+    );
+
+    const kapaklar = parts.filter((p) => p.kind === 'kapak');
+
+    expect(kapaklar.filter((p) => p.moduleIndex === 0)).toHaveLength(1);
+    expect(kapaklar.filter((p) => p.moduleIndex === 1)).toHaveLength(2);
+  });
+
   it('genişliği sıfır olan bölüm parça üretmez', () => {
-    const { parts } = build({ bayWidths: [56.4, 0] });
+    const { parts } = build({ modules: [{ width: 56.4 }, { width: 0 }] });
 
     expect(countOf(parts, 'yan-panel')).toBe(2);
   });

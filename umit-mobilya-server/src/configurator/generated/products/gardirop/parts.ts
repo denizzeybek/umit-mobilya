@@ -54,18 +54,27 @@ const interiorParts = (
   const drawerStack = drawers * DRAWER_HEIGHT_CM;
   const shelfDepth = config.depth - config.backPanel / 10 - SHELF_CLEARANCE_CM;
 
-  if (drawers > 0) {
+  /*
+   * Çekmece başına AYRI parça. Fiyat açısından tek kalem olması (C8: birim
+   * fiyat rayı ve malzemeyi içerir) bunu değiştirmiyor — `priceOf` etikete
+   * göre topluyor, yani beş parça da beş adet ediyor.
+   *
+   * Tek parçaya çökertilmişti ve sahne beş çekmece yerine yığının ortasında
+   * havada duran TEK bir panel çiziyordu.
+   */
+  for (let index = 0; index < drawers; index += 1) {
     parts.push({
       kind: 'cekmece',
       partClass: 'hardware',
       moduleIndex: rect.index,
       label: 'Çekmeceler',
-      qty: drawers,
+      qty: 1,
       size: { w: rect.bayWidth, h: DRAWER_HEIGHT_CM, d: t },
       placement: {
         x: rect.center * CM,
-        y: ((t + drawerStack) / 2) * CM,
-        z: (config.depth / 2) * CM,
+        y: (t + index * DRAWER_HEIGHT_CM + DRAWER_HEIGHT_CM / 2) * CM,
+        /* Ön yüz gövde hizasında değil, bir panel kalınlığı İÇERİDE. */
+        z: (config.depth / 2 - t / 2) * CM,
       },
     });
   }
@@ -119,13 +128,16 @@ export const gardiropParts = (
   book: IPriceBook,
 ): IPart[] => {
   const settings = book.products.gardirop;
-  const bayWidths = config.sections
+  const modules = config.sections
     .slice(0, config.sectionCount)
-    .map((section) => section.width);
+    .map((section) => ({
+      width: section.width,
+      doorLeaves: section.doorLeaves ?? null,
+    }));
 
   const shell = carcassParts(
     {
-      bayWidths,
+      modules,
       height: config.height,
       depth: config.depth,
       backPanel: config.backPanel,

@@ -18,8 +18,14 @@ import type { IPart } from './types';
 
 const CM = 0.01;
 
+export interface ICarcassModule {
+  width: number;
+  /** `null`/yok = otomatik; sayı = kullanıcının seçtiği kanat sayısı. */
+  doorLeaves?: number | null;
+}
+
 export interface ICarcassInput {
-  bayWidths: number[];
+  modules: ICarcassModule[];
   height: number;
   depth: number;
   backPanel: number;
@@ -104,11 +110,12 @@ const doorPartsFor = (
   book: IPriceBook,
   t: number,
   maxLeaf: number,
+  leafOverride?: number | null,
 ): IPart[] => {
   const doorType = book.doorTypes.find((item) => item.id === input.doorType);
   if (!doorType || input.doorType === 'yok') return [];
 
-  const leaves = doorLeafCount(rect.outerWidth, maxLeaf);
+  const leaves = doorLeafCount(rect.outerWidth, maxLeaf, leafOverride);
   if (leaves === 0) return [];
 
   const leafWidth = rect.outerWidth / leaves;
@@ -167,7 +174,10 @@ export const carcassParts = (
 ): ICarcassParts => {
   const material = book.materials.find((item) => item.id === input.material);
   const t = panelThicknessOf(material?.thicknessMm ?? 18);
-  const modules = moduleRects(input.bayWidths, t);
+  const modules = moduleRects(
+    input.modules.map((module) => module.width),
+    t,
+  );
   const parts: IPart[] = [];
 
   for (const rect of modules) {
@@ -178,7 +188,16 @@ export const carcassParts = (
     parts.push(horizontalPart(rect, 'ust', input, t));
     parts.push(horizontalPart(rect, 'alt', input, t));
     parts.push(backPart(rect, input));
-    parts.push(...doorPartsFor(rect, input, book, t, maxDoorLeafWidthCm));
+    parts.push(
+      ...doorPartsFor(
+        rect,
+        input,
+        book,
+        t,
+        maxDoorLeafWidthCm,
+        input.modules[rect.index]?.doorLeaves,
+      ),
+    );
   }
 
   return { parts, modules, panelThicknessCm: t };

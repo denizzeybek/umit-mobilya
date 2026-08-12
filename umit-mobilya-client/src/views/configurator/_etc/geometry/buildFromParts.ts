@@ -19,6 +19,7 @@ import type { IProductMaterials } from './primitives';
 const CM = 0.01;
 const DOOR_GAP = 0.003;
 const RAIL_RADIUS = 0.014;
+const DRAWER_GAP = 0.003;
 const MAX_DOOR_ANGLE = (100 * Math.PI) / 180;
 
 /**
@@ -58,6 +59,35 @@ const meshFor = (
     rail.position.set(placement.x, placement.y, placement.z);
     rail.castShadow = true;
     return rail;
+  }
+
+  /*
+   * Çekmece TEK parça ama İKİ kutu: ön panel ve üstündeki metal kulp çıtası.
+   * İkisi de aynı fiziksel şeyin parçası (birim fiyatı ikisini de içeriyor),
+   * o yüzden parça listesine ayrı satır girmiyorlar — sahnede bir grup
+   * oluyorlar. Kulp çizilmediğinde çekmeceler düz panel gibi görünüyordu.
+   */
+  if (part.kind === 'cekmece') {
+    const group = new Group();
+    const w = size.w * CM;
+    const h = size.h * CM;
+    const d = size.d * CM;
+
+    group.add(box(materials.panel, w - DRAWER_GAP * 2, h - DRAWER_GAP * 2, d, 0, 0, 0));
+    group.add(
+      box(
+        materials.metal,
+        w * 0.42,
+        0.008,
+        0.012,
+        0,
+        h / 2 - 0.03,
+        d / 2 + 0.006,
+      ),
+    );
+
+    group.position.set(placement.x, placement.y, placement.z);
+    return group;
   }
 
   const material =

@@ -14,9 +14,17 @@ import type {
  * sunucuda derlenmezdi. Sahne ve panel tipleri `_etc/types.ts`'te kalıyor.
  */
 
-/** Her ürünün bölümünde bulunan tek ortak alan. */
+/**
+ * Her ürünün bölümünde bulunan ortak alanlar.
+ *
+ * `doorLeaves` bilerek `null` olabiliyor: OTOMATİK demek, yani kanat sayısı
+ * modül genişliğinden ve kanat tavanından hesaplanır. Bir sayı verildiğinde
+ * kullanıcının kararı geçerli olur — atölye bazen tavanı bilerek zorluyor ya
+ * da simetri için farklı bölüyor, ve bunu koda gömmek yanlış olurdu.
+ */
 export interface IBaseSection {
   width: number;
+  doorLeaves?: number | null;
 }
 
 export interface IBaseConfig {

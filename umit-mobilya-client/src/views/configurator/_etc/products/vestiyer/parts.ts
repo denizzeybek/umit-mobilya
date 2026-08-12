@@ -105,13 +105,16 @@ export const vestiyerParts = (
   book: IPriceBook,
 ): IPart[] => {
   const settings = book.products.vestiyer;
-  const bayWidths = config.sections
+  const modules = config.sections
     .slice(0, config.sectionCount)
-    .map((section) => section.width);
+    .map((section) => ({
+      width: section.width,
+      doorLeaves: section.doorLeaves ?? null,
+    }));
 
   const shell = carcassParts(
     {
-      bayWidths,
+      modules,
       height: config.height,
       depth: config.depth,
       backPanel: config.backPanel,

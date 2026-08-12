@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { buildFromParts } from './geometry/buildFromParts';
 import { DEFAULT_PRICE_BOOK } from './pricing/defaults';
 import { priceOf } from './pricing/priceOf';
+import { gardiropDefinition } from './products/gardirop';
 import { PRODUCTS } from './registry';
 
 import type { IBaseConfig } from './types';
@@ -56,6 +57,40 @@ describe('ürün kayıt defteri', () => {
 
     expect(build.group.children.length).toBeGreaterThan(0);
     build.dispose();
+  });
+
+  /*
+   * Çekmece fiyat açısından TEK kalem (birim fiyatı rayı ve malzemeyi
+   * içeriyor) ama sahnede beş çekmece beş ön panel demek. Bir kez tek parçaya
+   * çökertilmişti ve sahne yığının ortasında havada duran tek bir panel
+   * çiziyordu — fiyat doğruydu, görüntü yanlıştı.
+   */
+  it('her çekmece ayrı parça olur ama fiyat adet üstünden kalır', () => {
+    const base = gardiropDefinition.createDefault();
+    const config = {
+      ...base,
+      sections: base.sections.map((section, index) => ({
+        ...section,
+        drawers: index === 0 ? 4 : 0,
+      })),
+    };
+
+    const parts = gardiropDefinition.parts(config, DEFAULT_PRICE_BOOK);
+    const drawers = parts.filter((part) => part.kind === 'cekmece');
+
+    expect(drawers).toHaveLength(4);
+    expect(drawers.every((part) => part.qty === 1)).toBe(true);
+
+    /* Dördü de farklı yükseklikte: üst üste yığılıyorlar. */
+    const heights = drawers.map((part) => part.placement?.y);
+    expect(new Set(heights).size).toBe(4);
+
+    const price = priceOf(parts, DEFAULT_PRICE_BOOK, selectionOf(config));
+    const line = price.lines.find((item) => item.label === 'Çekmeceler');
+
+    expect(line?.amount).toBe(
+      4 * DEFAULT_PRICE_BOOK.hardware.drawer.pricePerUnit,
+    );
   });
 
   /*
