@@ -1,0 +1,106 @@
+{
+  "productType": "gardirop",
+  "configSchemaVersion": 1,
+  "priceBookVersion": 0,
+  "config": {
+    "width": 400,
+    "height": 280,
+    "depth": 60,
+    "sectionCount": 4,
+    "material": "lak-panel",
+    "finish": "beyaz",
+    "backPanel": 18,
+    "doorType": "standart",
+    "doorOpen": 0,
+    "sections": [
+      {
+        "width": 96.4,
+        "shelves": [
+          40,
+          90
+        ],
+        "rails": [
+          50
+        ],
+        "drawers": 3
+      },
+      {
+        "width": 96.4,
+        "shelves": [
+          40,
+          90
+        ],
+        "rails": [
+          50
+        ],
+        "drawers": 3
+      },
+      {
+        "width": 96.4,
+        "shelves": [
+          40,
+          90
+        ],
+        "rails": [
+          50
+        ],
+        "drawers": 3
+      },
+      {
+        "width": 96.4,
+        "shelves": [
+          40,
+          90
+        ],
+        "rails": [
+          50
+        ],
+        "drawers": 3
+      }
+    ]
+  },
+  "price": {
+    "lines": [
+      {
+        "label": "Gövde",
+        "amount": 52896
+      },
+      {
+        "label": "Kapak — Standart kapak",
+        "amount": 32479.999999999996
+      },
+      {
+        "label": "Menteşeler",
+        "amount": 840
+      },
+      {
+        "label": "Kulplar",
+        "amount": 480
+      },
+      {
+        "label": "Çekmeceler",
+        "amount": 11400
+      },
+      {
+        "label": "Raflar",
+        "amount": 12569.017600000003
+      },
+      {
+        "label": "Askılıklar",
+        "amount": 694.08
+      },
+      {
+        "label": "Kenar bandı",
+        "amount": 1715.0399999999995
+      },
+      {
+        "label": "İşçilik",
+        "amount": 17240.950399999994
+      }
+    ],
+    "netTotal": 170173.86,
+    "vat": 34034.772,
+    "total": 204208.63199999998
+  },
+  "displayTotal": 204210
+}

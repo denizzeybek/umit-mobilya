@@ -1,0 +1,99 @@
+{
+  "productType": "vestiyer",
+  "configSchemaVersion": 1,
+  "priceBookVersion": 0,
+  "config": {
+    "width": 320,
+    "height": 240,
+    "depth": 45,
+    "sectionCount": 5,
+    "material": "akrilik",
+    "finish": "beyaz",
+    "backPanel": 18,
+    "doorType": "yok",
+    "doorOpen": 0,
+    "sections": [
+      {
+        "width": 60.4,
+        "benchFromFloor": 45,
+        "shoeShelves": 2,
+        "shelves": [
+          30
+        ],
+        "hookRail": 60
+      },
+      {
+        "width": 60.4,
+        "benchFromFloor": 45,
+        "shoeShelves": 2,
+        "shelves": [
+          30
+        ],
+        "hookRail": 60
+      },
+      {
+        "width": 60.4,
+        "benchFromFloor": 45,
+        "shoeShelves": 2,
+        "shelves": [
+          30
+        ],
+        "hookRail": 60
+      },
+      {
+        "width": 60.4,
+        "benchFromFloor": 45,
+        "shoeShelves": 2,
+        "shelves": [
+          30
+        ],
+        "hookRail": 60
+      },
+      {
+        "width": 60.4,
+        "benchFromFloor": 45,
+        "shoeShelves": 2,
+        "shelves": [
+          30
+        ],
+        "hookRail": 60
+      }
+    ]
+  },
+  "price": {
+    "lines": [
+      {
+        "label": "Gövde",
+        "amount": 46511.99999999999
+      },
+      {
+        "label": "Oturak",
+        "amount": 4230.416
+      },
+      {
+        "label": "Ayakkabılık",
+        "amount": 8460.832
+      },
+      {
+        "label": "Raflar",
+        "amount": 4230.416
+      },
+      {
+        "label": "Askı çıtası",
+        "amount": 543.6
+      },
+      {
+        "label": "Kenar bandı",
+        "amount": 543.5999999999998
+      },
+      {
+        "label": "İşçilik",
+        "amount": 10717.935999999992
+      }
+    ],
+    "netTotal": 99040.5,
+    "vat": 19808.100000000002,
+    "total": 118848.6
+  },
+  "displayTotal": 118850
+}

@@ -20,6 +20,14 @@ case "$file_path" in
   *.characterization.spec.ts) exit 0 ;;
 esac
 
+# The price net pins prices that already compute — the same claim a
+# characterization spec makes, so the same exemption applies. A golden that had
+# to fail first would mean the golden was wrong, not the code.
+# See .claude/rules/13-price-net.md
+case "$file_path" in
+  */umit-mobilya-server/test/price-net/*) exit 0 ;;
+esac
+
 server_root="${file_path%%/umit-mobilya-server/*}/umit-mobilya-server"
 [[ -d "$server_root/node_modules" ]] || exit 0
 [[ -f "$file_path" ]] || exit 0

@@ -48,6 +48,12 @@
             "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-no-direct-env.sh",
             "timeout": 15,
             "statusMessage": "process.env kontrolu..."
+          },
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-price-net.sh",
+            "timeout": 15,
+            "statusMessage": "Fiyat agi kontrolu..."
           }
         ]
       }

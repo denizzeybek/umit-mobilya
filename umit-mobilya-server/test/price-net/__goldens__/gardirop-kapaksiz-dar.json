@@ -1,0 +1,52 @@
+{
+  "productType": "gardirop",
+  "configSchemaVersion": 1,
+  "priceBookVersion": 0,
+  "config": {
+    "width": 60,
+    "height": 160,
+    "depth": 40,
+    "sectionCount": 1,
+    "material": "mdf-gloss",
+    "finish": "beyaz",
+    "backPanel": 4,
+    "doorType": "yok",
+    "doorOpen": 0,
+    "sections": [
+      {
+        "width": 56.4,
+        "shelves": [
+          30,
+          60,
+          90
+        ],
+        "rails": [],
+        "drawers": 0
+      }
+    ]
+  },
+  "price": {
+    "lines": [
+      {
+        "label": "Gövde",
+        "amount": 3520
+      },
+      {
+        "label": "Raflar",
+        "amount": 1272.3839999999998
+      },
+      {
+        "label": "Kenar bandı",
+        "amount": 76.13999999999999
+      },
+      {
+        "label": "İşçilik",
+        "amount": 2674.6672
+      }
+    ],
+    "netTotal": 9644.989000000001,
+    "vat": 1928.9978000000003,
+    "total": 11573.986800000002
+  },
+  "displayTotal": 11570
+}

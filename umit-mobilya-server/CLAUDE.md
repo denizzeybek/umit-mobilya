@@ -17,6 +17,7 @@ Index only. Every rule that governs code in `umit-mobilya-server/` is defined in
 | [`10-mongoose-schema-rules.md`](.claude/rules/10-mongoose-schema-rules.md) | `@Schema()` classes, refs vs embedded, idempotent hooks, keys not URLs |
 | [`11-logging.md`](.claude/rules/11-logging.md) | Nest `Logger`, log what you swallow, never log credentials |
 | [`12-coverage-gates.md`](.claude/rules/12-coverage-gates.md) | Where the thresholds are, what is excluded and why, how to raise them |
+| [`13-price-net.md`](.claude/rules/13-price-net.md) | The frozen price goldens: determinism, `yarn price-net:bless`, mutations through HTTP, self-cleaning scenarios, how a net spec is written |
 
 Repo-wide rules that also apply here: [`comment-policy.md`](../.claude/rules/comment-policy.md),
 [`done-checklist.md`](../.claude/rules/done-checklist.md),
@@ -39,6 +40,8 @@ src/
   storage/           ObjectStorageService — the only place that talks to R2
   common/            AllExceptionsFilter, ParseObjectIdPipe
 test/                shared harness + the characterization suite
+  price-net/         frozen price goldens; the crown jewel — see rule 13
+  e2e-api.ts         hermetic boot for the client's Playwright suite
 ```
 
 ## Commands
@@ -51,6 +54,12 @@ yarn type-check   # tsc --noEmit, strict
 yarn test         # jest
 yarn test:cov     # jest + coverage thresholds
 yarn schema:dump  # nest build && write openapi.json (no database needed)
+yarn sync:pricing # copy the price engine from the client into src/configurator/generated
+
+yarn e2e:api          # boot the whole app on mongodb-memory-server, port 5055.
+                      # What the client's Playwright suite starts; blocks, so
+                      # don't run it in a tool call unless you background it.
+yarn price-net:bless  # regenerate test/price-net/__goldens__ — then READ THE DIFF
 ```
 
 Specs run against an in-memory mongod (`test/global-setup.ts`) with deliberately
