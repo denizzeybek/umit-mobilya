@@ -8,6 +8,7 @@
       v-show="scene.supported.value"
       ref="canvas"
       class="block h-full w-full cursor-grab active:cursor-grabbing"
+      data-testid="viewer-canvas"
     />
 
     <!--
@@ -18,6 +19,7 @@
     <div
       v-if="!scene.supported.value"
       class="flex h-full w-full flex-col items-center justify-center gap-3 p-8 text-center"
+      data-testid="viewer-fallback"
     >
       <p class="eyebrow">Önizleme görüntülenemiyor</p>
       <p class="max-w-prose text-sm text-f-ink-muted">

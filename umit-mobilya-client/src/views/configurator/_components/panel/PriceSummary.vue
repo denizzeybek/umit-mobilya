@@ -2,7 +2,7 @@
   <section class="bg-f-primary p-6 text-f-bone md:p-7">
     <p class="eyebrow !text-f-brass-light">Tahmini fiyat</p>
 
-    <p class="display mt-3 text-display-md text-f-bone">
+    <p class="display mt-3 text-display-md text-f-bone" data-testid="price-total">
       {{ formatTry(roundedTotal) }}
     </p>
     <p class="mt-1 text-sm text-f-bone/60">KDV dahil</p>
@@ -29,6 +29,7 @@
     <button
       type="button"
       class="mt-7 block w-full bg-f-bone py-4 text-center text-[0.7rem] font-medium uppercase tracking-[0.16em] text-f-primary transition-colors duration-300 hover:bg-f-brass-light"
+      data-testid="request-quote"
       @click="emit('requestQuote')"
     >
       Bu Tasarım İçin Teklif Al

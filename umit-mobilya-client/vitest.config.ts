@@ -8,7 +8,13 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/*'],
+      /*
+       * `e2e/*` yetmiyordu: yolculuklar `e2e/journeys/` altında ve tek yıldız
+       * alt klasöre inmiyor. Vitest o Playwright spec'lerini toplayıp
+       * "test is not defined" ile düşüyordu — kırmızı bar, hiçbir gerçek
+       * hataya karşılık gelmeden.
+       */
+      exclude: [...configDefaults.exclude, 'e2e/**'],
       root: fileURLToPath(new URL('./', import.meta.url))
     }
   })

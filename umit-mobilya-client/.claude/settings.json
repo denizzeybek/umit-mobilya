@@ -58,6 +58,12 @@
             "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-client/.claude/hooks/enforce-lazy-boundary.sh",
             "timeout": 15,
             "statusMessage": "Tembel paket siniri kontrolu..."
+          },
+          {
+            "type": "command",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-client/.claude/hooks/e2e-budget.sh",
+            "timeout": 15,
+            "statusMessage": "e2e butcesi kontrolu..."
           }
         ]
       }

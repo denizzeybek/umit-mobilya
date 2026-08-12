@@ -8,14 +8,17 @@
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false && tsc --noEmit -p tsconfig.e2e.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write src/",
     "generate-icon-names": "node ./scripts/iconNameGenerator.js",
     "gcl": "openapi --input ../umit-mobilya-server/openapi.json --output ./src/client --client axios",
     "gcl:live": "openapi --input http://localhost:3000/docs-json --output ./src/client --client axios",
-    "size-check": "node scripts/size-check.mjs"
+    "size-check": "node scripts/size-check.mjs",
+    "e2e:smoke": "playwright test --config playwright.smoke.config.ts",
+    "e2e:journeys": "playwright test --config playwright.journeys.config.ts",
+    "e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@primevue/themes": "^4.2.0",
@@ -42,6 +45,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.61.1",
     "@primevue/auto-import-resolver": "^4.2.0",
     "@rushstack/eslint-patch": "^1.10.4",
     "@tsconfig/node18": "^18.2.4",

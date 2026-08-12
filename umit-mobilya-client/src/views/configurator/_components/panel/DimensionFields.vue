@@ -3,7 +3,7 @@
     <h2 class="font-serif text-2xl text-f-ink">2 — Ölçü</h2>
 
     <div class="mt-4 grid grid-cols-3 gap-3">
-      <label class="flex flex-col gap-2">
+      <label class="flex flex-col gap-2" data-testid="dim-width">
         <span class="eyebrow">Genişlik</span>
         <InputNumber
           v-model="width"
@@ -16,7 +16,7 @@
         />
       </label>
 
-      <label class="flex flex-col gap-2">
+      <label class="flex flex-col gap-2" data-testid="dim-height">
         <span class="eyebrow">Yükseklik</span>
         <InputNumber
           v-model="height"
@@ -29,7 +29,7 @@
         />
       </label>
 
-      <label class="flex flex-col gap-2">
+      <label class="flex flex-col gap-2" data-testid="dim-depth">
         <span class="eyebrow">Derinlik</span>
         <InputNumber
           v-model="depth"

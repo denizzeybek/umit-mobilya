@@ -20,7 +20,7 @@
       </nav>
     </header>
 
-    <main class="pt-8">
+    <main class="pt-8" data-testid="app-main">
       <RouterView />
     </main>
   </div>

@@ -1,6 +1,7 @@
 <template>
   <section
     class="mx-auto flex min-h-[70svh] max-w-editorial flex-col justify-center px-5 py-section md:px-10"
+    data-testid="not-found"
   >
     <p class="eyebrow">404</p>
     <h1 class="display mt-6 max-w-[16ch] text-display-lg text-f-ink">

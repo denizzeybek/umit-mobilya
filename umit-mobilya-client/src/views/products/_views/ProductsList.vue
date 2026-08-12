@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto max-w-editorial px-5 py-16 md:px-10 md:py-24">
+  <div class="mx-auto max-w-editorial px-5 py-16 md:px-10 md:py-24" data-testid="products-list">
     <header class="border-b border-f-rule pb-10">
       <p class="eyebrow">İşler</p>
       <div

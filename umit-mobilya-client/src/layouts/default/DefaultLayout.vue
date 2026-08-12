@@ -7,7 +7,11 @@
       hero'suz sayfalar başlık yüksekliği kadar itilir. Eski sürümdeki sabit
       mt-[101px] her iki durumu da yanlış çözüyordu.
     -->
-    <main class="flex-1" :class="{ 'pt-[72px] md:pt-[88px]': !hasHero }">
+    <main
+      class="flex-1"
+      :class="{ 'pt-[72px] md:pt-[88px]': !hasHero }"
+      data-testid="app-main"
+    >
       <RouterView />
     </main>
 

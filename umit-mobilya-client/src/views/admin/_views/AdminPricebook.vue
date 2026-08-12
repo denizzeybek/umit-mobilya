@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-6 pb-12">
+  <div class="flex flex-col gap-6 pb-12" data-testid="admin-pricebook">
     <!--
       Eylem çubuğu yapışkan: sayfa uzun ve kaydet düğmesi en üstteyken
       aşağıdaki bir alanı değiştiren kişi onu hiç görmüyordu.

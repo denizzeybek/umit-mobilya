@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4" data-testid="categories-list">
     <div class="flex justify-end">
       <Button label="Kategori Ekle" @click="showCategoryModal = true" />
     </div>

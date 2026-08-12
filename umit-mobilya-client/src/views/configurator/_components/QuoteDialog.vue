@@ -6,8 +6,18 @@
     class="w-[min(32rem,92vw)]"
   >
     <form v-if="!created" class="flex flex-col gap-4" @submit="submitHandler">
-      <FInput name="name" label="Ad soyad" placeholder="Adınız" />
-      <FInput name="phone" label="Telefon" placeholder="05xx xxx xx xx" />
+      <FInput
+        name="name"
+        label="Ad soyad"
+        placeholder="Adınız"
+        data-testid="quote-name"
+      />
+      <FInput
+        name="phone"
+        label="Telefon"
+        placeholder="05xx xxx xx xx"
+        data-testid="quote-phone"
+      />
       <FInput name="email" label="E-posta (isteğe bağlı)" placeholder="ornek@eposta.com" />
       <FInput name="note" label="Not (isteğe bağlı)" placeholder="Eklemek istedikleriniz" />
 
@@ -19,6 +29,7 @@
       <Button
         type="submit"
         label="Teklif Gönder"
+        data-testid="quote-submit"
         :disabled="isSubmitting"
         :loading="isSubmitting"
         class="w-full"
@@ -29,7 +40,9 @@
       <p class="text-f-ink">
         Teklif talebin alındı. Referans numaran:
       </p>
-      <p class="display text-display-sm text-f-primary">{{ created.code }}</p>
+      <p class="display text-display-sm text-f-primary" data-testid="quote-code">
+        {{ created.code }}
+      </p>
       <p class="text-sm text-f-ink-muted">
         Bu numarayı sakla — teklifini bu numarayla tekrar açabilirsin.
       </p>

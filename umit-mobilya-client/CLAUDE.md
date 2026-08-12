@@ -18,6 +18,7 @@ Index only. Every rule that governs code in `umit-mobilya-client/` is defined in
 | [`08-file-size-and-splitting.md`](.claude/rules/08-file-size-and-splitting.md) | 250-line cap on `.vue`/`.ts`, how to split, which files are exempt |
 | [`09-ui-controls.md`](.claude/rules/09-ui-controls.md) | `F*` first, then PrimeVue, raw HTML controls only with `raw-control:` |
 | [`10-product-modules.md`](.claude/rules/10-product-modules.md) | Configurator product family: no cross-product imports, limits are passed not imported |
+| [`11-e2e-conventions.md`](.claude/rules/11-e2e-conventions.md) | Playwright budget (manifested journeys, wall-clock ceilings) **and** how a spec is written: fixtures import, `data-testid` selectors, awaited web-first assertions, no sleeps/try-catch/only |
 
 Repo-wide rules that also apply here: [`comment-policy.md`](../.claude/rules/comment-policy.md),
 [`done-checklist.md`](../.claude/rules/done-checklist.md),
@@ -28,19 +29,26 @@ Repo-wide rules that also apply here: [`comment-policy.md`](../.claude/rules/com
 ```bash
 yarn dev          # vite on port 3001 — never run this in a tool call, it blocks
 yarn lint         # eslint flat config; must be clean before a change is done
-yarn type-check   # vue-tsc --noEmit
+yarn type-check   # vue-tsc for src/ + tsc -p tsconfig.e2e.json for e2e/
 yarn build        # vue-tsc -b && vite build
 yarn test:unit    # vitest
 yarn format       # prettier --write src/
 yarn gcl          # regenerate src/client from the server's openapi.json
+yarn e2e:smoke    # Playwright, every route (~30 s) — safe to run in a tool call
+yarn e2e:journeys # Playwright, the three manifested journeys (~30 s)
 ```
 
 `yarn generate-icon-names` points at a `scripts/` directory that does not exist.
-Tests cover the configurator's pure functions only (`_etc/geometry`,
-`_etc/dimensionOps`, `_etc/products/*`): 79 tests across 6 files, no component
-tests. Take the count from `yarn test:unit run`, not from grepping `it(` —
-several specs generate cases in a loop, so grep undercounts (61 vs 79).
+Vitest covers the configurator's pure functions only (`_etc/geometry`,
+`_etc/pricing`, `_etc/dimensionOps`, `_etc/products/*`): 131 tests across 9
+files, no component tests. Take the count from `yarn test:unit run`, not from
+grepping `it(` — several specs generate cases in a loop, so grep undercounts.
 `.claude/hooks/hooks.test.sh` covers the hooks themselves.
+
+The e2e commands are **hermetic and safe to run in a tool call** (unlike
+`yarn dev`): Playwright boots its own vite on **3101** and its own Nest API on
+**5055** over an in-memory mongod, so it never touches your `yarn dev` or a real
+database. First run needs `npx playwright install chromium` once.
 
 ## The five-second version
 

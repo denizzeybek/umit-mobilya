@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-col gap-6">
+  <section class="flex flex-col gap-6" data-testid="admin-quotes">
     <header>
       <h2 class="font-serif text-2xl text-f-ink">Teklif talepleri</h2>
       <p class="mt-1 text-sm text-f-ink-muted">

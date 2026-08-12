@@ -107,6 +107,55 @@ expect 0 enforce-lazy-boundary "$ROOT/src/views/dashboard/_components/HomeHero.v
 expect 0 enforce-lazy-boundary "$ROOT/src/components/three/lazy/HeroScene.vue" \
   "import * as THREE from 'three';" "tembel sahne klasoru"
 
+printf '\n— e2e-budget: yol kapisi —\n'
+E="$ROOT/e2e"
+OK="import { expect, test } from '../fixtures';"
+expect 2 e2e-budget "$E/journeys/her-butonu-dene.spec.ts" "$OK" "manifestsiz yolculuk"
+expect 0 e2e-budget "$E/journeys/quote-price-roundtrip.spec.ts" "$OK" "manifestli yolculuk"
+expect 2 e2e-budget "$E/urun-listesi.spec.ts" "$OK" "e2e/ altinda duz spec"
+expect 0 e2e-budget "$E/smoke.spec.ts" "import { expect, test } from './fixtures';" "smoke"
+expect 0 e2e-budget "$ROOT/src/views/x/y.spec.ts" "await page.waitForTimeout(1500);" "muaf: src altindaki vitest spec"
+
+printf '\n— e2e-budget: yazim kurallari —\n'
+S="$E/smoke.spec.ts"
+J="$E/journeys/quote-price-roundtrip.spec.ts"
+# fixtures nobetcisi atlanamaz — ama fixtures.ts'in kendisi muaf.
+expect 2 e2e-budget "$S" "import { expect, test } from '@playwright/test';" "fixtures atlanmis"
+expect 0 e2e-budget "$E/fixtures.ts" "import { test as base } from '@playwright/test';" "muaf: fixtures.ts"
+expect 0 e2e-budget "$E/fixtures.ts" "const api = process.env.E2E_API_URL ?? 'http://localhost:5055/api';" "muaf: fixtures env varsayilani"
+# Secici disiplini.
+expect 2 e2e-budget "$S" "page.locator('.mt-7.bg-f-bone')" "Tailwind sinifi secici"
+expect 2 e2e-budget "$S" "page.locator('#app > section')" "id + yapisal secici"
+expect 2 e2e-budget "$S" "page.locator('div:nth-child(2)')" "nth-child"
+expect 2 e2e-budget "$S" "page.locator('xpath=//div')" "xpath"
+expect 0 e2e-budget "$S" "page.getByTestId('price-total')" "testid"
+expect 0 e2e-budget "$S" "page.getByRole('button', { name: /teklif/i })" "rol"
+# Await'siz web-first iddia.
+expect 2 e2e-budget "$S" "expect(page.getByTestId('price-total')).toBeVisible();" "await'siz iddia"
+expect 0 e2e-budget "$S" "await expect(page.getByTestId('price-total')).toBeVisible();" "await'li iddia"
+expect 0 e2e-budget "$S" "expect(await page.getByTestId('x').textContent()).toContain('a');" "onceden await edilmis deger"
+# Bekleme.
+expect 2 e2e-budget "$S" "await page.waitForTimeout(1500);" "sabit uyku"
+expect 2 e2e-budget "$S" "await page.waitForSelector('canvas');" "eski bekleme API'si"
+expect 0 e2e-budget "$S" "await page.waitForURL(/c=/);" "web-first bekleme"
+# Yutulan hata, islenmis only/skip.
+expect 2 e2e-budget "$S" "try {
+  await page.goto('/');
+} catch (error) {}" "try/catch"
+expect 2 e2e-budget "$S" "test.only('x', async () => {});" "test.only"
+expect 2 e2e-budget "$S" "test.skip('x', async () => {});" "test.skip"
+expect 0 e2e-budget "$S" "await expect(promise).rejects.toThrow();" "beklenen hata iddiasi"
+# Sabit URL.
+expect 2 e2e-budget "$S" "await page.goto('http://localhost:3001/login');" "sabit base URL"
+expect 0 e2e-budget "$S" "await page.goto('/login');" "goreli yol"
+# Hesaplanmis tutar iddiasi.
+expect 2 e2e-budget "$J" "expect(shownTotal).toBe(48320);" "sabit tutar"
+expect 2 e2e-budget "$J" "expect(shownTotal).toBe(48_320);" "alt cizgili sabit tutar"
+expect 0 e2e-budget "$J" "expect(shownTotal).toBe(Math.round(quote.price.total / 10) * 10);" "kimlik iddiasi"
+expect 0 e2e-budget "$S" "expect(response.status()).toBe(201);" "durum kodu"
+expect 0 e2e-budget "$S" "await expect(canvas).toBeVisible({ timeout: 20000 });" "iddia timeout'u"
+expect 0 e2e-budget "$S" "expect(width).toBe(1920); /* reason: viewport genisligi, tutar degil */" "gerekceli sabit"
+
 printf '\n— mevcut kaynak agaci —\n'
 while IFS= read -r file; do
   body="$(cat "$file")"

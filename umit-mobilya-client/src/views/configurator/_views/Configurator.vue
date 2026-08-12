@@ -1,6 +1,7 @@
 <template>
   <div
     class="mx-auto max-w-editorial px-5 py-12 md:px-10 md:py-20 lg:px-16 xl:px-24"
+    data-testid="configurator"
   >
     <header class="border-b border-f-rule pb-8">
       <p class="eyebrow">{{ definition.eyebrow }}</p>

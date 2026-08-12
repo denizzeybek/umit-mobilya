@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center w-full max-w-xs m-auto">
+  <div class="flex flex-col justify-center w-full max-w-xs m-auto" data-testid="login-form">
     <FText as="h1" class="mb-8 text-center"> Login </FText>
 
     <form class="flex flex-col gap-5" @submit="submitHandler">
