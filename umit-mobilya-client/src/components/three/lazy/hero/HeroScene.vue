@@ -116,10 +116,15 @@ const tick = (): void => {
   const rect = (props.track ?? container.value).getBoundingClientRect();
   if (rect.bottom < -80) return;
 
+  /*
+   * `travel` sıfır olamaz: sıfıra bölme NaN üretiyor, NaN parça konumlarına
+   * yazılıyor ve dolap sahneden kayboluyor — künyede de "montaj %NaN" kalıyor.
+   */
   const travel =
     Math.max(rect.height - window.innerHeight, rect.height * 0.5) *
     ASSEMBLY_SPAN;
-  const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
+  const progress =
+    travel > 0 ? Math.min(Math.max(-rect.top / travel, 0), 1) : 0;
 
   const yawGap = yawTarget - yaw;
   const pitchGap = pitchTarget - pitch;
