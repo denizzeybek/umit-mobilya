@@ -127,6 +127,16 @@ export const priceCases = (book: IPriceBook): IPriceCase[] => {
     backPanel: 4,
   };
 
+  const kose: IShape = {
+    width: 240,
+    height: 220,
+    depth: 60,
+    sectionCount: 3,
+    material: gardirop.defaultMaterial,
+    doorType: gardirop.defaultDoorType,
+    backPanel: 8,
+  };
+
   const vestiyerStandart: IShape = {
     width: 120,
     height: 200,
@@ -193,6 +203,31 @@ export const priceCases = (book: IPriceBook): IPriceCase[] => {
           rails: [],
           drawers: 0,
         }),
+      },
+    },
+    {
+      id: 'gardirop-kose-modullu',
+      title: '240 x 220 x 60, üç bölüm, üçüncüsü köşe modülü',
+      guards:
+        'Köşe modülünün tutara etkisi. Bugün NÖTR (cornerSurchargePercent 0), ' +
+        'yani bu golden düz üç bölümlü dolapla aynı sayıyı taşıyor — katsayı ' +
+        'gerçek imalat farkına çekildiğinde kaymak ZORUNDA, ve kaymazsa köşe ' +
+        'bayrağı fiyata hiç ulaşmıyor demektir.',
+      productType: 'gardirop',
+      config: {
+        ...baseOf(kose),
+        /*
+         * Üç eşit modül, üçüncüsü köşe. Köşe modülünün genişliği diğerleriyle
+         * aynı çünkü o ölçü artık KAPAK YÜZÜ genişliği; planda kapladığı kare
+         * ondan ve derinlikten türüyor.
+         */
+        sections: gardiropSections(kose, book, {
+          shelves: [35, 120],
+          rails: [42],
+          drawers: 0,
+        }).map((section, index) =>
+          index === 2 ? { ...section, corner: true } : section,
+        ),
       },
     },
     {

@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import { Vector3 } from 'three';
 
@@ -61,6 +61,12 @@ interface IProps {
   content: Object3D | null;
   size: { width: number; height: number; depth: number };
   /**
+   * Kameranın sığdıracağı gerçek kutu. Etiketteki ölçüden ayrı, çünkü köşe
+   * modülü olan bir gövdede ikisi aynı şey değil: etiket toplam koşu
+   * uzunluğunu söyler, kamera ayak izini çerçevelemek zorundadır.
+   */
+  bounds?: { width: number; height: number; depth: number };
+  /**
    * İçerik yerinde değiştirildiğinde (kapak açısı gibi) referans aynı kaldığı
    * için `content` izleyicisi tetiklenmez. Bu sayacı artırmak yeniden çizim
    * istemenin tek yolu.
@@ -77,12 +83,18 @@ const CM = 0.01;
 const container = ref<HTMLDivElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
 
+const framed = computed(() => {
+  const box = props.bounds ?? props.size;
+  return box.width > 0 && box.height > 0 ? box : props.size;
+});
+
 const frame = () => {
   const size = new Vector3(
-    props.size.width * CM,
-    props.size.height * CM,
-    props.size.depth * CM,
+    framed.value.width * CM,
+    framed.value.height * CM,
+    framed.value.depth * CM,
   );
+  scene.setBackdropDepth(size.z);
   orbit.frameBounds(size, size.y / 2);
 };
 
@@ -94,7 +106,7 @@ watch(() => props.content, scene.setContent);
 watch(() => props.version, scene.requestRender);
 
 watch(
-  () => [props.size.width, props.size.height, props.size.depth],
+  () => [framed.value.width, framed.value.height, framed.value.depth],
   frame,
 );
 

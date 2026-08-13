@@ -39,6 +39,12 @@
     >
         {{ sectionLabel(config.sectionCount, index) }}
         <span class="opacity-60">· {{ config.sections[index]?.width }} cm</span>
+        <!--
+          Köşe rozeti burada, çünkü hangi modülün köşe olduğu düzenleme
+          alanında değil bu şeritte aranıyor: kullanıcı modüller arasında
+          gezerken tek tek açıp bakmak zorunda kalmasın.
+        -->
+        <span v-if="config.sections[index]?.corner" class="opacity-60">· köşe</span>
       </Button>
     </div>
   </div>

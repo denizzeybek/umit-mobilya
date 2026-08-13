@@ -23,6 +23,14 @@
             Kanat sayısını bu belirler; menteşe ve kulp adedi ona bağlı.
           </span>
         </label>
+        <label class="flex flex-col gap-2">
+          <span class="eyebrow">Köşe modül farkı</span>
+          <InputNumber v-model="settings.cornerSurchargePercent" suffix=" %" :min="0" :max="200" />
+          <span class="text-xs text-f-ink-muted">
+            Köşe işaretli modülün bütün parçalarına uygulanır. 0 = köşe modül
+            düz modülle aynı fiyatlanır.
+          </span>
+        </label>
       </div>
     </div>
   </section>

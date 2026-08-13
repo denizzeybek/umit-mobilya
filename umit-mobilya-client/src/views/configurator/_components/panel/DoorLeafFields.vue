@@ -1,5 +1,14 @@
 <template>
-  <section v-if="config.doorType !== 'yok'" class="p-6 md:p-7">
+  <!--
+    Köşe modülünde bu alan YOK: köşe kapağı tanımı gereği iki kanat (her
+    cepheye bir tane) ve `cornerUnitParts` kanat sayısını okumuyor. Alanı
+    göstermek, seçtiği sayının bir karşılığı olduğunu söylemek olurdu — üstelik
+    altındaki kanat genişliği de köşe için yanlış hesaplanıyordu.
+  -->
+  <section
+    v-if="config.doorType !== 'yok' && section?.corner !== true"
+    class="p-6 md:p-7"
+  >
     <div class="flex items-baseline justify-between gap-4">
       <h2 class="font-serif text-2xl text-f-ink">Kapak kanadı</h2>
       <span class="text-sm text-f-ink-faint">{{ label }}</span>
@@ -32,10 +41,7 @@
 import { computed } from 'vue';
 
 import { PANEL_THICKNESS_CM } from '../../_etc/geometry/units';
-import {
-  doorLeafCount,
-  MAX_DOOR_LEAVES,
-} from '../../_etc/pricing/moduleLayout';
+import { doorLeafCount, MAX_DOOR_LEAVES } from '../../_etc/pricing/doorLeaves';
 import { sectionLabel } from '../../_etc/sectionLabel';
 
 import type { IProductLimits } from '../../_etc/types';

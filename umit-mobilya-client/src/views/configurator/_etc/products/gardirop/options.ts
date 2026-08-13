@@ -21,7 +21,7 @@ export const DRAWER_LIMIT = { min: 0, max: 8 };
 export const PRESETS: {
   id: string;
   label: string;
-  build: () => Omit<IGardiropSection, 'width'>;
+  build: () => Omit<IGardiropSection, 'width' | 'corner'>;
 }[] = [
   {
     id: 'tam-rafli',
@@ -58,8 +58,14 @@ export const PRESETS: {
 /** "Standart düzeni yükle" düğmesinin yüklediği düzen. */
 export const STANDARD_PRESET = PRESETS[3];
 
+/**
+ * `corner` bilerek AÇIKÇA `false`: `sanitizeConfig` gelen bölümü şablonun
+ * anahtarları üstünden birleştiriyor, yani şablonda olmayan bir alan
+ * paylaşılan bağlantıdan sessizce düşerdi.
+ */
 export const createSection = (width: number): IGardiropSection => ({
   width,
+  corner: false,
   shelves: [35, 120],
   rails: [42],
   drawers: 0,

@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { carcassParts } from './carcassParts';
 import { DEFAULT_PRICE_BOOK } from './defaults';
-import { doorLeafCount, hingeCountFor, moduleRects } from './moduleLayout';
+import { doorLeafCount, hingeCountFor } from './doorLeaves';
+import { moduleRects } from './moduleLayout';
 import { priceOf } from './priceOf';
 
 import type { ICarcassInput } from './carcassParts';
@@ -25,11 +26,11 @@ const countOf = (parts: { kind: string }[], kind: string) =>
 
 describe('moduleRects', () => {
   it('modüller yan yana dizilir ve gövdeyi ortalar', () => {
-    const rects = moduleRects([56.4, 56.4], 1.8);
+    const rects = moduleRects([{ bayWidth: 56.4 }, { bayWidth: 56.4 }], 1.8, 60);
 
     expect(rects[0].outerWidth).toBeCloseTo(60, 6);
-    expect(rects[0].left).toBeCloseTo(-60, 6);
-    expect(rects[1].right).toBeCloseTo(60, 6);
+    expect(rects[0].centerX).toBeCloseTo(-30, 6);
+    expect(rects[1].centerX).toBeCloseTo(30, 6);
   });
 
   /*
@@ -37,9 +38,9 @@ describe('moduleRects', () => {
    * bölme değil. Eski tek kabuk modeli burada tek panel sayıyordu.
    */
   it('komşu modüller arasında iki panel kalınlığı vardır', () => {
-    const rects = moduleRects([50, 50], 1.8);
+    const rects = moduleRects([{ bayWidth: 50 }, { bayWidth: 50 }], 1.8, 60);
 
-    expect(rects[1].left - rects[0].right).toBeCloseTo(0, 6);
+    expect(rects[1].centerX - rects[0].centerX).toBeCloseTo(53.6, 6);
     expect(rects[0].outerWidth - rects[0].bayWidth).toBeCloseTo(3.6, 6);
   });
 });

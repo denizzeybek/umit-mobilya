@@ -61,7 +61,17 @@ export const limitsOf = (settings: IProductSettings): IProductLimits => ({
 
 export interface IProductBuild {
   group: Group;
-  doorPivots: { pivot: Object3D; hinge: 'left' | 'right' }[];
+  /**
+   * `baseRotationY` modülün kendi dönüşü: açılma açısı bunun ÜSTÜNE biniyor,
+   * yoksa köşeden sonra dönmüş modüllerin kapakları gövdenin içine açılıyor.
+   */
+  doorPivots: {
+    pivot: Object3D;
+    hinge: 'left' | 'right';
+    baseRotationY: number;
+    /** Katlanır kapağın ikinci kanadı: açısı bir öncekine GÖRE ölçülür. */
+    fold: boolean;
+  }[];
   dispose: () => void;
 }
 

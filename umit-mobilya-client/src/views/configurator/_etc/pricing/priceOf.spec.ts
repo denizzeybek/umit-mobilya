@@ -122,3 +122,80 @@ describe('priceOf — gövde aritmetiği', () => {
     expect(price.total).toBe(2.88 * 1400);
   });
 });
+
+const secim = {
+  material: 'mdf-gloss',
+  finish: 'beyaz',
+  doorType: 'yok',
+  backPanel: 8,
+};
+
+const carpanla = (parts: IPart[], multiplier: number): IPart[] =>
+  parts.map((part) => ({ ...part, costMultiplier: multiplier }));
+
+/**
+ * Köşe modülünün imalat farkı parçaya iliştirilmiş bir çarpan olarak geliyor.
+ * Buradaki testler çarpanın PARAYA uygulandığını, ölçüye uygulanmadığını ve
+ * yokluğunda hiçbir şeyi değiştirmediğini çiviliyor — üçüncüsü en önemlisi,
+ * çünkü tohum kitapta fark 0 ve bugünkü bütün tutarlar ona bağlı.
+ */
+describe('priceOf — parça maliyet çarpanı', () => {
+  it('çarpansız fiyat, çarpanı 1 olan fiyatla aynıdır', () => {
+    const duz = priceOf(govdePanelleri(), bare(), secim);
+    const birle = priceOf(carpanla(govdePanelleri(), 1), bare(), secim);
+
+    expect(birle.total).toBe(duz.total);
+  });
+
+  it('panel maliyetini çarpar', () => {
+    const price = priceOf(carpanla(govdePanelleri(), 1.25), bare(), secim);
+
+    expect(price.total).toBe(5760 * 1.25);
+  });
+
+  it('donanımı da çarpar', () => {
+    const book = bare({
+      hardware: {
+        hinge: { pricePerUnit: 100, countByDoorHeight: [] },
+        handle: { pricePerUnit: 0 },
+        drawer: { pricePerUnit: 0 },
+        rail: { pricePerM: 0 },
+      },
+    });
+    const menteseler: IPart[] = [
+      {
+        kind: 'mentese',
+        partClass: 'hardware',
+        moduleIndex: 0,
+        label: 'Menteşeler',
+        qty: 4,
+        costMultiplier: 1.5,
+      },
+    ];
+
+    const price = priceOf(menteseler, book, secim);
+
+    expect(price.total).toBe(4 * 100 * 1.5);
+  });
+
+  it('kenar bandı metrajı çarpanın dışında kalır', () => {
+    const book = bare({ edgeBand: { pricePerM: 50, appliedTo: 'all' } });
+    const parts = carpanla(govdePanelleri(), 2);
+
+    const price = priceOf(parts, book, secim);
+    const duz = priceOf(govdePanelleri(), book, secim);
+
+    const bant = duz.lines.find((line) => line.label === 'Kenar bandı');
+    const bantCarpanli = price.lines.find(
+      (line) => line.label === 'Kenar bandı',
+    );
+
+    expect(bantCarpanli?.amount).toBe(bant?.amount);
+  });
+
+  it('bozuk bir çarpan tutarı düşürmez, yok sayılır', () => {
+    const price = priceOf(carpanla(govdePanelleri(), Number.NaN), bare(), secim);
+
+    expect(price.total).toBe(5760);
+  });
+});

@@ -144,6 +144,19 @@ export interface IProductSettings {
    * menteşe/kulp/kenar bandı adedini doğrudan belirler.
    */
   maxDoorLeafWidthCm: number;
+  /**
+   * Köşe modülünün imalat farkı, yüzde. Modülün bütün parçalarının maliyetine
+   * uygulanır; 0 = köşe modül düz modülle aynı fiyatlanır.
+   *
+   * Tohumda 0, yani köşe seçeneği bugün yalnızca tasarımda işaretli duruyor ve
+   * tutara dokunmuyor. Sayı burada, kodda değil, çünkü fark bir imalat bilgisi
+   * ve atölyeden gelecek — admin panelinden girilir, kod değişmez.
+   *
+   * TODO: atölyeden köşe imalat farkı gelince tohumu ve `gardirop` ayarını
+   * gerçek yüzdeye çek, sonra `yarn price-net:bless` ile golden'ları oku —
+   * `gardirop-kose-modullu` tam bu değişikliği yakalamak için var.
+   */
+  cornerSurchargePercent: number;
   defaultMaterial: TMaterialId;
   defaultDoorType: TDoorTypeId;
 }

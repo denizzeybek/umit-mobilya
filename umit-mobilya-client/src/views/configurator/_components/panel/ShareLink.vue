@@ -15,6 +15,21 @@
       Bağlantı ölçülerini ve seçimlerini taşır — açan kişi tam olarak bu
       tasarımı görür.
     </p>
+
+    <Button
+      label="Tasarımı sıfırla"
+      icon="pi pi-refresh"
+      severity="secondary"
+      text
+      class="mt-4"
+      data-testid="reset-design"
+      @click="emit('reset')"
+    />
+
+    <p class="mt-1 text-sm text-f-ink-faint">
+      Ölçüler, modüller ve iç düzen başlangıç hâline döner; adresteki tasarım
+      kodu da silinir.
+    </p>
   </section>
 </template>
 
@@ -37,7 +52,13 @@ interface IProps {
   config: IBaseConfig;
 }
 
+interface IEmits {
+  /** Tasarımı varsayılana döndür — sıfırlamayı config'in sahibi yapar. */
+  reset: [];
+}
+
 const props = defineProps<IProps>();
+const emit = defineEmits<IEmits>();
 
 const { showErrorMessage } = useFToast();
 

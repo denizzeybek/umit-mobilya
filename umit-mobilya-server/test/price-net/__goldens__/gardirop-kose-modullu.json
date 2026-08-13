@@ -1,0 +1,88 @@
+{
+  "productType": "gardirop",
+  "configSchemaVersion": 1,
+  "priceBookVersion": 0,
+  "config": {
+    "width": 240,
+    "height": 220,
+    "depth": 60,
+    "sectionCount": 3,
+    "material": "mdf-gloss",
+    "finish": "beyaz",
+    "backPanel": 8,
+    "doorType": "kulpsuz",
+    "doorOpen": 0,
+    "sections": [
+      {
+        "width": 76.4,
+        "shelves": [
+          35,
+          120
+        ],
+        "rails": [
+          42
+        ],
+        "drawers": 0
+      },
+      {
+        "width": 76.4,
+        "shelves": [
+          35,
+          120
+        ],
+        "rails": [
+          42
+        ],
+        "drawers": 0
+      },
+      {
+        "width": 76.4,
+        "shelves": [
+          35,
+          120
+        ],
+        "rails": [
+          42
+        ],
+        "drawers": 0,
+        "corner": true
+      }
+    ]
+  },
+  "price": {
+    "lines": [
+      {
+        "label": "Gövde",
+        "amount": 24960
+      },
+      {
+        "label": "Kapak — Kulpsuz kapak",
+        "amount": 17248
+      },
+      {
+        "label": "Menteşeler",
+        "amount": 700
+      },
+      {
+        "label": "Raflar",
+        "amount": 8533.856
+      },
+      {
+        "label": "Askılıklar",
+        "amount": 275.04
+      },
+      {
+        "label": "Kenar bandı",
+        "amount": 1361.52
+      },
+      {
+        "label": "İşçilik",
+        "amount": 13213.424799999999
+      }
+    ],
+    "netTotal": 86010.80099999999,
+    "vat": 17202.1602,
+    "total": 103212.96119999999
+  },
+  "displayTotal": 103210
+}
