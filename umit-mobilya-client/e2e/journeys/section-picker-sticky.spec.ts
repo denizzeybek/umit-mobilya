@@ -36,7 +36,7 @@ test('bölüm seçici aşağı kaydırırken görünür kalır', async ({ page }
   await expect(picker).toBeInViewport();
 
   /* Ve kullanılabilir kalıyor: kaydırılmış hâldeyken seçim değiştirilebiliyor. */
-  const other = picker.getByRole('button', { name: /Sağ bölüm/ });
+  const other = picker.getByRole('button', { name: /Sağ modül/ });
   await other.click();
   await expect(other).toHaveAttribute('aria-pressed', 'true');
 });

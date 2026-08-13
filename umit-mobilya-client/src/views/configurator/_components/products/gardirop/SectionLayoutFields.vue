@@ -9,7 +9,7 @@
 
       <div class="mt-4 border-b border-f-rule pb-4">
         <label class="flex items-center gap-3">
-          <span class="flex-1 text-sm text-f-ink-muted">Bölüm genişliği</span>
+          <span class="flex-1 text-sm text-f-ink-muted">Modül genişliği</span>
           <InputNumber
             v-model="width"
             :min="range.min"
@@ -34,7 +34,7 @@
       </div>
 
       <p class="mt-3 text-sm text-f-ink-faint">
-        Bu bölümü büyütmek diğerlerini daraltmaz — gövde genişler. Şu an gövde
+        Bu modülü büyütmek diğerlerini daraltmaz — gövde genişler. Şu an gövde
         <strong class="text-f-ink">{{ config.width }} cm</strong>.
       </p>
 

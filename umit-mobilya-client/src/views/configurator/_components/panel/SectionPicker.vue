@@ -16,12 +16,18 @@
   -->
   <div
     v-if="config.sectionCount > 1"
-    class="sticky top-[73px] z-20 flex flex-wrap items-center gap-2 border-b border-f-rule bg-f-paper px-6 py-3 md:top-[89px] md:px-7"
+    class="sticky top-[73px] z-20 flex flex-col gap-2 border-b border-f-rule bg-f-paper px-6 py-3 md:top-[89px] md:px-7"
     data-testid="section-picker"
   >
-    <span class="eyebrow shrink-0">Bölüm seç</span>
+    <!--
+      Etiket KENDİ satırında: düğmelerin yanındayken üçüncü modül alta
+      kayıyor ve etiketin altından başlıyordu — ikinci satır ilkiyle
+      hizalanmıyor, şerit kırık görünüyordu.
+    -->
+    <span class="eyebrow">Modül seç</span>
 
-    <Button
+    <div class="flex flex-wrap gap-2">
+      <Button
       v-for="(_, index) in config.sectionCount"
       :key="index"
       size="small"
@@ -31,9 +37,10 @@
       :aria-pressed="active === index"
       @click="active = index"
     >
-      {{ sectionLabel(config.sectionCount, index) }}
-      <span class="opacity-60">· {{ config.sections[index]?.width }} cm</span>
-    </Button>
+        {{ sectionLabel(config.sectionCount, index) }}
+        <span class="opacity-60">· {{ config.sections[index]?.width }} cm</span>
+      </Button>
+    </div>
   </div>
 </template>
 
@@ -53,7 +60,7 @@ import type { IBaseConfig } from '../../_etc/types';
  * uygulanıyor ama seçim yukarıda kalıyordu: kullanıcı aşağı kaydırdıkça hangi
  * bölümde olduğunu unutup yanlış bölümü düzenliyordu.
  *
- * Tek bölümde gösterilmiyor — seçilecek bir şey yokken yer kaplayan bir şerit,
+ * Tek modülde gösterilmiyor — seçilecek bir şey yokken yer kaplayan bir şerit,
  * yalnızca gürültü.
  */
 const config = defineModel<IBaseConfig>({ required: true });

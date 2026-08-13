@@ -47,7 +47,7 @@
       Genişlik {{ limits.width.min }}–{{ limits.width.max }}, yükseklik
       {{ limits.height.min }}–{{ limits.height.max }}, derinlik
       {{ limits.depth.min }}–{{ limits.depth.max }} cm arası. Genişlik
-      bölümlerden türetilir; buraya yazılan ölçü bölümlere oranla dağıtılır.
+      modüllerden türetilir; buraya yazılan ölçü modüllere oranla dağıtılır.
     </p>
   </section>
 </template>

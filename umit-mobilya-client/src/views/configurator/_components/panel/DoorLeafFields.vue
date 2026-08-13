@@ -6,7 +6,7 @@
     </div>
 
     <p class="mt-2 text-sm text-f-ink-muted">
-      Seçili bölümün kapağı kaç kanada bölünsün. Otomatikte
+      Seçili modülün kapağı kaç kanada bölünsün. Otomatikte
       {{ maxLeafWidth }} cm'yi geçen modül kendiliğinden bölünür.
     </p>
 
