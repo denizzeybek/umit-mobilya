@@ -4,7 +4,8 @@
 
 ## Why this rule exists
 
-The suite went from zero to 195 specs in one migration, and it found eleven real
+The suite went from zero to 195 specs in one migration — **271 today**, across
+27 files — and it found eleven real
 bugs on the way — a rename that answered 400 after succeeding, an image delete
 that destroyed the wrong object, a `GET /api/products` that would have returned
 500 in production. None of those were caught by types or by the build.

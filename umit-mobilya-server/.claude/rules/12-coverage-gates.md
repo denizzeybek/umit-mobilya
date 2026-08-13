@@ -4,8 +4,8 @@
 
 ## Why this rule exists
 
-195 specs exist today. Nothing stopped the 196th change from adding an untested
-branch, and nothing would have told you — the bar stays green either way. The
+271 specs exist today. Nothing stops the next change from adding an untested
+branch, and nothing would tell you — the bar stays green either way. The
 threshold exists so that *sliding* is loud, which is the only thing a coverage
 number is actually good at.
 

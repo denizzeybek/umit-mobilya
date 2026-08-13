@@ -25,7 +25,7 @@ Before calling a change done:
 ```bash
 yarn lint            # must be clean; lint:fix only for mechanical fixes
 yarn type-check      # vue-tsc for src/ + tsc for e2e/, must pass
-yarn test:unit run   # vitest; the configurator's pure functions
+yarn test:unit run   # vitest; the configurator's pure functions (149 test)
 yarn build           # catches what type-check misses
 yarn size-check      # ana paket tavanı — build'den SONRA
 yarn e2e:smoke       # her route açılıyor mu — ~30 sn
@@ -34,7 +34,9 @@ yarn e2e:smoke       # her route açılıyor mu — ~30 sn
 `size-check` bir alarm: bu repoda CI yok ve paket boyutu sessizce şişiyor.
 Ölçüldü — menüye ürün listesi eklerken bir composable `registry`'yi import
 etti ve ana paket 1 741 kB'den 2 237 kB'ye çıktı; hiçbir test kırılmadı,
-hiçbir uyarı çıkmadı.
+hiçbir uyarı çıkmadı. Tavan **1800 kB**; bugünkü ana paket ~1687 kB, yani
+kalan pay dar — yeni bir bağımlılığı ana pakete sokan bir import'u ölçmeden
+bırakma.
 
 Touched a `.claude/hooks/` script? Run its own suite — the hooks have no other
 coverage and a broken matcher fails open, which is worse than failing loud:
@@ -51,8 +53,8 @@ human eye still sees things no assertion was written for.
 ### e2e — tarayıcı katmanı
 
 ```bash
-yarn e2e:smoke      # bütün route'lar; günlük hızlı kontrol (~30 sn)
-yarn e2e:journeys   # fiyat round-trip, paylaşım bağlantısı, 3B (~30 sn)
+yarn e2e:smoke      # bütün route'lar (14 test); günlük hızlı kontrol (~30 sn)
+yarn e2e:journeys   # manifest'teki yedi yolculuk (8 test) (~35 sn)
 ```
 
 İkisi de **hermetik**: Playwright kendi Nest sunucusunu bellek içi bir mongod
@@ -76,7 +78,7 @@ Konfigüratöre, fiyata, route'lara ya da 3B görüntüleyiciye dokunduysan
 The NestJS half (`src/`, `test/`):
 
 ```bash
-yarn test         # Jest; the spec you wrote must be green
+yarn test         # Jest, 271 spec; the spec you wrote must be green
 yarn test:cov     # same, plus the coverage floor — this is what the commit hook runs
 yarn type-check   # tsc --noEmit, strict
 yarn build        # nest build
@@ -110,8 +112,13 @@ yarn sync:pricing   # istemciden kopyala
 
 ## Both
 
-- Don't commit build artefacts that changed as a side effect. `*.tsbuildinfo` churns
-  on every build — restore it rather than including it in an unrelated commit.
+- Don't commit build artefacts that changed as a side effect. `*.tsbuildinfo` and
+  `dist/` are gitignored now, so they should never reach `git status` — if one
+  does, the ignore rule is what needs fixing, not the commit.
+- A dependency bump means the lockfile travels with the `package.json`, in the
+  same commit. A `package.json` change without its `yarn.lock` installs
+  differently on the next machine, which is the whole failure mode a lockfile
+  exists to prevent.
 - Don't commit `.env`. Use `.env.example` when a variable is added.
 - If a check fails and you're fixing something unrelated, say so rather than silently
   leaving it broken.

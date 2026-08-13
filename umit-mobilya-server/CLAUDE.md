@@ -29,7 +29,8 @@ NestJS + TypeScript, single application. The Express/CommonJS version is gone �
 all three domains are ported and no `.js` source remains.
 
 ```
-curls/               replay-ready call for every endpoint — see curls/README.md
+curls/               replay-ready calls: auth, categories, products, schema
+                     (price book / quote / storage have none) — see its README
 src/
   main.ts            entry point; boots Nest and applies setup-app
   setup-app.ts       body parsers, ValidationPipe, exception filter, CORS, Swagger
@@ -40,10 +41,15 @@ src/
   configurator/      price book + the price engine copied from the client
   quote/             quote requests, the frozen price, the PDF
   product/           the portfolio: R2 images, filtering
-  storage/           ObjectStorageService — the only place that talks to R2
+  storage/           ObjectStorageService — the only place that talks to R2 —
+                     plus LocalDiskStorage and the controller serving it
   common/            AllExceptionsFilter, ParseObjectIdPipe
+  config/            env.validation.ts — the boot-time environment schema
+  openapi.ts         the document builder shared by /docs and yarn schema:dump
+  tools/             build-time scripts (dump-openapi); excluded from coverage
 test/                shared harness + the characterization suite
   price-net/         frozen price goldens; the crown jewel — see rule 13
+  pricing-sync.spec.ts  proves the two copies of the price engine are identical
   e2e-api.ts         hermetic boot for the client's Playwright suite
 ```
 
@@ -73,9 +79,14 @@ fake credentials (`test/setup-env.ts`), and `ConfigModule` skips `.env` when
 
 - MongoDB stores object **keys** (`imageName`, `imageNameList[]`), never URLs.
   `ObjectStorageService` composes public URLs at read time.
-- The bucket is **optional**: with no R2 variables the service boots, warns once,
-  and image upload answers 503 — everything else works. Half-configured storage
-  fails the boot on purpose. Storage is R2 despite the `S3_ENDPOINT` name.
+- The bucket is **optional**, and what happens without it depends on `NODE_ENV`.
+  Outside production the service falls back to `LocalDiskStorage` and serves the
+  files back through `GET /api/storage/:key`, so image work is possible with no
+  R2 account. Under `NODE_ENV=production` it warns once and image upload answers
+  **503** — Railway's disk is ephemeral, so a local-disk upload there would
+  vanish on the next deploy. Everything else works in both cases.
+  Half-configured storage fails the boot on purpose. Storage is R2 despite the
+  `S3_ENDPOINT` name.
 - `GET /api/products` and `/:id` return **201**. Inherited behaviour, pinned by
   the characterization suite — do not "fix" it in isolation.
 - Mutating routes sit behind `JwtAuthGuard`. The deliberate exceptions are the

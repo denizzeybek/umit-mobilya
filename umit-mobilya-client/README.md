@@ -1,49 +1,58 @@
-# Furniture Website Project
+# umit-mobilya-client
 
-## Overview
-This is a full-stack modular furniture website project designed to provide a seamless user experience for browsing, customizing, and purchasing furniture. The platform supports modular product creation, allowing users to combine multiple products into a single package. For example, users can assemble a wardrobe by selecting and adding related products as modules.
+Vue 3 + TypeScript + Vite SPA. The public site (portfolio, configurator, quote
+request) and the admin screens (price book, quotes, categories).
 
-The project heavily utilizes images, and to manage this efficiently, it stores them in Cloudflare R2 and serves them from a public CDN domain.
+For what the project *is*, see the [repository README](../README.md).
+For how the code is organised and the rules that govern it, see
+[`CLAUDE.md`](CLAUDE.md) — it indexes `.claude/rules/`.
 
-## Technologies Used
+## Setup
 
-### Frontend:
-- **Vue.js**: Framework for building interactive user interfaces.
-- **PrimeVue**: UI component library to accelerate development.
-- **Tailwind CSS**: Utility-first CSS framework for responsive and custom styling.
-- **Pinia**: State management library for managing application state efficiently.
+```bash
+yarn install
+npx playwright install chromium   # once, before the first e2e run
+```
 
-### Backend:
-- **Express.js**: Backend framework for API development.
-- **MongoDB**: NoSQL database for storing data in a flexible and scalable manner.
+Create `.env` (gitignored) with:
 
-### Additional Tools:
-- **Cloudflare R2**: S3-compatible object storage for the extensive use of images.
+```
+VITE_API_URL=http://localhost:5000/api
+VITE_I18N_LOCALE=tr
+```
 
-### Hosting:
-- **Netlify**: Frontend hosting and builds.
-- **Railway**: Backend hosting.
-- **MongoDB Atlas**: Managed database.
+`VITE_API_URL` ends with `/api`; `plugins/apiClient.ts` strips that suffix
+because the generated client's paths already carry it. A new `VITE_*` variable
+must also be added in the Netlify dashboard — it is not read from the repo.
 
-## Features
-- **Product Browsing**: Users can view various furniture products with detailed descriptions and images.
-- **Modular Product Creation**: Users can create custom furniture packages by selecting related modules (e.g., combining parts of a modular wardrobe).
-- **Responsive Design**: The site is fully responsive and optimized for all devices.
-- **Image Management**: Efficiently handles numerous images through Cloudflare R2 integration.
-- **User Authentication**: Secure login and registration system for personalized experiences.
-- **Advanced Search and Filter Options**: Easily find products using dynamic filters and search capabilities.
+## Commands
 
-## Installation
+```bash
+yarn dev          # vite on port 3001 (the server's default CORS origin)
+yarn build        # vue-tsc -b && vite build
+yarn preview      # serve the production build
+yarn lint         # eslint flat config
+yarn type-check   # vue-tsc for src/ + tsc for e2e/
+yarn test:unit    # vitest (watch); `yarn test:unit run` for one pass
+yarn format       # prettier --write src/
+yarn size-check   # main-bundle ceiling — run AFTER a build
+yarn gcl          # regenerate src/client from ../umit-mobilya-server/openapi.json
+yarn e2e:smoke    # Playwright: every route loads
+yarn e2e:journeys # Playwright: the seven manifested journeys
+```
 
-### Prerequisites:
-- Node.js installed.
-- MongoDB server set up.
+`yarn generate-icon-names` is broken — it points at a script that does not exist.
 
+## Things that surprise people
 
-## Future Enhancements
-- Implement payment gateway integration.
-
-
-## License
-This project is licensed under the [MIT License](LICENSE).
-
+- Components in `src/components/ui/global/` are registered globally with an `F`
+  prefix (`Input.vue` → `<FInput>`). Never import them.
+- `src/client/` is **generated** from the server's OpenAPI schema and must not be
+  hand-edited. Never add a global axios interceptor — it breaks that client in a
+  way that looks like a server error.
+- `ERouteNames` values are Turkish display strings used simultaneously as route
+  name, page title and nav label. Renaming one is not a copy change.
+- `public/_redirects` is the SPA fallback. Deleting it breaks every deep link in
+  production while `yarn dev` stays perfectly happy.
+- The configurator is the only lazily-loaded route, and that is deliberate: a
+  file that is always loaded must not import `three` or the product registry.

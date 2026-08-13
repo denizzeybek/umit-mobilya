@@ -34,16 +34,20 @@ yarn build        # vue-tsc -b && vite build
 yarn test:unit    # vitest
 yarn format       # prettier --write src/
 yarn gcl          # regenerate src/client from the server's openapi.json
+yarn size-check   # main-bundle ceiling (1800 kB) — run it AFTER a build
 yarn e2e:smoke    # Playwright, every route (~30 s) — safe to run in a tool call
-yarn e2e:journeys # Playwright, the three manifested journeys (~30 s)
+yarn e2e:journeys # Playwright, the seven manifested journeys (~35 s)
 ```
 
-`yarn generate-icon-names` points at a `scripts/` directory that does not exist.
-Vitest covers the configurator's pure functions only (`_etc/geometry`,
-`_etc/pricing`, `_etc/dimensionOps`, `_etc/products/*`): 131 tests across 9
-files, no component tests. Take the count from `yarn test:unit run`, not from
-grepping `it(` — several specs generate cases in a loop, so grep undercounts.
-`.claude/hooks/hooks.test.sh` covers the hooks themselves.
+`yarn generate-icon-names` points at `scripts/iconNameGenerator.js`, which does
+not exist — the `scripts/` directory does, and holds `size-check.mjs`.
+Vitest covers pure functions only — the configurator's (`_etc/geometry`,
+`_etc/pricing`, `_etc/dimensionOps`, `_etc/products/*`, `_etc/configUrl`,
+`_etc/sanitizeConfig`, `_etc/registry`) plus `views/admin/_etc/colorValue`:
+149 tests across 11 files, no component tests. Take the count from
+`yarn test:unit run`, not from grepping `it(` — several specs generate cases in
+a loop, so grep undercounts. `.claude/hooks/hooks.test.sh` covers the hooks
+themselves.
 
 The e2e commands are **hermetic and safe to run in a tool call** (unlike
 `yarn dev`): Playwright boots its own vite on **3101** and its own Nest API on

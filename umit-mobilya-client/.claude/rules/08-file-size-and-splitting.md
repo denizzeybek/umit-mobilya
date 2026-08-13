@@ -5,13 +5,19 @@
 ## Why this rule exists
 
 Bu repoda tavan olmadan yazılan ilk büyük özellik konfigüratördü ve sonuç
-ortada: `ConfiguratorPanel.vue` **539** satır, `WardrobeViewer.vue` **395**
-satır. İkisi de tek bir dosyada üç iş birden yapıyor — panel hem form
-durumunu, hem genişlik dağıtma mantığını, hem fiyat sunumunu taşıyor.
+ortadaydı: `ConfiguratorPanel.vue` **539** satır, `WardrobeViewer.vue` **395**
+satır. İkisi de tek bir dosyada üç iş birden yapıyordu — panel hem form
+durumunu, hem genişlik dağıtma mantığını, hem fiyat sunumunu taşıyordu.
 
 Böyle bir dosyada tek bir davranışı değiştirmek için tamamını okumak gerekiyor,
 ve bir şeyi bozup bozmadığını anlamanın tek yolu elle denemek. Test yazmak da
 mümkün değil: içeride ayrıştırılabilir bir birim yok.
+
+**O borç ödendi.** `ConfiguratorPanel.vue` bugün **102**, aynı görüntüleyici —
+adı artık `ProductViewer.vue` — **108** satır; `src/` altında tavanı aşan tek
+dosya kalmadı (muaf olan `flexytheme.ts` dışında). Aşağıdaki kural bu yüzden
+kaldırılmıyor: tavanı geri getiren şey büyük bir yeniden yazım değil, art arda
+eklenen on satır.
 
 `.claude/hooks/enforce-file-size.sh` yazma anında engelliyor, çünkü bu sınır
 gözden geçirmede hatırlanacak bir şey değil.
@@ -39,7 +45,9 @@ Yoksa ihlal eden dosyayı bölmek imkânsız olurdu: ilk düzenleme de engelleni
 Yani 539 satırlık bir dosyayı 400'e indirebilirsin, 400'den 300'e, 300'den
 250'nin altına. Her adım geçer. Ama 539'dan 545'e çıkamazsın.
 
-Bu, borcu ödemenin yolunu açık tutmak için; kalıcı bir muafiyet değil.
+Bu, borcu ödemenin yolunu açık tutmak için; kalıcı bir muafiyet değil — ve
+konfigüratörde tam olarak böyle kullanıldı. Şu an ihlal eden bir dosya yok, yani
+bu madde bir sonraki sefere hazır duruyor.
 
 ## Nasıl bölünür
 

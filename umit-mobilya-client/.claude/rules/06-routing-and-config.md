@@ -46,7 +46,8 @@ builds fine and ships `undefined`.
 6. `netlify.toml` lives at the **repo root**, not in this folder — Netlify only
    reads it from the repository root. It carries `base = "umit-mobilya-client"`,
    `command = "yarn build"`, `publish = "dist"` (relative to `base`) and
-   `NODE_VERSION = "18"`. Leave the Netlify UI's base directory field empty;
+   `NODE_VERSION = "22"` — it tracks the Node the local gates actually run on,
+   so don't lower it without re-running them. Leave the Netlify UI's base directory field empty;
    setting it too nests the path twice.
 7. `public/_redirects` holds the SPA fallback `/*  /index.html  200`. The router
    uses `createWebHistory`, so without it a direct visit to `/login` returns

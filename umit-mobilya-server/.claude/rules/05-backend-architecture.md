@@ -53,11 +53,11 @@ Shared pieces, reuse rather than reimplement:
 These held before the port and hold after it. They live in `product.controller.js` today and move to a product service:
 
 - **MongoDB stores keys, never URLs.** `imageName` and `imageNameList[]` hold R2 object keys. Public URLs are derived at read time from `PUBLIC_BUCKET_URL`.
-- **Keys are built by `buildImageKey()`**, which slugifies the original filename and appends random hex. Keys end up inside public URLs, so they must be URL-safe — never build a key by hand.
-- **`generateImageUrl()` is synchronous** and just joins the public base with the encoded key. There is no signing and no expiry; the bucket is public. URLs are stable and may be cached.
+- **Keys are built by `ObjectStorageService.buildKey()`**, which slugifies the original filename and appends random hex. Keys end up inside public URLs, so they must be URL-safe — never build a key by hand.
+- **`publicUrl()` is synchronous** and just joins the public base with the encoded key. There is no signing and no expiry; the bucket is public. URLs are stable and may be cached. In the local-disk fallback the same method returns a `GET /api/storage/:key` URL, so callers never branch on which backend is live.
 - **Deleting a record deletes the object**, and **membership is checked before anything is deleted**. A new delete path that skips either leaves orphaned objects, or destroys an object it did not own.
 - **Validate before you upload.** `create` checks the category exists first; the reverse order leaves an object in the bucket on every rejected request.
-- **Uploads stay in memory** — `multer.memoryStorage()` → `sharp` resize → `PutObjectCommand`. Nothing touches local disk.
+- **Uploads stay in memory on the way in** — `FileInterceptor` with Nest's default memory storage hands the handler a `Buffer`, which goes to `sharp` and then to `PutObjectCommand`. No multer temp file, ever. The one thing that does reach local disk is the deliberate no-R2 fallback (`LocalDiskStorage`, non-production only) — see [[07-config-and-secrets]].
 - Deletion failures are logged and swallowed so a storage outage cannot block a database delete. Keep that ordering.
 
 ## Rate limiting — a decorator without a guard does nothing

@@ -30,12 +30,26 @@ not a code change.
 **Object storage — all five or none:** `BUCKET_NAME`, `S3_ENDPOINT`,
 `PUBLIC_BUCKET_URL`, `ACCESS_KEY`, `SECRET_ACCESS_KEY`.
 
-Storage being *absent* is a supported state. Without it the service boots, logs
-one `warn`, and image upload answers **503** with a message saying so; every
-other endpoint works untouched. That matters because the configurator, the
-quotes, the price book and the product list never touch the bucket — making them
-die for a missing bucket meant a developer without R2 credentials could run
-nothing at all.
+**Local disk fallback — both optional:** `LOCAL_STORAGE_DIR` (default
+`.local-storage`), `LOCAL_STORAGE_URL` (default
+`http://localhost:${PORT}/api/storage`). They are read only when the R2 five are
+absent.
+
+Storage being *absent* is a supported state, and it resolves two different ways:
+
+- **Outside production**, the service falls back to `LocalDiskStorage`, writes
+  under `LOCAL_STORAGE_DIR` and serves the files back through
+  `GET /api/storage/:key`. Upload *works*. This exists so a feature like the
+  finish texture can be built without an R2 account.
+- **Under `NODE_ENV=production`**, there is no fallback: the service logs one
+  `warn` and image upload answers **503** with a message saying so. Railway's
+  filesystem is ephemeral, so an upload that "works" onto local disk there is an
+  upload that disappears silently at the next deploy — worse than a clear 503.
+
+Either way every other endpoint works untouched. That matters because the
+configurator, the quotes, the price book and the product list never touch the
+bucket — making them die for a missing bucket meant a developer without R2
+credentials could run nothing at all.
 
 Storage being *half* configured is **not** supported and fails the boot
 deliberately (`assertStorageIsAllOrNothing`). Half a bucket is worse than none:

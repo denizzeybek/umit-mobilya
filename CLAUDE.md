@@ -49,8 +49,9 @@ yarn build        # vue-tsc -b && vite build
 yarn type-check   # vue-tsc for src/ + tsc -p tsconfig.e2e.json for e2e/
 yarn test:unit    # vitest (watch); vitest run <path> for a single file
 yarn format       # prettier --write src/
+yarn size-check   # main-bundle ceiling (1800 kB) — run it AFTER a build
 yarn e2e:smoke    # Playwright: every route loads (~30 s)
-yarn e2e:journeys # Playwright: price round-trip, share link, 3D viewer (~30 s)
+yarn e2e:journeys # Playwright: the seven manifested journeys (~35 s)
 ```
 
 Server (`cd umit-mobilya-server`):
@@ -67,19 +68,58 @@ yarn price-net:bless  # regenerate the price goldens, then READ THE DIFF
 Env files are gitignored and must exist locally:
 - client `.env`: `VITE_API_URL`, `VITE_I18N_LOCALE`
 - server `.env`: `MONGO_URI`, `JWT_SECRET`, `PORT`, `ALLOWED_ORIGINS`, `BUCKET_NAME`, `S3_ENDPOINT`, `PUBLIC_BUCKET_URL`, `ACCESS_KEY`, `SECRET_ACCESS_KEY`
+  — plus the optional `LOCAL_STORAGE_DIR` / `LOCAL_STORAGE_URL`, which only
+  matter when the R2 five are absent (see the storage section below).
 
 A new `VITE_*` var must also be added in the Netlify dashboard, and a new server var in the Railway dashboard — neither is read from the repo.
 
 Known broken/absent tooling — don't assume these work:
-- `yarn generate-icon-names` points at a `scripts/` directory that doesn't exist.
-- Client vitest covers the configurator's pure functions only (131 tests, 9
-  files) — still **no component tests**. Browser coverage is Playwright
-  (`e2e/`), and it is deliberately thin: a smoke spec plus three manifested
-  journeys.
+- `yarn generate-icon-names` points at `scripts/iconNameGenerator.js`, which
+  doesn't exist. The `scripts/` directory itself does — it holds
+  `size-check.mjs`, which `yarn size-check` runs.
+- Client vitest covers pure functions only — the configurator's, plus
+  `views/admin/_etc/colorValue`: **149 tests across 11 files**, still **no
+  component tests**. Browser coverage is Playwright (`e2e/`), and it is
+  deliberately thin: a smoke spec plus **seven** manifested journeys.
 - Playwright needs its browser once: `npx playwright install chromium`.
   It is pinned to **1.61.1** because 1.62's chromium build refuses to install
   on macOS 13 — don't bump it without checking that.
-- `tsconfig.*.tsbuildinfo` files are committed and churn on every build; ignore them in diffs. (`dist/` is gitignored.)
+- `tsconfig.*.tsbuildinfo` and `dist/` are both gitignored, so neither should
+  ever appear in a diff.
+
+## Dependencies
+
+Both apps are yarn 1 with their own lockfile, and Dependabot watches both. The
+tree was last swept to zero open alerts; four things about that sweep are worth
+knowing before you touch a version, because each one looks like a mistake:
+
+- **The server does not declare `express` and `multer` to use them directly** —
+  it declares them so there is *one* copy. `@nestjs/platform-express` depends on
+  express and multer itself, and it moved to **express 5 / multer 2** on its own.
+  The root manifest had been left on express 4 / multer 1, so the app ran Nest's
+  express 5 while `setup-app.ts` imported a *separate* express 4 for
+  `express.json()`. That duplicate was the single largest source of alerts
+  (express 4 drags in `path-to-regexp` 0.1.x, `body-parser` 1.x, old `qs`).
+  Keep the root ranges in step with what platform-express resolves to.
+- **`bcrypt` is on 6.x specifically to drop `@mapbox/node-pre-gyp`.** bcrypt 5's
+  install toolchain pulled `tar` 6, which has no patched release — eleven alerts,
+  one of them critical, all of them from a build-time dependency of a password
+  hash. bcrypt 6 uses `node-gyp-build` and pulls neither. The hash format is
+  unchanged, so stored passwords still verify.
+- **`@nestjs/swagger` pins `js-yaml` to an exact version**, so the only way to
+  patch it is the `resolutions` entry in the server's `package.json`. Yarn warns
+  that the resolution is "incompatible with the requested version" on every
+  install; that warning is the resolution working, not failing.
+- **Unused packages were removed rather than upgraded.** `lodash`, `qs`, `uuid`
+  and `exceljs` were declared on the client and imported nowhere — `exceljs` was
+  reachable only through a type-augmentation file for code that no longer
+  existed, and it was what dragged in the vulnerable `tmp` and `uuid` 8. Deleting
+  an unused dependency closes its alerts permanently; upgrading it just schedules
+  the next one.
+
+Client `resolutions` is now empty. It used to pin `jackspeak` to 2.1.1, a
+workaround for a broken 2.3.x publish that had become a *downgrade* below what
+`glob` asks for.
 
 ## Skills and the gates that need them
 
@@ -123,7 +163,7 @@ test harness so a spec can never exercise a differently-configured app:
 CORS from `ALLOWED_ORIGINS`, and Swagger on `/docs` (+ `/docs-json`).
 
 `AppModule` wires `ConfigModule` (validated at boot, skips `.env` under
-`NODE_ENV=test`), `MongooseModule`, `ThrottlerModule`, and five feature
+`NODE_ENV=test`), `MongooseModule`, `ThrottlerModule`, and six feature
 modules. Each domain is a `schemas/` + `dto/` + service + controller + module
 set; `src/category/` is the smallest complete example.
 
@@ -134,7 +174,7 @@ set; `src/category/` is the smallest complete example.
 | `product/` | the portfolio, R2 images |
 | `configurator/` | the price book and the price engine |
 | `quote/` | quote requests, the frozen price, the PDF |
-| `storage/` | `ObjectStorageService` — the only thing that talks to R2 |
+| `storage/` | `ObjectStorageService` — the only thing that talks to R2 — plus `LocalDiskStorage` and the controller that serves it |
 
 **Auth**: JWT (3-day expiry) returned in the login response *and* set as an
 `httpOnly` `jwt` cookie. `JwtAuthGuard` is applied per route with `@UseGuards`,
@@ -166,7 +206,8 @@ it writes a new version and moves the `active` flag.
 - MongoDB stores only **keys** (`imageName`, `imageNameList[]`), never URLs. This keeps rows portable if the public domain or bucket changes.
 - The bucket is **public**. The URL is composed synchronously from `PUBLIC_BUCKET_URL` and the URL-encoded key — no signing, no expiry. `imageUrl`/`imageUrlList` are stable, so browser and CDN caching work.
 - Keys are slugified (non-`[\w.-]` runs collapse to `-`, lowercased) and suffixed with random hex, because the key ends up inside a public URL.
-- Uploads use `multer.memoryStorage()` (buffers, not disk) → `sharp` resize → `PutObjectCommand`.
+- **With the R2 five absent there are two different behaviours, split on `NODE_ENV`.** Outside production the service falls back to `LocalDiskStorage` (`LOCAL_STORAGE_DIR`, default `.local-storage`) and serves the files back through `GET /api/storage/:key`, so a feature like the finish texture can be built without an R2 account. Under `NODE_ENV=production` there is **no** fallback: it warns, upload answers **503**, and everything else works. Railway's filesystem is ephemeral, so a "working" local-disk upload there is an upload that silently disappears on the next deploy.
+- Uploads arrive as buffers, not temp files — `FileInterceptor` is used with Nest's default memory storage → `sharp` resize → `PutObjectCommand` (or a local write). Nothing is streamed to a temp directory.
 - Single main image on `POST /api/products`; gallery on `PUT /api/products/create-images/:id` — the field name there is still singular `image`.
 - Deleting a record deletes the object, and membership is checked first. Deletion failures are logged and swallowed so a storage outage can't block the DB delete.
 
@@ -238,10 +279,11 @@ There is also **no CI** — no `.github/` directory. Neither host type-checks, l
 or tests; they only build. Every gate that exists is local (see
 [`done-checklist.md`](.claude/rules/done-checklist.md)).
 
-- **Frontend → Netlify.** `netlify.toml` sits at the **repo root** (Netlify only looks there) and sets `base = umit-mobilya-client`, `command = yarn build`, `publish = dist`, and pins Node 18. `public/_redirects` holds the SPA fallback (`/* /index.html 200`); without it a direct visit to `/login` or `/products` 404s, because the router uses `createWebHistory`. Env vars come from the Netlify dashboard.
+- **Frontend → Netlify.** `netlify.toml` sits at the **repo root** (Netlify only looks there) and sets `base = umit-mobilya-client`, `command = yarn build`, `publish = dist`, and pins **Node 22**. That pin was 18 until the toolchain moved to vite 6 / vitest 3; 18 is end-of-life and, more to the point, every local gate is now run on 22, so pinning anything else would deploy a combination nobody has built. `public/_redirects` holds the SPA fallback (`/* /index.html 200`); without it a direct visit to `/login` or `/products` 404s, because the router uses `createWebHistory`. Env vars come from the Netlify dashboard.
 - **Backend → Railway.** `yarn start` (`node dist/main`) is the start command,
   which means a build step (`nest build`) has to run first — the Express era
-  needed none, so this is the first thing to verify when a host is connected and `app.js` already honours the injected `PORT`. There is no Dockerfile in the server, so Nixpacks detects it; the root directory must be set to `umit-mobilya-server`. Env vars come from the Railway dashboard, and dependencies are installed on deploy.
+  needed none, so this is the first thing to verify when a host is connected;
+  `main.ts` already honours the injected `PORT`. There is no Dockerfile in the server, so Nixpacks detects it; the root directory must be set to `umit-mobilya-server`. Env vars come from the Railway dashboard, and dependencies are installed on deploy.
 - **Images → Cloudflare R2**, **database → MongoDB Atlas** (Atlas needs Railway's egress allowed under Network Access).
 
 The server's CORS allowlist is read from `ALLOWED_ORIGINS` (comma-separated, defaults to `http://localhost:3001`), so a new frontend domain is an env change, not a code change.

@@ -1,7 +1,12 @@
 # curls/
 
-Replay-ready calls for every endpoint this API serves. One script, one request,
-one readable response.
+Replay-ready calls for this API. One script, one request, one readable response.
+
+**Coverage is partial**, and knowing where the edge is saves you looking for a
+script that was never written: `auth/`, `categories/` and `products/` are
+covered, plus `schema.sh`. The **price book**, **quote** and **storage**
+endpoints have none — reach for `curls/schema.sh` (or `/docs`) for their shapes,
+and add a script here when you next work on one.
 
 ## Why this folder exists
 
@@ -21,6 +26,13 @@ cd umit-mobilya-server
 yarn build && node dist/main       # or: yarn dev
 ```
 
+**Mind the port.** `main.ts` defaults to **5000** when `PORT` is unset, but
+`.env.example` sets `PORT=3000` and every script here — plus the client's
+`yarn gcl:live` — assumes 3000. Copy `.env.example` and they agree; run with no
+`.env` and every script answers "connection refused" against a server that is
+running perfectly well on 5000. Override with `API_BASE` rather than editing the
+scripts.
+
 Scripts are committed executable. If git dropped the bit:
 
 ```bash
@@ -29,14 +41,22 @@ chmod +x curls/*/*.sh curls/_shared/*.sh
 
 ## What needs real R2 credentials
 
-`products/create.sh` and `products/upload-images.sh` push to Cloudflare R2. With
-placeholder credentials they answer **500** and the log shows a TLS handshake
-failure — the script is fine, the bucket is not reachable. Everything else runs
-against a local MongoDB with no object storage at all.
+`products/create.sh` and `products/upload-images.sh` are the only scripts that
+touch object storage, and what they do depends on how storage is configured:
 
-To exercise the module and gallery endpoints without R2, seed products straight
-into Mongo and use their ids; the read, module and delete paths never touch the
-bucket on the happy path (deletion failures are logged and swallowed by design).
+- **Placeholder R2 credentials** — the worst case. The service believes it has a
+  bucket, so it tries R2 and answers **500** with a TLS handshake failure in the
+  log. The script is fine; the bucket is not reachable.
+- **No R2 variables at all** — outside production the server falls back to local
+  disk, so both scripts *succeed* and the returned `imageUrl` points at
+  `GET /api/storage/:key` on the same server. This is usually what you want
+  locally.
+
+Everything else runs against a local MongoDB with no object storage at all.
+
+To exercise the gallery endpoints without any storage, seed products straight
+into Mongo and use their ids; the read and delete paths never touch the bucket on
+the happy path (deletion failures are logged and swallowed by design).
 
 ## Env vars
 
@@ -82,11 +102,13 @@ products/update.sh            PUT  /api/products/:id
 products/delete.sh            DELETE /api/products/:id
 products/upload-images.sh     PUT  /api/products/create-images/:id
 products/delete-image.sh      POST /api/products/delete-image/:id
-products/add-module.sh        POST /api/products/add-module
-products/remove-module.sh     DELETE /api/products/remove-module/:productId/:moduleId
-products/update-modules.sh    PUT  /api/products/update-modules/:id
 schema.sh                     GET  /docs-json               (what `yarn gcl` reads)
 ```
+
+The three `*-module.sh` scripts that used to sit here are gone with the endpoints
+they called. A product carries no `modules[]` any more — made-to-measure work is
+priced from dimensions by the configurator, so the module system it duplicated
+was removed rather than kept in parallel.
 
 ## Things these scripts will show you
 

@@ -10,9 +10,10 @@ it was 44 `any` occurrences and 5 `as unknown as` casts, and the casts existed
 almost entirely to re-type what a hand-written axios layer had erased.
 
 Generated types settled most of it: once `src/client/` arrived, only **7**
-implicit `any`s were left to fix by hand. What remains is 18 *explicit* `any`s
+implicit `any`s were left to fix by hand. What remains is 17 *explicit* `any`s
 in code that never touches the API — PrimeVue prop passthroughs, the i18n
-locale ref, the global component registry. ESLint reports each as a warning.
+locale ref, the global component registry. ESLint reports each as a warning, so
+`yarn lint` is the count; don't trust a grep.
 
 Do not add to the pile, and never reach for `as unknown as` again: if a type
 does not fit, the schema is the thing to change.
