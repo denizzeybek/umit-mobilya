@@ -24,12 +24,12 @@ const IGNORED_CONSOLE = [
   /Download the Vue Devtools/i,
   /\[vite\] connect/i,
   /*
-   * Vite'ın bağımlılık ön paketleyicisi koşum ortasında yeniden çalıştığında
-   * uçuşta olan chunk istekleri 404 alıyor ve sayfa kendini yeniliyor. Ürün
-   * kodunun hatası değil, dev sunucusunun iç işi — ve yalnızca dört işçi aynı
-   * anda yüklenirken görülüyor.
+   * Google Fonts. Nöbetçinin işi BİZİM kodumuzun hataları; üçüncü taraf bir
+   * CDN'in aksaması ne bizim hatamız ne de testin denetleyebileceği bir şey.
+   * Ölçüldü: kapıyı üç kez kırmızıya düşüren şey buydu ve teşhis edilebilmesi
+   * için mesaja adres eklemek gerekti.
    */
-  /node_modules\/\.vite\//,
+  /fonts\.(gstatic|googleapis)\.com/,
 ];
 
 const isNoise = (text: string): boolean =>

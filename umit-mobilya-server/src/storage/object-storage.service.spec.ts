@@ -28,16 +28,67 @@ jest.mock('@aws-sdk/client-s3', () => {
   };
 });
 
+/*
+ * `get`, `getOrThrow` DEĞİL: servis artık eksik değişkende patlamak yerine
+ * yapılandırılmamış moda düşüyor, o yüzden okuma da patlamayan biçimde.
+ */
+const VALUES: Record<string, string> = {
+  BUCKET_NAME: 'test-bucket',
+  S3_ENDPOINT: 'https://account.r2.cloudflarestorage.com',
+  PUBLIC_BUCKET_URL: 'https://img.test/',
+  ACCESS_KEY: 'access',
+  SECRET_ACCESS_KEY: 'secret',
+};
+
 const config = {
-  getOrThrow: (key: string) =>
-    ({
-      BUCKET_NAME: 'test-bucket',
-      S3_ENDPOINT: 'https://account.r2.cloudflarestorage.com',
-      PUBLIC_BUCKET_URL: 'https://img.test/',
-      ACCESS_KEY: 'access',
-      SECRET_ACCESS_KEY: 'secret',
-    })[key] as string,
+  get: (key: string) => VALUES[key],
+  getOrThrow: (key: string) => VALUES[key] as string,
 } as unknown as ConfigService;
+
+/** Hiçbir depolama değişkeni tanımlı değil — kova henüz yokken bu geçerli. */
+const emptyConfig = {
+  get: () => undefined,
+  getOrThrow: (key: string) => {
+    throw new Error(`eksik: ${key}`);
+  },
+} as unknown as ConfigService;
+
+/*
+ * Kova YOKKEN uygulama açılmalı. Aksi hâlde tek bir eksik değişken bütün
+ * API'yi kaldırıyor: ürün listesi, konfigüratör, teklif, fiyat kitabı — hiçbiri
+ * kovaya dokunmadığı hâlde hepsi ölü. Kovaya ihtiyaç duyan tek şey görsel
+ * yükleme; kapalı olması gereken de yalnızca o.
+ */
+describe('ObjectStorageService — yapılandırılmamış', () => {
+  it('yapılandırma olmadan kurulabilir', () => {
+    expect(() => new ObjectStorageService(emptyConfig)).not.toThrow();
+  });
+
+  it('URL üretmez, null döner', () => {
+    const service = new ObjectStorageService(emptyConfig);
+
+    expect(service.publicUrl('bir-anahtar')).toBeNull();
+  });
+
+  /* Sessizce başarılı olmak, kovaya gitmemiş bir görseli gitmiş göstermek olurdu. */
+  it('yükleme denemesi açık bir hatayla düşer', async () => {
+    const service = new ObjectStorageService(emptyConfig);
+
+    await expect(
+      service.upload(Buffer.from(''), 'key', 'image/jpeg'),
+    ).rejects.toThrow(/depolama/i);
+    await expect(
+      service.uploadTexture(Buffer.from(''), 'key', 'image/jpeg'),
+    ).rejects.toThrow(/depolama/i);
+  });
+
+  /* Silme zaten hataları yutuyor; yapılandırma yokken de sessiz kalmalı. */
+  it('silme sessizce geçer', async () => {
+    const service = new ObjectStorageService(emptyConfig);
+
+    await expect(service.remove('bir-anahtar')).resolves.toBeUndefined();
+  });
+});
 
 describe('ObjectStorageService', () => {
   let service: ObjectStorageService;

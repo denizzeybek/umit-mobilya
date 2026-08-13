@@ -41,6 +41,11 @@ block() {
   {
     printf 'BLOCKED: e2e kapisi kirmizi — push yapilmadi.\n\n%s\n' "$1"
     if [[ -n "${2:-}" && -f "${2:-}" ]]; then
+      # Log SAKLANIYOR: adim adi sabit oldugu icin bir sonraki BASARILI kosum
+      # ayni dosyayi siliyordu ve titrek bir kirmizi kosum teshis edilemiyordu.
+      # Bir kez tam olarak bu yuzden kaybedildi.
+      kept="/tmp/umb-e2e-gate-failed-$$.log"
+      cp "$2" "$kept" 2>/dev/null && printf '\nTam log: %s\n' "$kept"
       printf '\n--- son 30 satir ---\n'
       tail -30 "$2"
     fi

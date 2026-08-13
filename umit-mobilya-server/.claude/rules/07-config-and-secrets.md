@@ -21,11 +21,31 @@ deploy.
 
 ## Required variables
 
-`MONGO_URI`, `JWT_SECRET`, `PORT`, `ALLOWED_ORIGINS`, `BUCKET_NAME`,
-`S3_ENDPOINT`, `PUBLIC_BUCKET_URL`, `ACCESS_KEY`, `SECRET_ACCESS_KEY`.
+**Always required:** `MONGO_URI`, `JWT_SECRET`.
 
-`ALLOWED_ORIGINS` is comma-separated and defaults to `http://localhost:3001`.
-Adding a deploy domain is a Railway variable change, not a code change.
+**Optional with defaults:** `PORT` (5000), `ALLOWED_ORIGINS`
+(`http://localhost:3001`). Adding a deploy domain is a Railway variable change,
+not a code change.
+
+**Object storage — all five or none:** `BUCKET_NAME`, `S3_ENDPOINT`,
+`PUBLIC_BUCKET_URL`, `ACCESS_KEY`, `SECRET_ACCESS_KEY`.
+
+Storage being *absent* is a supported state. Without it the service boots, logs
+one `warn`, and image upload answers **503** with a message saying so; every
+other endpoint works untouched. That matters because the configurator, the
+quotes, the price book and the product list never touch the bucket — making them
+die for a missing bucket meant a developer without R2 credentials could run
+nothing at all.
+
+Storage being *half* configured is **not** supported and fails the boot
+deliberately (`assertStorageIsAllOrNothing`). Half a bucket is worse than none:
+the app comes up, the upload endpoints look alive, and requests fail silently or
+write to the wrong place — and a missing `PUBLIC_BUCKET_URL` produces relative
+URLs that look almost right, which is the failure this whole rule exists for.
+
+Despite the variable being named `S3_ENDPOINT`, the storage **is Cloudflare R2**
+— the SDK is `@aws-sdk/client-s3` because R2 speaks the S3 API, and the client
+is built with `region: 'auto'` plus R2's own endpoint. The name is historical.
 
 ## Do
 

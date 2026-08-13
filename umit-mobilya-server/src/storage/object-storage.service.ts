@@ -3,7 +3,11 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomBytes } from 'node:crypto';
 import sharp from 'sharp';
@@ -26,29 +30,69 @@ const TEXTURE_SIZE = 1024;
 @Injectable()
 export class ObjectStorageService {
   private readonly logger = new Logger(ObjectStorageService.name);
-  private readonly client: S3Client;
+  private readonly client: S3Client | null = null;
   private readonly bucket: string;
   private readonly publicBase: string;
 
+  /**
+   * Depolama YAPILANDIRILMAMIŞ olabilir ve bu geçerli bir durum.
+   *
+   * Kova yokken boot'un düşmesi, tek bir eksik değişkenin bütün API'yi
+   * kaldırması demekti: ürün listesi, konfigüratör, teklif ve fiyat kitabı
+   * kovaya hiç dokunmadığı hâlde ölüyordu. Kovaya ihtiyaç duyan tek şey görsel
+   * yükleme; kapalı olması gereken de yalnızca o.
+   *
+   * Yarım yapılandırma AYRI bir mesele ve orada boot düşüyor
+   * (`config/env.validation.ts`): eksik bir kimlik bilgisiyle çalışan bir
+   * yükleme, sessizce başarısız olan bir yüklemedir.
+   */
   constructor(config: ConfigService) {
-    this.bucket = config.getOrThrow<string>('BUCKET_NAME');
-    this.publicBase = config
-      .getOrThrow<string>('PUBLIC_BUCKET_URL')
-      .replace(/\/+$/, '');
+    this.bucket = config.get<string>('BUCKET_NAME') ?? '';
+    this.publicBase = (config.get<string>('PUBLIC_BUCKET_URL') ?? '').replace(
+      /\/+$/,
+      '',
+    );
+
+    const endpoint = config.get<string>('S3_ENDPOINT');
+    const accessKeyId = config.get<string>('ACCESS_KEY');
+    const secretAccessKey = config.get<string>('SECRET_ACCESS_KEY');
+
+    if (!this.bucket || !this.publicBase || !endpoint || !accessKeyId || !secretAccessKey) {
+      this.logger.warn(
+        'Depolama yapılandırılmamış (BUCKET_NAME / S3_ENDPOINT / ' +
+          'PUBLIC_BUCKET_URL / ACCESS_KEY / SECRET_ACCESS_KEY). Görsel yükleme ' +
+          'KAPALI; geri kalan her şey çalışıyor.',
+      );
+      return;
+    }
 
     /* R2 requires region 'auto' and its own endpoint; an AWS region is rejected. */
     this.client = new S3Client({
       region: 'auto',
-      endpoint: config.getOrThrow<string>('S3_ENDPOINT'),
-      credentials: {
-        accessKeyId: config.getOrThrow<string>('ACCESS_KEY'),
-        secretAccessKey: config.getOrThrow<string>('SECRET_ACCESS_KEY'),
-      },
+      endpoint,
+      credentials: { accessKeyId, secretAccessKey },
     });
   }
 
+  /** Kova yapılandırılmış mı — yükleme uçları buna bakıyor. */
+  get isConfigured(): boolean {
+    return this.client !== null;
+  }
+
+  private requireClient(): S3Client {
+    if (!this.client) {
+      throw new ServiceUnavailableException(
+        'Depolama yapılandırılmamış: görsel yükleme şu an kapalı.',
+      );
+    }
+
+    return this.client;
+  }
+
   publicUrl(key: string | undefined | null): string | null {
-    return key ? `${this.publicBase}/${encodeURIComponent(key)}` : null;
+    if (!key || !this.client) return null;
+
+    return `${this.publicBase}/${encodeURIComponent(key)}`;
   }
 
   /**
@@ -74,11 +118,13 @@ export class ObjectStorageService {
     key: string,
     contentType: string,
   ): Promise<void> {
+    const client = this.requireClient();
+
     const resized = await sharp(buffer)
       .resize({ width: MAX_WIDTH, height: MAX_HEIGHT, fit: 'inside' })
       .toBuffer();
 
-    await this.client.send(
+    await client.send(
       new PutObjectCommand({
         Bucket: this.bucket,
         Key: key,
@@ -104,11 +150,13 @@ export class ObjectStorageService {
     key: string,
     contentType: string,
   ): Promise<void> {
+    const client = this.requireClient();
+
     const resized = await sharp(buffer)
       .resize({ width: TEXTURE_SIZE, height: TEXTURE_SIZE, fit: 'cover' })
       .toBuffer();
 
-    await this.client.send(
+    await client.send(
       new PutObjectCommand({
         Bucket: this.bucket,
         Key: key,
@@ -123,7 +171,7 @@ export class ObjectStorageService {
    * outage must not be able to block a database delete.
    */
   async remove(key: string | undefined | null): Promise<void> {
-    if (!key) {
+    if (!key || !this.client) {
       return;
     }
 

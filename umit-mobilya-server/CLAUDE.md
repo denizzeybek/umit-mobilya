@@ -73,6 +73,9 @@ fake credentials (`test/setup-env.ts`), and `ConfigModule` skips `.env` when
 
 - MongoDB stores object **keys** (`imageName`, `imageNameList[]`), never URLs.
   `ObjectStorageService` composes public URLs at read time.
+- The bucket is **optional**: with no R2 variables the service boots, warns once,
+  and image upload answers 503 — everything else works. Half-configured storage
+  fails the boot on purpose. Storage is R2 despite the `S3_ENDPOINT` name.
 - `GET /api/products` and `/:id` return **201**. Inherited behaviour, pinned by
   the characterization suite — do not "fix" it in isolation.
 - Mutating routes sit behind `JwtAuthGuard`. The deliberate exceptions are the
