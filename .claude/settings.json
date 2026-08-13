@@ -38,7 +38,7 @@
             "type": "command",
             "if": "Bash(git push*)",
             "statusMessage": "Deploy guard: branch kontrol ediliyor",
-            "command": "cmd=$(jq -r '.tool_input.command // \"\"' 2>/dev/null); case \"$cmd\" in *\"git push\"*) br=$(git -C /Users/denizzeybek/Documents/umit-mobilya rev-parse --abbrev-ref HEAD 2>/dev/null); [ \"$br\" = \"main\" ] && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"UYARI: main branch uzerindesin. main e push PRODUCTION deploy tetikler - frontend Netlify de yeniden build edilir, backend Railway de yeniden deploy olur. Arada CI kapisi ve review adimi yok. Devam etmek istedigine emin ol.\"}}' ;; esac; exit 0"
+            "command": "cmd=$(jq -r '.tool_input.command // \"\"' 2>/dev/null); case \"$cmd\" in *\"git push\"*) br=$(git -C /Users/denizzeybek/Documents/umit-mobilya rev-parse --abbrev-ref HEAD 2>/dev/null); [ \"$br\" = \"main\" ] && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"UYARI: main branch uzerindesin. Su an bagli bir deploy YOK (AWS hesabi kapali, Netlify/Railway bagli degil) - yani push kodu yayinlar, baska bir sey tetiklemez. Ama main varsayilan dal: bir host baglandigi gun buraya giden her sey CI ve review olmadan uretime cikar. Dalda calismak yine de dogrusu.\"}}' ;; esac; exit 0"
           },
           {
             "type": "command",

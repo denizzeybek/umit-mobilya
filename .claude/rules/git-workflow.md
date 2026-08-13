@@ -1,6 +1,6 @@
 # Git Workflow
 
-> `main` is deployed. Branch first, verify before you push, and keep unrelated churn out of the diff.
+> Nothing is deployed **yet**. Branch first, verify before you push, and keep unrelated churn out of the diff — because the day a host is connected, `main` becomes production with no CI in between.
 
 ## Why this rule exists
 
@@ -35,7 +35,8 @@ bisect.
 
 ## Do
 
-- Say plainly when a push will deploy, and to which service.
+- Say plainly when a push will deploy, and to which service — once a host is
+  connected. Until then, say that too rather than implying a deploy.
 - Prefer fast-forward merges when history is linear — a merge commit for a
   single-branch project adds noise, not information.
 - Delete merged branches once they're in `main`.

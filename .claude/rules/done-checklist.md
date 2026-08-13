@@ -5,8 +5,14 @@
 ## Why this rule exists
 
 This repo has no CI. The GitHub Actions workflows were deleted when the project moved
-off AWS, and Netlify/Railway only run a build — they don't type-check, lint, or test.
-Every quality gate that exists is one you run locally or one a hook runs for you.
+off AWS, and there is **no live deployment at all right now** — the AWS account is
+closed and no host is connected. So nothing anywhere checks this code except the
+gates below: every quality gate that exists is one you run locally or one a hook
+runs for you.
+
+That makes them more load-bearing, not less. When a host is finally connected it
+will build and publish whatever is on `main` without type-checking, linting or
+testing it.
 
 The cost of skipping them is not theoretical: an infinite-redirect bug in the router
 guard shipped to `main` in this project, and `type-check` alone would not have caught

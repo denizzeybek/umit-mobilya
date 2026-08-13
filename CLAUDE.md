@@ -229,10 +229,19 @@ imports → `IProps`/`defineProps` → `IEmits`/`defineEmits` → composables & 
 
 ## Deployment
 
-There is **no CI in this repo** — no `.github/` directory. Both hosts deploy from git themselves:
+**Nothing is deployed yet.** The AWS account is closed and no host is currently
+connected, so a push publishes code and nothing more. The section below is the
+*intended* setup, kept because the config for it is already in the repo — treat
+it as a plan, not as a running system, and update it the day a host is wired up.
+
+There is also **no CI** — no `.github/` directory. Neither host type-checks, lints
+or tests; they only build. Every gate that exists is local (see
+[`done-checklist.md`](.claude/rules/done-checklist.md)).
 
 - **Frontend → Netlify.** `netlify.toml` sits at the **repo root** (Netlify only looks there) and sets `base = umit-mobilya-client`, `command = yarn build`, `publish = dist`, and pins Node 18. `public/_redirects` holds the SPA fallback (`/* /index.html 200`); without it a direct visit to `/login` or `/products` 404s, because the router uses `createWebHistory`. Env vars come from the Netlify dashboard.
-- **Backend → Railway.** `yarn start` (`node app.js`) is the start command and `app.js` already honours the injected `PORT`. There is no Dockerfile in the server, so Nixpacks detects it; the root directory must be set to `umit-mobilya-server`. Env vars come from the Railway dashboard, and dependencies are installed on deploy.
+- **Backend → Railway.** `yarn start` (`node dist/main`) is the start command,
+  which means a build step (`nest build`) has to run first — the Express era
+  needed none, so this is the first thing to verify when a host is connected and `app.js` already honours the injected `PORT`. There is no Dockerfile in the server, so Nixpacks detects it; the root directory must be set to `umit-mobilya-server`. Env vars come from the Railway dashboard, and dependencies are installed on deploy.
 - **Images → Cloudflare R2**, **database → MongoDB Atlas** (Atlas needs Railway's egress allowed under Network Access).
 
 The server's CORS allowlist is read from `ALLOWED_ORIGINS` (comma-separated, defaults to `http://localhost:3001`), so a new frontend domain is an env change, not a code change.
