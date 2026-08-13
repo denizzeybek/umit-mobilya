@@ -2,6 +2,7 @@ import type { INestApplication } from '@nestjs/common';
 import mongoose from 'mongoose';
 import request from 'supertest';
 
+import { validateEnvironment } from '../../src/config/env.validation';
 import { createTestApp } from '../create-test-app';
 import { connectTestMongo, disconnectTestMongo } from '../mongo-memory';
 
@@ -97,5 +98,60 @@ describe('Service bootstrap', () => {
 
     expect(response.status).toBe(400);
     expect(response.body.message).toContain('isAdmin');
+  });
+});
+
+/**
+ * Boot'un ortam sözleşmesi.
+ *
+ * Depolama beşlisi ya tamamen tanımlı ya hiç. YARIM tanımlı hâl, tanımsızdan
+ * kötü: uygulama açılır, yükleme uçları canlı görünür, istekler eksik kimlik
+ * ya da yanlış adres yüzünden sessizce düşer. `PUBLIC_BUCKET_URL` eksikken
+ * üretilen göreli adresler ise "neredeyse doğru" görünüp saatlerce frontend'de
+ * aranır.
+ *
+ * Bu kontrolün kendisi test edilmemişti — hiç ötmeyen bir alarm, olmayan bir
+ * alarmdır.
+ */
+describe('ortam doğrulaması', () => {
+  const REQUIRED = {
+    MONGO_URI: 'mongodb://localhost:27017/test',
+    JWT_SECRET: 'secret',
+  };
+
+  const STORAGE = {
+    BUCKET_NAME: 'bucket',
+    S3_ENDPOINT: 'https://account.r2.cloudflarestorage.com',
+    PUBLIC_BUCKET_URL: 'https://img.test',
+    ACCESS_KEY: 'access',
+    SECRET_ACCESS_KEY: 'secret',
+  };
+
+  it('depolama hiç tanımlı değilken açılır — kova zorunlu değil', () => {
+    expect(() => validateEnvironment({ ...REQUIRED })).not.toThrow();
+  });
+
+  it('depolama tamamen tanımlıyken açılır', () => {
+    expect(() => validateEnvironment({ ...REQUIRED, ...STORAGE })).not.toThrow();
+  });
+
+  /* Asıl mesele: her eksik değişken tek başına boot'u düşürmeli. */
+  it.each(Object.keys(STORAGE))('%s eksikken boot düşer', (missing) => {
+    const half: Record<string, unknown> = { ...REQUIRED, ...STORAGE };
+    delete half[missing];
+
+    expect(() => validateEnvironment(half)).toThrow(/yarım yapılandırılmış/i);
+  });
+
+  it('düşen hata hangi değişkenin eksik olduğunu söyler', () => {
+    const half = { ...REQUIRED, ...STORAGE, PUBLIC_BUCKET_URL: undefined };
+
+    expect(() => validateEnvironment(half)).toThrow(/PUBLIC_BUCKET_URL/);
+  });
+
+  /* Zorunlu olanlar hâlâ zorunlu: depolamayı opsiyonel yapmak onları gevşetmedi. */
+  it('MONGO_URI ya da JWT_SECRET eksikse yine düşer', () => {
+    expect(() => validateEnvironment({ JWT_SECRET: 'x' })).toThrow(/MONGO_URI/);
+    expect(() => validateEnvironment({ MONGO_URI: 'x' })).toThrow(/JWT_SECRET/);
   });
 });

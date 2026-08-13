@@ -1,5 +1,6 @@
 import request from 'supertest';
 
+import { DEFAULT_PRICE_BOOK } from '../../src/configurator/generated/pricing/defaults';
 import { createTestApp, signTestToken } from '../create-test-app';
 import {
   clearCollections,
@@ -110,6 +111,51 @@ describe('quote + pricebook HTTP sözleşmesi', () => {
    * yalnızca burada görülüyor: kimin girebildiği, ve dosyasız isteğin 500
    * değil 400 aldığı.
    */
+  /*
+   * Sürüm uçları auth arkasında ve tek okuyucusu admin paneli. Test yoktu:
+   * `byVersion` bulunamayan sürüm için gövdeyi BOŞ nesneyle döndürüyor —
+   * 404 değil — ve bunu ancak ağdan bakarak görürsün.
+   */
+  describe('GET /api/pricebook/versions', () => {
+    it('auth olmadan 401 verir', async () => {
+      const response = await request(app.getHttpServer()).get(
+        '/api/pricebook/versions',
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    it('yayınlanan sürümleri yeniden eskiye listeler', async () => {
+      await request(app.getHttpServer())
+        .put('/api/pricebook')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ data: { ...DEFAULT_PRICE_BOOK } });
+      await request(app.getHttpServer())
+        .put('/api/pricebook')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ data: { ...DEFAULT_PRICE_BOOK } });
+
+      const response = await request(app.getHttpServer())
+        .get('/api/pricebook/versions')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.map((row: { version: number }) => row.version)).toEqual([
+        2, 1,
+      ]);
+    });
+
+    it('bilinmeyen sürüm 404 DEĞİL, boş gövde döner', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/pricebook/versions/99')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.version).toBe(99);
+      expect(response.body.data).toEqual({});
+    });
+  });
+
   describe('POST /api/pricebook/texture', () => {
     it('auth olmadan 401 verir', async () => {
       const response = await request(app.getHttpServer()).post(
