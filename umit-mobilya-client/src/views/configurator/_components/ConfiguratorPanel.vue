@@ -10,6 +10,13 @@
       :create-section="definition.createSection"
     />
 
+    <!--
+      Panelin doğrudan çocuğu ve bu bilinçli: `sticky` yalnızca kendi
+      ebeveyninin kutusunda yapışıyor, bir bölümün içinde kalsaydı o bölümle
+      birlikte ekrandan çıkardı.
+    -->
+    <SectionPicker v-model="config" v-model:active="active" />
+
     <DoorLeafFields
       v-model="config"
       :active="active"
@@ -46,6 +53,7 @@ import DoorLeafFields from './panel/DoorLeafFields.vue';
 import MaterialFields from './panel/MaterialFields.vue';
 import PriceSummary from './panel/PriceSummary.vue';
 import SectionCountFields from './panel/SectionCountFields.vue';
+import SectionPicker from './panel/SectionPicker.vue';
 import ShareLink from './panel/ShareLink.vue';
 import QuoteDialog from './QuoteDialog.vue';
 

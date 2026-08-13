@@ -7,22 +7,12 @@
       <SelectButton v-model="count" :options="options" :allow-empty="false" />
     </div>
 
-    <div class="mt-5 flex flex-wrap gap-2">
-      <Button
-        v-for="(_, index) in config.sectionCount"
-        :key="index"
-        size="small"
-        :severity="active === index ? 'primary' : 'secondary'"
-        :variant="active === index ? undefined : 'outlined'"
-        class="!rounded-none"
-        @click="active = index"
-      >
-        {{ sectionLabel(config.sectionCount, index) }}
-        <span class="opacity-60">· {{ config.sections[index]?.width }} cm</span>
-      </Button>
-    </div>
-
-    <div class="mt-4">
+    <!--
+      Bölüm SEÇİCİSİ burada değil: `SectionPicker` panelin doğrudan çocuğu ve
+      yapışkan, çünkü aşağıdaki alanlar seçili bölüme uygulanıyor ve seçim
+      ekrandan çıkınca hangi bölümde olunduğu unutuluyordu.
+    -->
+    <div class="mt-5">
       <Button
         size="small"
         severity="secondary"
@@ -40,7 +30,6 @@
 import { computed } from 'vue';
 
 import { distributeEvenly, setSectionCount } from '../../_etc/dimensionOps';
-import { sectionLabel } from '../../_etc/sectionLabel';
 
 import type {
   IBaseConfig,

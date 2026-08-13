@@ -26,6 +26,9 @@ export const APPROVED_JOURNEYS = [
 
   /* Özel kaplamayla paylaşılan bağlantı, karşı tarafta aynı kaplamayı açmalı. */
   'share-link-custom-finish',
+
+  /* Aşağı kaydırırken hangi bölümü düzenlediğini görebilmeli. */
+  'section-picker-sticky',
 ] as const;
 
 export type TApprovedJourney = (typeof APPROVED_JOURNEYS)[number];
