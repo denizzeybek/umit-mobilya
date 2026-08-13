@@ -1,46 +1,37 @@
 <template>
-  <div class="flex items-center gap-3">
+  <!--
+    Tek satır, sabit yükseklik. Önceki hâlde desen yüklenince hücreye ikinci
+    bir satır (ölçek alanı) giriyordu: o satır büyüyor, tablodaki bütün
+    hizalama kayıyordu. Ölçek artık kendi sütununda.
+  -->
+  <div class="flex items-center gap-2">
     <span
-      class="h-10 w-10 shrink-0 rounded border border-f-rule-strong bg-cover bg-center"
+      class="h-9 w-9 shrink-0 rounded border border-f-rule bg-cover bg-center"
       :style="previewStyle"
       :title="finish.textureUrl ? 'Yüklü desen' : 'Desen yok, düz renk'"
     />
 
-    <div class="flex flex-col gap-1">
-      <div class="flex items-center gap-1">
-        <FileUpload
-          mode="basic"
-          accept="image/*"
-          custom-upload
-          auto
-          :choose-label="finish.textureName ? 'Değiştir' : 'Görsel yükle'"
-          :disabled="pricebookStore.uploading"
-          @uploader="handleUpload"
-        />
-        <Button
-          v-if="finish.textureName"
-          icon="pi pi-times"
-          severity="secondary"
-          text
-          size="small"
-          aria-label="Deseni kaldır"
-          @click="handleClear"
-        />
-      </div>
+    <FileUpload
+      mode="basic"
+      accept="image/*"
+      custom-upload
+      auto
+      :choose-label="finish.textureName ? 'Değiştir' : 'Yükle'"
+      :choose-icon="finish.textureName ? 'pi pi-refresh' : 'pi pi-upload'"
+      :choose-button-props="CHOOSE_BUTTON"
+      :disabled="pricebookStore.uploading"
+      @uploader="handleUpload"
+    />
 
-      <label v-if="finish.textureName" class="flex items-center gap-2">
-        <span class="text-xs text-f-ink-muted">Tekrar</span>
-        <InputNumber
-          :model-value="finish.textureScaleCm ?? DEFAULT_SCALE_CM"
-          :min="5"
-          :max="400"
-          suffix=" cm"
-          size="small"
-          input-class="!w-20"
-          @update:model-value="handleScale"
-        />
-      </label>
-    </div>
+    <Button
+      v-if="finish.textureName"
+      icon="pi pi-times"
+      severity="secondary"
+      text
+      size="small"
+      aria-label="Deseni kaldır"
+      @click="handleClear"
+    />
   </div>
 </template>
 
@@ -49,6 +40,7 @@ import { computed } from 'vue';
 
 import { useFToast } from '@/composables/useFToast';
 import { usePricebookStore } from '@/stores/pricebook';
+import { DEFAULT_TEXTURE_SCALE_CM } from '@/views/configurator/_etc/pricing/priceBook';
 
 import type { IFinish } from '@/views/configurator/_etc/pricing/priceBook';
 import type { FileUploadUploaderEvent } from 'primevue/fileupload';
@@ -80,11 +72,16 @@ interface IEmits {
 const pricebookStore = usePricebookStore();
 const { showErrorMessage } = useFToast();
 
-/**
- * Ceviz damarı için makul bir başlangıç. Ölçek olmadan aynı görsel kapakta dev
- * bir leke, yan panelde toz gibi çıkıyor.
+/*
+ * Sessiz düğme: dolu koyu bir düğme tablodaki her satırda göze ilk çarpan şey
+ * oluyordu — oysa buradaki asıl bilgi kaplamanın kendisi, yükleme ikincil bir
+ * eylem.
  */
-const DEFAULT_SCALE_CM = 60;
+const CHOOSE_BUTTON = {
+  severity: 'secondary' as const,
+  outlined: true,
+  size: 'small' as const,
+};
 
 const previewStyle = computed(() =>
   props.finish.textureUrl
@@ -107,7 +104,7 @@ const handleUpload = async (event: FileUploadUploaderEvent): Promise<void> => {
        * yoksa kitapta kalıcı bir URL birikirdi (Rule 10).
        */
       textureUrl: saved.textureUrl,
-      textureScaleCm: props.finish.textureScaleCm ?? DEFAULT_SCALE_CM,
+      textureScaleCm: props.finish.textureScaleCm ?? DEFAULT_TEXTURE_SCALE_CM,
     });
   } catch (error) {
     showErrorMessage(error);
@@ -124,7 +121,4 @@ const handleClear = (): void => {
   emit('update', { ...rest, textureUrl: null });
 };
 
-const handleScale = (value: number): void => {
-  emit('update', { ...props.finish, textureScaleCm: value });
-};
 </script>

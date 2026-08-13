@@ -67,6 +67,26 @@
           <FinishTextureCell :finish="data" @update="replaceRow" />
         </template>
       </Column>
+      <!--
+        Ölçek KENDİ sütununda: desen hücresinin içindeyken satır yükseliyor ve
+        yalnızca dokusu olan satırlar büyüyüp tablonun hizasını bozuyordu.
+        Deseni olmayan satırda tire duruyor, yükseklik her yerde aynı.
+      -->
+      <Column header="Tekrar">
+        <template #body="{ data }">
+          <InputNumber
+            v-if="data.textureName"
+            :model-value="data.textureScaleCm ?? DEFAULT_TEXTURE_SCALE_CM"
+            :min="5"
+            :max="400"
+            suffix=" cm"
+            size="small"
+            input-class="!w-24"
+            @update:model-value="(value: number) => replaceRow({ ...data, textureScaleCm: value })"
+          />
+          <span v-else class="text-sm text-f-ink-faint">—</span>
+        </template>
+      </Column>
 
       <Column field="surchargePerM2" header="₺ / m² fark">
         <template #body="{ data }">
@@ -106,6 +126,7 @@ import {
   toColorNumber,
   toSwatch,
 } from '@/views/admin/_etc/colorValue';
+import { DEFAULT_TEXTURE_SCALE_CM } from '@/views/configurator/_etc/pricing/priceBook';
 
 import CatalogDeleteButton from './CatalogDeleteButton.vue';
 import FinishTextureCell from './FinishTextureCell.vue';

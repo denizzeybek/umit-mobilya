@@ -32,6 +32,16 @@ export interface IMaterial {
   hidden?: boolean;
 }
 
+/**
+ * Desen ölçeği verilmemişse varsayılan tekrar aralığı (cm).
+ *
+ * Burada, çünkü hem admin paneli (yeni desen yüklenince) hem 3B görüntüleyici
+ * (ölçek boşsa) aynı sayıya ihtiyaç duyuyor. İki yerde yazıldığında biri
+ * değişip diğeri kaldığında panel bir şey gösterip sahne başka bir şey
+ * çiziyordu.
+ */
+export const DEFAULT_TEXTURE_SCALE_CM = 60;
+
 export interface IFinish {
   id: TFinishId;
   label: string;

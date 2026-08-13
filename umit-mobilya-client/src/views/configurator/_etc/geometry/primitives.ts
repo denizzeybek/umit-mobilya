@@ -5,6 +5,8 @@ import {
   MeshStandardMaterial,
 } from 'three';
 
+import { DEFAULT_TEXTURE_SCALE_CM } from '../pricing/priceBook';
+
 import { loadTexture } from './textureCache';
 
 import type { IPriceBook } from '../pricing/priceBook';
@@ -16,9 +18,6 @@ import type { Material, Texture } from 'three';
  * da sonuçta kutudan ibaret; kutuyu ve malzemeyi tek yerden almak, bir ürünün
  * gölge ayarını değiştirdiğinde diğerlerinin de tutarlı kalmasını sağlıyor.
  */
-
-/** Desen ölçeği verilmemişse ceviz damarı için makul bir başlangıç. */
-const DEFAULT_TEXTURE_SCALE_CM = 60;
 
 export interface IProductMaterials {
   /** Görünen gövde yüzeyleri: yan, üst, alt, raf. */
