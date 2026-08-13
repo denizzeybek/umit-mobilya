@@ -1,7 +1,18 @@
 import { ConfigService } from '@nestjs/config';
+import { mkdtemp } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import sharp from 'sharp';
 
 import { ObjectStorageService } from './object-storage.service';
+
+/** Gerçek bir JPEG; sharp'ın yeniden boyutlandırabilmesi için geçerli olmalı. */
+const JPEG = Buffer.from(
+  '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a' +
+    'HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAA' +
+    'AAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==',
+  'base64',
+);
 
 const sent: { type: string; input: Record<string, unknown> }[] = [];
 let sendShouldThrow = false;
@@ -45,48 +56,86 @@ const config = {
   getOrThrow: (key: string) => VALUES[key] as string,
 } as unknown as ConfigService;
 
-/** Hiçbir depolama değişkeni tanımlı değil — kova henüz yokken bu geçerli. */
-const emptyConfig = {
-  get: () => undefined,
-  getOrThrow: (key: string) => {
-    throw new Error(`eksik: ${key}`);
-  },
-} as unknown as ConfigService;
-
-/*
- * Kova YOKKEN uygulama açılmalı. Aksi hâlde tek bir eksik değişken bütün
- * API'yi kaldırıyor: ürün listesi, konfigüratör, teklif, fiyat kitabı — hiçbiri
- * kovaya dokunmadığı hâlde hepsi ölü. Kovaya ihtiyaç duyan tek şey görsel
- * yükleme; kapalı olması gereken de yalnızca o.
+/**
+ * Kova yokken üç mod var ve hangisinin seçildiği ORTAMA bağlı:
+ *
+ * | R2 değişkenleri | NODE_ENV     | mod         |
+ * |-----------------|--------------|-------------|
+ * | var             | herhangi     | R2          |
+ * | yok             | production'ı | yerel disk  |
+ * | yok             | production   | KAPALI      |
+ *
+ * Üçüncüsü bilerek: Railway'in dosya sistemi geçici, canlıda diske yazmak
+ * "çalışıyor" görünüp deploy'da sessizce silinen yüklemeler demekti.
  */
-describe('ObjectStorageService — yapılandırılmamış', () => {
-  it('yapılandırma olmadan kurulabilir', () => {
-    expect(() => new ObjectStorageService(emptyConfig)).not.toThrow();
+const configOf = (values: Record<string, string | undefined>) =>
+  ({
+    get: (key: string) => values[key],
+    getOrThrow: (key: string) => values[key] as string,
+  }) as unknown as ConfigService;
+
+describe('ObjectStorageService — kova yok, geliştirme', () => {
+  let root: string;
+  let service: ObjectStorageService;
+
+  beforeEach(async () => {
+    root = await mkdtemp(join(tmpdir(), 'umb-svc-'));
+    service = new ObjectStorageService(
+      configOf({ LOCAL_STORAGE_DIR: root, PORT: '5000' }),
+    );
   });
 
-  it('URL üretmez, null döner', () => {
-    const service = new ObjectStorageService(emptyConfig);
+  it('yerel diske yazar ve geri okunur', async () => {
+    await service.uploadTexture(JPEG, 'ceviz-abc', 'image/jpeg');
 
-    expect(service.publicUrl('bir-anahtar')).toBeNull();
+    const found = await service.readLocal('ceviz-abc');
+
+    expect(found?.contentType).toBe('image/jpeg');
+    expect(found?.body.length).toBeGreaterThan(0);
   });
 
-  /* Sessizce başarılı olmak, kovaya gitmemiş bir görseli gitmiş göstermek olurdu. */
-  it('yükleme denemesi açık bir hatayla düşer', async () => {
-    const service = new ObjectStorageService(emptyConfig);
+  /*
+   * Okuma yolu bu URL üzerinden işliyor; boş dönerse görsel hiçbir yerde
+   * görünmez — kaplama dairesinde de, 3B dokuda da.
+   */
+  it('kendi okuma ucuna işaret eden URL üretir', () => {
+    expect(service.publicUrl('ceviz-abc')).toBe(
+      'http://localhost:5000/api/storage/ceviz-abc',
+    );
+  });
 
+  it('sildiğini geri okumaz', async () => {
+    await service.uploadTexture(JPEG, 'gidecek-abc', 'image/jpeg');
+    await service.remove('gidecek-abc');
+
+    expect(await service.readLocal('gidecek-abc')).toBeNull();
+  });
+});
+
+describe('ObjectStorageService — kova yok, production', () => {
+  const service = () =>
+    new ObjectStorageService(configOf({ NODE_ENV: 'production' }));
+
+  it('URL üretmez', () => {
+    expect(service().publicUrl('bir-anahtar')).toBeNull();
+  });
+
+  /*
+   * Diske düşmek YASAK: Railway'de dosya sistemi geçici, yükleme çalışıyormuş
+   * gibi görünüp ilk deploy'da kaybolurdu. Sessizce başarılı olmak, kaybı fark
+   * edilmeyen tek hata türü.
+   */
+  it('yükleme açık bir hatayla düşer, diske DÜŞMEZ', async () => {
     await expect(
-      service.upload(Buffer.from(''), 'key', 'image/jpeg'),
+      service().uploadTexture(JPEG, 'key', 'image/jpeg'),
     ).rejects.toThrow(/depolama/i);
-    await expect(
-      service.uploadTexture(Buffer.from(''), 'key', 'image/jpeg'),
-    ).rejects.toThrow(/depolama/i);
+    await expect(service().upload(JPEG, 'key', 'image/jpeg')).rejects.toThrow(
+      /depolama/i,
+    );
   });
 
-  /* Silme zaten hataları yutuyor; yapılandırma yokken de sessiz kalmalı. */
   it('silme sessizce geçer', async () => {
-    const service = new ObjectStorageService(emptyConfig);
-
-    await expect(service.remove('bir-anahtar')).resolves.toBeUndefined();
+    await expect(service().remove('bir-anahtar')).resolves.toBeUndefined();
   });
 });
 

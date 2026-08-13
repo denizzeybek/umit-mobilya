@@ -10,7 +10,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomBytes } from 'node:crypto';
+import { join } from 'node:path';
 import sharp from 'sharp';
+
+import { LocalDiskStorage } from './local-disk.storage';
+
+import type { IStoredObject } from './local-disk.storage';
 
 const RANDOM_SUFFIX_BYTES = 32;
 const MAX_WIDTH = 900;
@@ -31,6 +36,7 @@ const TEXTURE_SIZE = 1024;
 export class ObjectStorageService {
   private readonly logger = new Logger(ObjectStorageService.name);
   private readonly client: S3Client | null = null;
+  private readonly local: LocalDiskStorage | null = null;
   private readonly bucket: string;
   private readonly publicBase: string;
 
@@ -58,10 +64,34 @@ export class ObjectStorageService {
     const secretAccessKey = config.get<string>('SECRET_ACCESS_KEY');
 
     if (!this.bucket || !this.publicBase || !endpoint || !accessKeyId || !secretAccessKey) {
+      /*
+       * Kova yok. Geliştirmede diske düşülüyor ki kaplama deseni gibi bir
+       * özellik R2 hesabı olmadan geliştirilebilsin; production'da DÜŞÜLMÜYOR,
+       * çünkü Railway'in dosya sistemi geçici — orada "çalışan" bir yükleme,
+       * ilk deploy'da sessizce kaybolan bir yükleme demek.
+       */
+      if (config.get<string>('NODE_ENV') === 'production') {
+        this.logger.warn(
+          'Depolama yapılandırılmamış (BUCKET_NAME / S3_ENDPOINT / ' +
+            'PUBLIC_BUCKET_URL / ACCESS_KEY / SECRET_ACCESS_KEY). Görsel ' +
+            'yükleme KAPALI; geri kalan her şey çalışıyor.',
+        );
+        return;
+      }
+
+      const root =
+        config.get<string>('LOCAL_STORAGE_DIR') ??
+        join(process.cwd(), '.local-storage');
+
+      const port = config.get<string>('PORT') ?? '5000';
+      this.publicBase =
+        config.get<string>('LOCAL_STORAGE_URL') ??
+        `http://localhost:${port}/api/storage`;
+
+      this.local = new LocalDiskStorage(root);
       this.logger.warn(
-        'Depolama yapılandırılmamış (BUCKET_NAME / S3_ENDPOINT / ' +
-          'PUBLIC_BUCKET_URL / ACCESS_KEY / SECRET_ACCESS_KEY). Görsel yükleme ' +
-          'KAPALI; geri kalan her şey çalışıyor.',
+        `R2 yapılandırılmamış — görseller YEREL DİSKE yazılıyor (${root}). ` +
+          'Yalnızca geliştirme içindir; canlıda R2 değişkenleri gerekir.',
       );
       return;
     }
@@ -74,25 +104,49 @@ export class ObjectStorageService {
     });
   }
 
-  /** Kova yapılandırılmış mı — yükleme uçları buna bakıyor. */
+  /** Yükleme mümkün mü — R2 ya da yerel disk. */
   get isConfigured(): boolean {
-    return this.client !== null;
+    return this.client !== null || this.local !== null;
   }
 
-  private requireClient(): S3Client {
+  /**
+   * Yerel diskteki nesneyi okur; `GET /api/storage/:key` bunu servis ediyor.
+   * R2 modunda `null` döner — orada okuma kovanın kendi public adresinden.
+   */
+  async readLocal(key: string): Promise<IStoredObject | null> {
+    return this.local ? this.local.read(key) : null;
+  }
+
+  publicUrl(key: string | undefined | null): string | null {
+    if (!key || !this.isConfigured) return null;
+
+    return `${this.publicBase}/${encodeURIComponent(key)}`;
+  }
+
+  private async store(
+    buffer: Buffer,
+    key: string,
+    contentType: string,
+  ): Promise<void> {
+    if (this.local) {
+      await this.local.put(key, buffer);
+      return;
+    }
+
     if (!this.client) {
       throw new ServiceUnavailableException(
         'Depolama yapılandırılmamış: görsel yükleme şu an kapalı.',
       );
     }
 
-    return this.client;
-  }
-
-  publicUrl(key: string | undefined | null): string | null {
-    if (!key || !this.client) return null;
-
-    return `${this.publicBase}/${encodeURIComponent(key)}`;
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: buffer,
+        ContentType: contentType,
+      }),
+    );
   }
 
   /**
@@ -118,20 +172,11 @@ export class ObjectStorageService {
     key: string,
     contentType: string,
   ): Promise<void> {
-    const client = this.requireClient();
-
     const resized = await sharp(buffer)
       .resize({ width: MAX_WIDTH, height: MAX_HEIGHT, fit: 'inside' })
       .toBuffer();
 
-    await client.send(
-      new PutObjectCommand({
-        Bucket: this.bucket,
-        Key: key,
-        Body: resized,
-        ContentType: contentType,
-      }),
-    );
+    await this.store(resized, key, contentType);
   }
 
   /**
@@ -150,20 +195,11 @@ export class ObjectStorageService {
     key: string,
     contentType: string,
   ): Promise<void> {
-    const client = this.requireClient();
-
     const resized = await sharp(buffer)
       .resize({ width: TEXTURE_SIZE, height: TEXTURE_SIZE, fit: 'cover' })
       .toBuffer();
 
-    await client.send(
-      new PutObjectCommand({
-        Bucket: this.bucket,
-        Key: key,
-        Body: resized,
-        ContentType: contentType,
-      }),
-    );
+    await this.store(resized, key, contentType);
   }
 
   /**
@@ -171,9 +207,14 @@ export class ObjectStorageService {
    * outage must not be able to block a database delete.
    */
   async remove(key: string | undefined | null): Promise<void> {
-    if (!key || !this.client) {
+    if (!key) return;
+
+    if (this.local) {
+      await this.local.remove(key);
       return;
     }
+
+    if (!this.client) return;
 
     try {
       await this.client.send(

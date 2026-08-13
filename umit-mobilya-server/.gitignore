@@ -36,3 +36,6 @@ storybook-static
 
 # TypeScript incremental build state
 *.tsbuildinfo
+
+# Yerel disk deposu (kova yokken, YALNIZCA gelistirme)
+.local-storage/
