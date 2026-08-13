@@ -2,7 +2,9 @@
  * Kaynak: umit-mobilya-client/src/views/configurator/_etc/
  * Yeniden üretmek için: cd umit-mobilya-server && yarn sync:pricing
  */
-import { doorLeafCount, hingeCountFor, moduleRects, panelThicknessOf } from './moduleLayout';
+import { cornerUnitParts } from './cornerUnitParts';
+import { doorLeafCount, hingeCountFor } from './doorLeaves';
+import { moduleRects, panelThicknessOf, placeIn } from './moduleLayout';
 
 import type { IModuleRect } from './moduleLayout';
 import type { IPriceBook } from './priceBook';
@@ -14,14 +16,18 @@ import type { IPart } from './types';
  *
  * Ölçüler cm, yerleşim METRE: sahne metre ölçeğinde çalışıyor (Three.js'in
  * ışık zayıflaması ve gölge kamerası ona göre ayarlı), fiyat ise cm ile.
+ *
+ * Yerleşim modülün KENDİ çerçevesinde yazılıyor (`placeIn`): yerel +x modülün
+ * genişliği, yerel +z cephesi. Köşeden sonra dönen modüller bu sayede tek bir
+ * satır bile değiştirmeden doğru yere düşüyor.
  */
-
-const CM = 0.01;
 
 export interface ICarcassModule {
   width: number;
   /** `null`/yok = otomatik; sayı = kullanıcının seçtiği kanat sayısı. */
   doorLeaves?: number | null;
+  /** Sıra bu modülden sonra 90° döner — köşe modülü. */
+  corner?: boolean;
 }
 
 export interface ICarcassInput {
@@ -42,7 +48,7 @@ export interface ICarcassParts {
 
 const sidePart = (
   rect: IModuleRect,
-  x: number,
+  localX: number,
   input: ICarcassInput,
   t: number,
 ): IPart => ({
@@ -54,7 +60,7 @@ const sidePart = (
   qty: 1,
   size: { w: t, h: input.height, d: input.depth },
   grossSize: { w: t, h: input.height, d: input.depth },
-  placement: { x: x * CM, y: (input.height / 2) * CM, z: 0 },
+  placement: placeIn(rect, localX, input.height / 2, 0),
 });
 
 /**
@@ -76,11 +82,7 @@ const horizontalPart = (
   qty: 1,
   size: { w: rect.bayWidth, h: t, d: input.depth },
   grossSize: { w: rect.outerWidth, h: t, d: input.depth },
-  placement: {
-    x: rect.center * CM,
-    y: (kind === 'ust' ? input.height - t / 2 : t / 2) * CM,
-    z: 0,
-  },
+  placement: placeIn(rect, 0, kind === 'ust' ? input.height - t / 2 : t / 2, 0),
 });
 
 const backPart = (rect: IModuleRect, input: ICarcassInput): IPart => {
@@ -96,11 +98,7 @@ const backPart = (rect: IModuleRect, input: ICarcassInput): IPart => {
     hidden: true,
     size: { w: rect.outerWidth, h: input.height, d: back },
     grossSize: { w: rect.outerWidth, h: input.height, d: back },
-    placement: {
-      x: rect.center * CM,
-      y: (input.height / 2) * CM,
-      z: (-input.depth / 2 + back / 2) * CM,
-    },
+    placement: placeIn(rect, 0, input.height / 2, -input.depth / 2 + back / 2),
   };
 };
 
@@ -110,19 +108,19 @@ const doorPartsFor = (
   book: IPriceBook,
   t: number,
   maxLeaf: number,
-  leafOverride?: number | null,
+  module?: ICarcassModule,
 ): IPart[] => {
   const doorType = book.doorTypes.find((item) => item.id === input.doorType);
   if (!doorType || input.doorType === 'yok') return [];
 
-  const leaves = doorLeafCount(rect.outerWidth, maxLeaf, leafOverride);
+  const leaves = doorLeafCount(rect.outerWidth, maxLeaf, module?.doorLeaves);
   if (leaves === 0) return [];
 
   const leafWidth = rect.outerWidth / leaves;
   const parts: IPart[] = [];
 
   for (let leaf = 0; leaf < leaves; leaf += 1) {
-    const center = rect.left + leafWidth * (leaf + 0.5);
+    const localX = -rect.outerWidth / 2 + leafWidth * (leaf + 0.5);
 
     parts.push({
       kind: 'kapak',
@@ -134,11 +132,7 @@ const doorPartsFor = (
       size: { w: leafWidth, h: input.height, d: t },
       grossSize: { w: leafWidth, h: input.height, d: t },
       bandedEdgeM: (2 * (leafWidth + input.height)) / 100,
-      placement: {
-        x: center * CM,
-        y: (input.height / 2) * CM,
-        z: (input.depth / 2 + t / 2) * CM,
-      },
+      placement: placeIn(rect, localX, input.height / 2, input.depth / 2 + t / 2),
     });
   }
 
@@ -175,28 +169,54 @@ export const carcassParts = (
   const material = book.materials.find((item) => item.id === input.material);
   const t = panelThicknessOf(material?.thicknessMm ?? 18);
   const modules = moduleRects(
-    input.modules.map((module) => module.width),
+    input.modules.map((module) => ({
+      bayWidth: module.width,
+      corner: module.corner === true,
+    })),
     t,
+    input.depth,
   );
   const parts: IPart[] = [];
+
+  const doorType = book.doorTypes.find((item) => item.id === input.doorType);
+  const hasDoor = !!doorType && input.doorType !== 'yok';
 
   for (const rect of modules) {
     if (rect.bayWidth <= 0) continue;
 
-    parts.push(sidePart(rect, rect.left + t / 2, input, t));
-    parts.push(sidePart(rect, rect.right - t / 2, input, t));
+    /*
+     * Köşe modülü ayrı bir kutu — düz modülün parçalarıyla anlatılamıyor:
+     * gövdesi L, iki arkalığı, iki dik cephesi var.
+     */
+    if (rect.corner) {
+      parts.push(
+        ...cornerUnitParts(rect, {
+          height: input.height,
+          depth: input.depth,
+          backCm: input.backPanel / 10,
+          panelThicknessCm: t,
+          doorLabel: hasDoor && doorType ? doorType.label : null,
+          includesHandle: doorType?.includesHandle === true,
+          hingeCount: hingeCountFor(
+            input.height,
+            book.hardware.hinge.countByDoorHeight,
+          ),
+        }),
+      );
+      continue;
+    }
+
+    /* İki yan panel modülün kendi kenarlarında: dış genişliğin yarısı eksi
+       yarım panel kalınlığı, yerel eksende. */
+    const sideOffset = (rect.outerWidth - t) / 2;
+
+    parts.push(sidePart(rect, -sideOffset, input, t));
+    parts.push(sidePart(rect, sideOffset, input, t));
     parts.push(horizontalPart(rect, 'ust', input, t));
     parts.push(horizontalPart(rect, 'alt', input, t));
     parts.push(backPart(rect, input));
     parts.push(
-      ...doorPartsFor(
-        rect,
-        input,
-        book,
-        t,
-        maxDoorLeafWidthCm,
-        input.modules[rect.index]?.doorLeaves,
-      ),
+      ...doorPartsFor(rect, input, book, t, maxDoorLeafWidthCm, input.modules[rect.index]),
     );
   }
 

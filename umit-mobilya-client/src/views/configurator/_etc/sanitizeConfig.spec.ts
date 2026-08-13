@@ -170,6 +170,30 @@ describe('sanitizeConfig', () => {
     expect(result.sections[0].shelves).toEqual(template.shelves);
   });
 
+  /*
+   * Köşe bayrağı paylaşılan bağlantının taşıması gereken bir karar: düşerse
+   * karşı taraf başka bir dolap görür ve farkı yalnızca teklif gelince
+   * anlaşılır.
+   */
+  it('köşe işareti paylaşılan bağlantıdan geçer', () => {
+    const result = clean({
+      sectionCount: 2,
+      sections: [{ width: 80 }, { width: 80, corner: true }],
+    });
+
+    expect(result.sections[0].corner).toBe(false);
+    expect(result.sections[1].corner).toBe(true);
+  });
+
+  it('boolean olmayan köşe işareti varsayılanda kalır', () => {
+    const result = clean({
+      sectionCount: 1,
+      sections: [{ width: 80, corner: 'evet' }],
+    });
+
+    expect(result.sections[0].corner).toBe(false);
+  });
+
   it('bilinmeyen bölüm alanı gövdeye sızmaz', () => {
     const result = clean({
       sectionCount: 1,

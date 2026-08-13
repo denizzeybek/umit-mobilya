@@ -38,6 +38,25 @@
         <strong class="text-f-ink">{{ config.width }} cm</strong>.
       </p>
 
+      <div class="mt-4 border-b border-f-rule pb-4">
+        <label class="flex items-center gap-3">
+          <span class="flex-1 text-sm text-f-ink-muted">Köşe modülü</span>
+          <ToggleSwitch v-model="corner" data-testid="section-corner" />
+        </label>
+
+        <p class="mt-2 text-sm text-f-ink-faint">
+          İki duvarın birleştiği L dolap: iki modülün dik birleşmiş hâli gibi
+          durur, her bacağın cephesi bu modül genişliğindedir. Bundan sonraki
+          modüller 90° dönüp komşu duvara oturur.
+        </p>
+
+        <p v-if="corner" class="mt-2 text-sm text-f-ink-faint">
+          Planda <strong class="text-f-ink">{{ cornerSide }} × {{ cornerSide }} cm</strong>
+          kare yer kaplar ({{ width }} cm cephe + {{ config.depth }} cm ikinci
+          bacak); kapağı birbirine menteşeli iki kanat, her yüze bir tane.
+        </p>
+      </div>
+
       <div class="mt-4 flex flex-col gap-3">
         <SectionFittingRow
           v-for="(_, index) in section.shelves"
@@ -48,25 +67,32 @@
           @remove="section.shelves.splice(index, 1)"
         />
 
-        <SectionFittingRow
-          v-for="(_, index) in section.rails"
-          :key="`rail-${index}`"
-          v-model="section.rails[index]"
-          :label="`Askılık ${index + 1} — üstten`"
-          :max="config.height"
-          @remove="section.rails.splice(index, 1)"
-        />
-
-        <label class="flex items-center gap-3">
-          <span class="flex-1 text-sm text-f-ink-muted">Çekmece adedi</span>
-          <InputNumber
-            v-model="drawers"
-            :min="DRAWER_LIMIT.min"
-            :max="DRAWER_LIMIT.max"
-            show-buttons
-            input-class="!w-16 !px-3"
+        <!--
+          Köşe modülünde askılık ve çekmece YOK: L açıklıktan çekmece geçmiyor,
+          askı borusu da köşede dönemiyor. Alanı göstermek, sahnede karşılığı
+          olmayan bir ölçü girdirmek olurdu.
+        -->
+        <template v-if="!corner">
+          <SectionFittingRow
+            v-for="(_, index) in section.rails"
+            :key="`rail-${index}`"
+            v-model="section.rails[index]"
+            :label="`Askılık ${index + 1} — üstten`"
+            :max="config.height"
+            @remove="section.rails.splice(index, 1)"
           />
-        </label>
+
+          <label class="flex items-center gap-3">
+            <span class="flex-1 text-sm text-f-ink-muted">Çekmece adedi</span>
+            <InputNumber
+              v-model="drawers"
+              :min="DRAWER_LIMIT.min"
+              :max="DRAWER_LIMIT.max"
+              show-buttons
+              input-class="!w-16 !px-3"
+            />
+          </label>
+        </template>
       </div>
     </div>
 
@@ -81,6 +107,7 @@
         + Raf ekle
       </Button>
       <Button
+        v-if="!corner"
         size="small"
         severity="secondary"
         variant="outlined"
@@ -98,8 +125,10 @@ import { computed } from 'vue';
 
 import { setSectionWidth } from '../../../_etc/dimensionOps';
 import { sectionWidthRange } from '../../../_etc/geometry/sectionWidths';
+import { PANEL_THICKNESS_CM } from '../../../_etc/geometry/units';
+import { cornerSideOf } from '../../../_etc/pricing/moduleLayout';
 import { gardiropDefinition } from '../../../_etc/products/gardirop';
-import { setDrawers } from '../../../_etc/products/gardirop/configOps';
+import { setCorner, setDrawers } from '../../../_etc/products/gardirop/configOps';
 import { DRAWER_LIMIT } from '../../../_etc/products/gardirop/options';
 
 const props = defineProps<IProps>();
@@ -119,11 +148,29 @@ const section = computed(
   () => config.value.sections[props.active] ?? config.value.sections[0],
 );
 
-const range = computed(() => sectionWidthRange(config.value, props.active, LIMITS.width));
+const range = computed(() =>
+  sectionWidthRange(config.value, props.active, LIMITS.width),
+);
+
+/** Köşe modülünün planda kapladığı karenin kenarı. */
+const cornerSide = computed(
+  () =>
+    Math.round(
+      cornerSideOf(
+        section.value.width + 2 * PANEL_THICKNESS_CM,
+        config.value.depth,
+      ) * 10,
+    ) / 10,
+);
 
 const width = computed({
   get: () => section.value.width,
   set: (value: number) => setSectionWidth(config.value, props.active, value, LIMITS.width),
+});
+
+const corner = computed({
+  get: () => section.value.corner === true,
+  set: (value: boolean) => setCorner(config.value, props.active, value),
 });
 
 const drawers = computed({

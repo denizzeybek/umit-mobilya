@@ -36,6 +36,12 @@ export interface IThreeScene {
   supported: Ref<boolean>;
   requestRender: () => void;
   setContent: (next: Object3D | null) => void;
+  /**
+   * Arka duvarı gövdenin arkasına taşır (metre). Sabit dururken L bir dolabın
+   * arka bacağı duvarın İÇİNE giriyordu: düz sırada gövde 60 cm derin olduğu
+   * için kimse fark etmiyordu, köşe eklenince derinlik metrelere çıkıyor.
+   */
+  setBackdropDepth: (depth: number) => void;
   resize: () => void;
   mount: () => void;
 }
@@ -52,7 +58,12 @@ export const useThreeScene = (
   let scene: Scene | null = null;
   let content: Object3D | null = null;
   let observer: ResizeObserver | null = null;
+  let wall: Mesh | null = null;
   let frame = 0;
+
+  /** Duvarın gövdenin arkasında bırakacağı en küçük pay (m). */
+  const WALL_CLEARANCE = 0.02;
+  const MIN_WALL_DISTANCE = 1.6;
 
   const requestRender = () => {
     if (frame) return;
@@ -113,13 +124,25 @@ export const useThreeScene = (
     floor.receiveShadow = true;
     target.add(floor);
 
-    const wall = new Mesh(
+    wall = new Mesh(
       new PlaneGeometry(30, 18),
       new MeshStandardMaterial({ color: 0xeee8dd, roughness: 1 }),
     );
-    wall.position.set(0, 9, -1.6);
+    wall.position.set(0, 9, -MIN_WALL_DISTANCE);
     wall.receiveShadow = true;
     target.add(wall);
+  };
+
+  const setBackdropDepth = (depth: number) => {
+    if (!wall) return;
+
+    /* Gövde merkezde duruyor, yani arkası derinliğin yarısı kadar geride. */
+    const behind = depth / 2 + WALL_CLEARANCE;
+    const next = -Math.max(behind, MIN_WALL_DISTANCE);
+    if (next === wall.position.z) return;
+
+    wall.position.z = next;
+    requestRender();
   };
 
   const mount = () => {
@@ -168,8 +191,17 @@ export const useThreeScene = (
     renderer = null;
     scene = null;
     content = null;
+    wall = null;
     camera.value = null;
   });
 
-  return { camera, supported, requestRender, setContent, resize, mount };
+  return {
+    camera,
+    supported,
+    requestRender,
+    setContent,
+    setBackdropDepth,
+    resize,
+    mount,
+  };
 };

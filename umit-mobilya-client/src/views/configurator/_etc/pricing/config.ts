@@ -25,6 +25,17 @@ import type {
 export interface IBaseSection {
   width: number;
   doorLeaves?: number | null;
+  /**
+   * Köşe modülü. İki duvarın birleştiği yerde duran modül, düz bir modülden
+   * farklı imal edilir — ön yüzün bir kısmı ölü alandır, yan panellerden biri
+   * komşu sıranın derinliğine oturur.
+   *
+   * BUGÜN düz modülle AYNI çiziliyor ve AYNI fiyatlanıyor: fark fiyat
+   * kitabındaki `cornerSurchargePercent` ile veriliyor ve tohumda 0.
+   * `undefined` = düz modül, yani alanı taşımayan eski bir bağlantı ya da
+   * teklif olduğu gibi okunmaya devam eder.
+   */
+  corner?: boolean;
 }
 
 export interface IBaseConfig {

@@ -8,16 +8,25 @@ import type { IGardiropConfig, IGardiropSection } from './types';
  * için `_etc/dimensionOps.ts` altında paylaşılıyor.
  */
 
-/** Düzen değiştirmek bölümü daraltmaz — genişlik korunur. */
+/**
+ * Düzen değiştirmek bölümü daraltmaz — genişlik korunur. Köşe bayrağı da
+ * korunuyor ve aynı sebeple: ikisi de modülün İÇİNE ne konduğuyla ilgili
+ * değil, modülün kendisiyle ilgili. Hazır düzen seçmek dolabın köşede
+ * durduğunu unutturmamalı.
+ */
 export const applyLayout = (
   config: IGardiropConfig,
   index: number,
-  layout: Omit<IGardiropSection, 'width'>,
+  layout: Omit<IGardiropSection, 'width' | 'corner'>,
 ): void => {
   const section = config.sections[index];
   if (!section) return;
 
-  config.sections[index] = { ...layout, width: section.width };
+  config.sections[index] = {
+    ...layout,
+    width: section.width,
+    corner: section.corner === true,
+  };
 };
 
 export const clearSection = (
@@ -25,6 +34,22 @@ export const clearSection = (
   index: number,
 ): void => {
   applyLayout(config, index, { shelves: [], rails: [], drawers: 0 });
+};
+
+/**
+ * Köşe işareti modülün GENİŞLİĞİNE dokunmuyor: o ölçü artık kapak yüzünün
+ * genişliği ve köşede de düz modüldekiyle aynı anlama geliyor. Modülün
+ * planda kapladığı kare (`genişlik + derinlik`) ondan türüyor.
+ */
+export const setCorner = (
+  config: IGardiropConfig,
+  index: number,
+  value: boolean,
+): void => {
+  const section = config.sections[index];
+  if (!section) return;
+
+  section.corner = value;
 };
 
 export const setDrawers = (

@@ -61,6 +61,13 @@ export interface IPartPlacement {
   x: number;
   y: number;
   z: number;
+  /**
+   * Parçanın Y ekseni etrafındaki dönüşü (radyan). Köşe modülünden sonraki
+   * modüller komşu duvara döndüğü için parça artık eksene paralel olmak
+   * zorunda değil; `size` modülün KENDİ çerçevesinde ölçülü kalıyor, dönüşü
+   * sahne uyguluyor.
+   */
+  rotationY?: number;
 }
 
 export interface IPart {
@@ -83,6 +90,20 @@ export interface IPart {
   bandedEdgeM?: number;
   /** Askılık borusu gibi metrajla fiyatlanan donanımın uzunluğu (m). */
   lengthM?: number;
+  /**
+   * Bu parçanın maliyetine uygulanan çarpan. Yok ya da 1 = normal imalat.
+   *
+   * Ölçü değil MALİYET çarpanı: parçanın alanı, kenar bandı metrajı ve
+   * sahnedeki yeri değişmez, yalnızca ödenen para değişir. Köşe modülü böyle
+   * fiyatlanıyor — aynı panelin köşede kesimi ve montajı daha pahalı, ama
+   * m²'si aynı m².
+   */
+  costMultiplier?: number;
+  /**
+   * Katlanır kapağın İKİNCİ kanadı: gövdeye değil, bir önceki kanada
+   * menteşelenir. Köşe modülünün kapağı böyle açılıyor.
+   */
+  doorFold?: boolean;
   /** Müşteriye gösterilen dökümde satır açmaz, toplamda vardır. */
   hidden?: boolean;
   /** Dökümde bu etiket altında toplanır. */

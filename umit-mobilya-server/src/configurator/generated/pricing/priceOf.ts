@@ -97,6 +97,18 @@ const hardwareCost = (part: IPart, book: IPriceBook): number => {
   return 0;
 };
 
+/**
+ * Parçaya iliştirilmiş imalat farkı. Yalnızca PARAYA uygulanıyor: alan, kenar
+ * bandı metrajı ve işçiliğin okuduğu m² fiziksel ölçüler ve köşede de aynı
+ * kalıyor. Kenar bandı bu yüzden çarpanın dışında — metraj değişmiyor.
+ */
+const factorOf = (part: IPart): number => {
+  const value = part.costMultiplier;
+  return typeof value === 'number' && Number.isFinite(value) && value > 0
+    ? value
+    : 1;
+};
+
 const accumulate = (into: Map<string, ICostLine>, line: ICostLine): void => {
   const existing = into.get(line.label);
   if (existing) {
@@ -120,7 +132,7 @@ export const priceOf = (
 
   for (const part of parts) {
     if (part.partClass === 'panel') {
-      const cost = panelCost(part, book, selection) * wasteFactor;
+      const cost = panelCost(part, book, selection) * wasteFactor * factorOf(part);
       materialCost += cost;
       panelM2 += areaOf(part, book.areaConvention) * part.qty;
       edgeM += edgeLengthOf(part, book.edgeBand.appliedTo, book.areaConvention) * part.qty;
@@ -130,7 +142,7 @@ export const priceOf = (
 
     accumulate(costs, {
       label: part.label,
-      amount: hardwareCost(part, book),
+      amount: hardwareCost(part, book) * factorOf(part),
       hidden: !!part.hidden,
     });
   }

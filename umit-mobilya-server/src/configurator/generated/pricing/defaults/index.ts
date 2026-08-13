@@ -40,6 +40,7 @@ const GARDIROP: IProductSettings = {
   sectionCount: { min: 1, max: 8 },
   maxModuleWidthCm: 200,
   maxDoorLeafWidthCm: 119,
+  cornerSurchargePercent: 0,
   defaultMaterial: 'mdf-gloss',
   defaultDoorType: 'kulpsuz',
 };
@@ -51,6 +52,7 @@ const VESTIYER: IProductSettings = {
   sectionCount: { min: 1, max: 5 },
   maxModuleWidthCm: 200,
   maxDoorLeafWidthCm: 119,
+  cornerSurchargePercent: 0,
   defaultMaterial: 'mdf-gloss',
   defaultDoorType: 'yok',
 };

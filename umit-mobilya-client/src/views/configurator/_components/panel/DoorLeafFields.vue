@@ -32,10 +32,7 @@
 import { computed } from 'vue';
 
 import { PANEL_THICKNESS_CM } from '../../_etc/geometry/units';
-import {
-  doorLeafCount,
-  MAX_DOOR_LEAVES,
-} from '../../_etc/pricing/moduleLayout';
+import { doorLeafCount, MAX_DOOR_LEAVES } from '../../_etc/pricing/doorLeaves';
 import { sectionLabel } from '../../_etc/sectionLabel';
 
 import type { IProductLimits } from '../../_etc/types';

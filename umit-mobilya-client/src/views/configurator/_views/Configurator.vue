@@ -15,6 +15,7 @@
       <ProductViewer
         :content="content"
         :size="config"
+        :bounds="bounds"
         :version="version"
         class="h-[52svh] min-h-[380px] lg:sticky lg:top-28 lg:h-[calc(100svh-9rem)] lg:self-start"
       />
@@ -43,6 +44,7 @@ import {
   encodeConfig,
 } from '../_etc/configUrl';
 import { applyDoorOpen, buildFromParts } from '../_etc/geometry/buildFromParts';
+import { sceneBoundsOf } from '../_etc/geometry/sceneBounds';
 import { sanitizeConfig } from '../_etc/sanitizeConfig';
 
 import type {
@@ -124,6 +126,13 @@ let build: IProductBuild | null = null;
 const parts = computed(() =>
   props.definition.parts(config.value, book.value),
 );
+
+/*
+ * Kameranın sığdıracağı kutu parçalardan okunuyor, ölçü alanlarından değil:
+ * köşe modülü sırayı döndürdüğünde gövde artık tek eksende değil ve
+ * `config.width` ayak izini anlatmıyor.
+ */
+const bounds = computed(() => sceneBoundsOf(parts.value));
 
 const rebuild = () => {
   const previous = build;

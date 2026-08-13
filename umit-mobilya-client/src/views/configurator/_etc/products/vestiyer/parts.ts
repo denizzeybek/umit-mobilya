@@ -1,4 +1,5 @@
 import { carcassParts } from '../../pricing/carcassParts';
+import { placeIn } from '../../pricing/moduleLayout';
 
 import type { IModuleRect } from '../../pricing/moduleLayout';
 import type { IPriceBook } from '../../pricing/priceBook';
@@ -13,7 +14,6 @@ import type { IVestiyerConfig, IVestiyerSection } from './types';
  * `benchFromFloor` ZEMİNDEN, raf ve askı çıtası TAVANDAN ölçülür.
  */
 
-const CM = 0.01;
 const BENCH_THICKNESS_FACTOR = 1.6;
 const SHELF_CLEARANCE_CM = 2;
 
@@ -43,7 +43,7 @@ const panelPart = (
   size: { w: width, h: thickness, d: depth },
   grossSize: { w: width, h: thickness, d: depth },
   bandedEdgeM: width / 100,
-  placement: { x: rect.center * CM, y: y * CM, z: z * CM },
+  placement: placeIn(rect, 0, y, z),
 });
 
 const interiorParts = (
@@ -92,7 +92,7 @@ const interiorParts = (
         qty: 1,
         lengthM: rect.bayWidth / 100,
         size: { w: rect.bayWidth, h: 2.6, d: 2.6 },
-        placement: { x: rect.center * CM, y: y * CM, z: z * CM },
+        placement: placeIn(rect, 0, y, z),
       });
     }
   }
