@@ -5,13 +5,21 @@
     içinde dururken, o bölüm ekrandan çıkar çıkmaz seçici de gidiyordu — yani
     tam olarak ihtiyaç duyulan anda, aşağıdaki kapak/düzen alanları
     okunurken.
+
+    Ofset başlığın GERÇEK yüksekliği: 73 / 89 px. Layout'un dolgu değerleri
+    (72 / 88) bir piksel kısa — başlığın alt kenarlığını saymıyorlar — ve o
+    fark şeridin üst kenarını başlığın altına sokuyordu.
+
+    Arka plan tam opak, yarı saydam değil: altından kayan metin şeridin
+    içinden hayal meyal görünüyordu ve bu, yapışkanlığı bozukmuş gibi
+    gösteriyordu.
   -->
   <div
     v-if="config.sectionCount > 1"
-    class="sticky top-[72px] z-20 flex flex-wrap items-center gap-2 border-b border-f-rule bg-f-paper/95 px-6 py-3 backdrop-blur-sm md:top-[88px] md:px-7"
+    class="sticky top-[73px] z-20 flex flex-wrap items-center gap-2 border-b border-f-rule bg-f-paper px-6 py-3 md:top-[89px] md:px-7"
     data-testid="section-picker"
   >
-    <span class="eyebrow shrink-0">Düzenlenen</span>
+    <span class="eyebrow shrink-0">Bölüm seç</span>
 
     <Button
       v-for="(_, index) in config.sectionCount"
@@ -35,7 +43,11 @@ import { sectionLabel } from '../../_etc/sectionLabel';
 import type { IBaseConfig } from '../../_etc/types';
 
 /**
- * Hangi bölümün düzenlendiğini gösteren yapışkan şerit.
+ * Bölümün SEÇİLDİĞİ yer — ve adı bunu söylüyor.
+ *
+ * Önceki hâlde "4 — Bölüm seç" başlığı modül sayısının üstündeydi ve burası
+ * "Düzenlenen" diyordu: kullanıcı bölümü seçtiğini sandığı yerde aslında
+ * modül sayısını değiştiriyordu. Fiil artık gerçekten seçim yapılan yerde.
  *
  * Aşağıdaki üç alan da (kapak kanadı, hazır düzen, özel düzen) SEÇİLİ bölüme
  * uygulanıyor ama seçim yukarıda kalıyordu: kullanıcı aşağı kaydırdıkça hangi

@@ -3,19 +3,22 @@
     <MaterialFields v-model="config" :book="book" />
     <DimensionFields v-model="config" :limits="definition.limits" />
     <CarcassFields v-model="config" :book="book" />
+    <!--
+      Bölüm sayısı seçicisinin ÜSTÜNDE ve panelin doğrudan çocuğu.
+
+      İkisi de bilinçli: `sticky` yalnızca kendi ebeveyninin kutusunda
+      yapışıyor (bir bölümün içinde kalsa o bölümle birlikte ekrandan çıkardı),
+      ve altında dururken çivilenmesi için "4 — Bölüm seç"in tamamının yukarı
+      geçmesi gerekiyordu — ölçüldü, ~350 px daha geç.
+    -->
+    <SectionPicker v-model="config" v-model:active="active" />
+
     <SectionCountFields
       v-model="config"
       v-model:active="active"
       :limits="definition.limits"
       :create-section="definition.createSection"
     />
-
-    <!--
-      Panelin doğrudan çocuğu ve bu bilinçli: `sticky` yalnızca kendi
-      ebeveyninin kutusunda yapışıyor, bir bölümün içinde kalsaydı o bölümle
-      birlikte ekrandan çıkardı.
-    -->
-    <SectionPicker v-model="config" v-model:active="active" />
 
     <DoorLeafFields
       v-model="config"

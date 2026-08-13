@@ -1,9 +1,16 @@
 <template>
   <section class="p-6 md:p-7">
-    <h2 class="font-serif text-2xl text-f-ink">4 — Bölüm seç</h2>
+    <!--
+      Başlık "Bölüm seç" DEĞİL: burada bir bölüm seçilmiyor, dolabın kaç
+      modülden imal edileceği belirleniyor. Seçim yukarıdaki yapışkan şeritte
+      ve iki başlığın aynı fiili kullanması kavram karmaşası yaratıyordu.
 
-    <div class="mt-4 flex flex-col gap-2">
-      <span class="eyebrow">Bölüm sayısı</span>
+      "Modül": atölye 3 bölümlü bir gardırobu 3 AYRI KUTU olarak imal ediyor
+      (bkz. `moduleLayout.ts`), yani buradaki sayı imalattaki kutu sayısı.
+    -->
+    <h2 class="font-serif text-2xl text-f-ink">4 — Modül sayısı</h2>
+
+    <div class="mt-4">
       <SelectButton v-model="count" :options="options" :allow-empty="false" />
     </div>
 
