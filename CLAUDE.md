@@ -81,6 +81,19 @@ Known broken/absent tooling — don't assume these work:
   on macOS 13 — don't bump it without checking that.
 - `tsconfig.*.tsbuildinfo` files are committed and churn on every build; ignore them in diffs. (`dist/` is gitignored.)
 
+## Skills and the gates that need them
+
+Two gates are decided by a **skill** and merely *checked* by a hook — hooks are
+deterministic shell, they cannot call a model:
+
+| Skill | Gate it feeds | Marker |
+|---|---|---|
+| [`ai-review`](.claude/skills/ai-review/SKILL.md) | `pre-push-ai-review.sh` | `.git/ai-review-pass` — the reviewed HEAD |
+| [`e2e-decision`](.claude/skills/e2e-decision/SKILL.md) | `enforce-e2e-decision.sh` | `.git/e2e-decision-pass` — hash of the staged diff |
+
+Both markers are content-bound: a new commit or one more staged file re-arms the
+gate, because the decision was made about what was actually read.
+
 ## The testing layers, and which one owns what
 
 | Question | Layer | Where |

@@ -23,6 +23,9 @@ export const APPROVED_JOURNEYS = [
 
   /* Yüklenen kaplama deseni dolabın üstünde görünmeli. */
   'finish-texture',
+
+  /* Özel kaplamayla paylaşılan bağlantı, karşı tarafta aynı kaplamayı açmalı. */
+  'share-link-custom-finish',
 ] as const;
 
 export type TApprovedJourney = (typeof APPROVED_JOURNEYS)[number];

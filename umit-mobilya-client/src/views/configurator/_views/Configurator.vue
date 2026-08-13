@@ -83,10 +83,24 @@ const configFromUrl = (): IBaseConfig | null => {
   const decoded = decodeConfig(route.query[CONFIG_QUERY_KEY]);
   if (!decoded || decoded.t !== props.definition.id) return null;
 
-  return sanitizeConfig(decoded.c, props.definition);
+  return sanitizeConfig(decoded.c, props.definition, book.value);
 };
 
 const config = ref(configFromUrl() ?? props.definition.createDefault());
+
+/**
+ * Adresten kurulan ilk hâlin izi.
+ *
+ * Katalog ağdan geldiğinde adresteki tasarım BİR KEZ DAHA çözülüyor: ilk
+ * çözümde elimizde yalnızca tohum kitap var, yani admin panelinden eklenmiş bir
+ * kaplama tanınmıyor ve varsayılana düşüyordu — özel kaplamayla paylaşılan
+ * bağlantı karşı tarafta başka bir dolap açıyordu.
+ *
+ * Bu iz, kullanıcının o arada bir şeye dokunup dokunmadığını söylüyor:
+ * dokunduysa yeniden çözüm YAPILMIYOR, yoksa katalog geç geldiğinde
+ * kullanıcının seçimi geri alınırdı.
+ */
+const initialTrace = JSON.stringify(config.value);
 
 /**
  * `shallowRef` bilinçli: Three.js nesne ağacını Vue'nun derin reaktifliğine
@@ -187,8 +201,13 @@ const writeConfigToUrl = () => {
 
 watch(config, writeConfigToUrl, { deep: true });
 
-onMounted(() => {
-  void pricebookStore.fetch().catch(() => undefined);
+onMounted(async () => {
+  await pricebookStore.fetch().catch(() => undefined);
+
+  const fromUrl = configFromUrl();
+  if (fromUrl && JSON.stringify(config.value) === initialTrace) {
+    config.value = fromUrl;
+  }
 });
 
 onBeforeUnmount(() => {

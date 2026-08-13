@@ -1,6 +1,8 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
+import { DEFAULT_PRICE_BOOK } from '../src/configurator/generated/pricing/defaults';
+
 import type { INestApplication } from '@nestjs/common';
 
 /**
@@ -31,6 +33,15 @@ export const E2E_ADMIN_PASSWORD =
 
 const seedTime = new Date('2026-01-01T00:00:00.000Z');
 
+/**
+ * Yalnızca yayınlanmış kitapta olan kaplamalar — tohum kitapta YOK.
+ * Yolculukların çivilediği şey tam olarak bu ayrım: admin panelinden eklenen
+ * bir kimlik hem 3B'de çizilmeli hem paylaşılan bağlantıdan geri yüklenmeli.
+ */
+export const E2E_TEXTURE_FINISH = 'e2e-doku';
+export const E2E_PLAIN_FINISH = 'e2e-ozel';
+export const E2E_TEXTURE_FILE = 'doku-ceviz.webp';
+
 async function seed(uri: string): Promise<void> {
   await mongoose.connect(uri);
   const db = mongoose.connection.db;
@@ -56,6 +67,43 @@ async function seed(uri: string): Promise<void> {
     description: 'e2e tohum kaydı.',
     category: new mongoose.Types.ObjectId(E2E_CATEGORY_ID),
     createdAt: seedTime,
+  });
+
+  /*
+   * Fiyat kitabı YAYINLANMIŞ hâlde tohumlanıyor, iki e2e kaplamasıyla.
+   *
+   * Yolculuklar bunu kendileri yayınlıyordu ve paralel koştukları için
+   * birbirlerinin kaplamasını eziyorlardı: ikisi de kitabı okuyup üstüne kendi
+   * kaplamasını ekleyip yazınca son yazan diğerininkini düşürüyordu. Tohum
+   * sabit olunca yolculuklar YALNIZCA OKUYOR ve yarış ortadan kalkıyor.
+   */
+  await db.collection('pricebooks').insertOne({
+    version: 1,
+    active: true,
+    createdAt: seedTime,
+    data: {
+      ...DEFAULT_PRICE_BOOK,
+      version: 1,
+      finishes: [
+        ...DEFAULT_PRICE_BOOK.finishes,
+        {
+          id: E2E_TEXTURE_FINISH,
+          label: 'e2e Ceviz Damar',
+          color: 0x6b4a32,
+          swatch: '#6B4A32',
+          surchargePerM2: 0,
+          textureName: E2E_TEXTURE_FILE,
+          textureScaleCm: 40,
+        },
+        {
+          id: E2E_PLAIN_FINISH,
+          label: 'e2e Atölye Yeşili',
+          color: 0x2f6b4f,
+          swatch: '#2F6B4F',
+          surchargePerM2: 0,
+        },
+      ],
+    },
   });
 
   await mongoose.disconnect();

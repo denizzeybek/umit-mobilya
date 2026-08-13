@@ -1,4 +1,3 @@
-import { DEFAULT_PRICE_BOOK } from './pricing/defaults';
 import {
   setDepth,
   setHeight,
@@ -6,6 +5,7 @@ import {
   setSectionWidth,
 } from './dimensionOps';
 
+import type { IPriceBook } from './pricing/priceBook';
 import type {
   IBaseConfig,
   IBaseSection,
@@ -85,14 +85,19 @@ const pickId = <T extends string | number>(
 const clamp01 = (value: unknown, fallback: number): number =>
   isFiniteNumber(value) ? Math.min(Math.max(value, 0), 1) : fallback;
 
+/**
+ * @param book Katalog kimliklerinin doğrulanacağı fiyat kitabı — GEÇİRİLİR,
+ * import EDİLMEZ. Tohum kitap sabit yazılıyken admin panelinden eklenen bir
+ * kaplama burada tanınmıyor ve sessizce varsayılana düşüyordu: özel kaplamayla
+ * paylaşılan bir bağlantı, karşı tarafta başka bir dolap açıyordu.
+ */
 export const sanitizeConfig = (
   incoming: unknown,
   definition: IProductDefinition,
+  book: IPriceBook,
 ): IBaseConfig => {
   const config = definition.createDefault();
   if (!isRecord(incoming)) return config;
-
-  const book = DEFAULT_PRICE_BOOK;
 
   config.material = pickId(incoming.material, book.materials, config.material);
   config.finish = pickId(incoming.finish, book.finishes, config.finish);

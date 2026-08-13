@@ -49,10 +49,24 @@
           },
           {
             "type": "command",
+            "if": "Bash(git commit*)",
+            "statusMessage": "e2e karari kontrol ediliyor...",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/enforce-e2e-decision.sh",
+            "timeout": 30
+          },
+          {
+            "type": "command",
             "if": "Bash(git push*)",
             "statusMessage": "e2e kapisi calisiyor (fiyat agi + smoke + yolculuklar)...",
             "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/pre-push-e2e-gate.sh",
             "timeout": 600
+          },
+          {
+            "type": "command",
+            "if": "Bash(git push*)",
+            "statusMessage": "AI inceleme onayi kontrol ediliyor...",
+            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/pre-push-ai-review.sh",
+            "timeout": 30
           }
         ]
       }

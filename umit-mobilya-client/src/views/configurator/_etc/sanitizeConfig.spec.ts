@@ -10,9 +10,47 @@ import { sanitizeConfig } from './sanitizeConfig';
 import type { IGardiropConfig } from './products/gardirop/types';
 
 const clean = (incoming: unknown): IGardiropConfig =>
-  sanitizeConfig(incoming, gardiropDefinition) as IGardiropConfig;
+  sanitizeConfig(incoming, gardiropDefinition, DEFAULT_PRICE_BOOK) as IGardiropConfig;
 
 const { limits } = gardiropDefinition;
+
+/**
+ * Admin panelinden eklenen kaplama YALNIZCA yayınlanmış kitapta var; tohum
+ * kitapta yok. Katalog sabit bir kaynaktan doğrulandığında böyle bir kimlik
+ * sessizce varsayılana düşüyordu — yani özel kaplamayla paylaşılan bir
+ * bağlantı, karşı tarafta başka bir dolap açıyordu.
+ */
+describe('sanitizeConfig — yayınlanmış katalog', () => {
+  const published = {
+    ...DEFAULT_PRICE_BOOK,
+    finishes: [
+      ...DEFAULT_PRICE_BOOK.finishes,
+      {
+        id: 'ozel-1',
+        label: 'Atölye Yeşili',
+        color: 0x2f6b4f,
+        swatch: '#2F6B4F',
+        surchargePerM2: 0,
+      },
+    ],
+  };
+
+  it('yalnızca yayınlanmış kitapta olan kaplamayı korur', () => {
+    const incoming = { ...createDefaultConfig(), finish: 'ozel-1' };
+
+    expect(sanitizeConfig(incoming, gardiropDefinition, published).finish).toBe(
+      'ozel-1',
+    );
+  });
+
+  it('hiçbir kitapta olmayan kimlik yine varsayılana düşer', () => {
+    const incoming = { ...createDefaultConfig(), finish: 'hic-yok' };
+
+    expect(sanitizeConfig(incoming, gardiropDefinition, published).finish).toBe(
+      createDefaultConfig().finish,
+    );
+  });
+});
 
 describe('sanitizeConfig', () => {
   it('geçerli bir config değişmeden geçer', () => {

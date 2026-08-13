@@ -110,14 +110,44 @@ yarn sync:pricing   # istemciden kopyala
 - If a check fails and you're fixing something unrelated, say so rather than silently
   leaving it broken.
 
-## Pushing
+## Kapılar — hangisi ne soruyor
 
-`git push` bir e2e kapısından geçiyor (`.claude/hooks/pre-push-e2e-gate.sh`):
-sunucu testleri + `e2e:smoke` + `e2e:journeys`, ~2 dakika. Commit hook'unun
-göremediği tek katman tarayıcı, ve `main` doğrudan deploy ediliyor.
+Dört kapı var, ikisi commit'te ikisi push'ta, ve **hiçbiri diğerinin sorusunu
+sormuyor**:
 
-Kapı `SKIP_E2E_GATE=1` ile bilerek atlanabilir. Atlamak bir karardır: neden
-atladığını söyle.
+| Ne zaman | Kapı | Sorduğu soru |
+|---|---|---|
+| commit | `enforce-pre-commit-quality.sh` | lint / type-check / sunucu testleri yeşil mi |
+| commit | `enforce-e2e-decision.sh` | bu davranış için e2e gerekiyor mu — karar verildi mi |
+| push | `pre-push-e2e-gate.sh` | bütün testler ve tarayıcı suite'i geçiyor mu |
+| push | `pre-push-ai-review.sh` | bu kod okundu mu, bloklayıcı bulgu var mı |
+
+İki tanesinin **düşünen yarısı bir skill**, çünkü hook'lar deterministik kabuk
+komutları — LLM çağıramazlar. Hook yalnızca "karar/onay kaydı var mı" diye bakar;
+kararı skill verir ve kaydı o yazar:
+
+- `e2e-decision` → `.git/e2e-decision-pass` (sahnelenmiş içeriğin özeti)
+- `ai-review` → `.git/ai-review-pass` (incelenen HEAD SHA'sı)
+
+Kayıt içeriğe bağlı olduğu için bir dosya daha eklemek ya da yeni bir commit
+atmak kapıyı yeniden kuruyor. Bu bilinçli: karar, incelenen şey için verildi.
+
+### Commit ederken
+
+Davranışa dokunan bir commit (`*/src/**`, üretilmiş kod ve spec'ler hariç)
+`e2e-decision` olmadan geçmiyor. Skill ya yolculuğu yazıp **yalnızca onu**
+koşturuyor — bütün suite push'ta koşuyor — ya da hangi katmanın kapsadığını
+gerekçe olarak kaydediyor.
+
+### Push ederken
+
+`pre-push-e2e-gate.sh` sunucu testleri + `e2e:smoke` + `e2e:journeys` koşuyor
+(~2 dk). `pre-push-ai-review.sh` ise `ai-review` skill'inin o HEAD için onay
+bırakmasını bekliyor; bloklayıcı bulgu varsa skill push'u tutuyor ve düzeltme
+konuşuluyor.
+
+Kapılar `SKIP_E2E_GATE=1`, `SKIP_E2E_DECISION=1`, `SKIP_AI_REVIEW=1` ile bilerek
+atlanabilir. Atlamak bir karardır: neden atladığını söyle.
 
 ## Don't
 

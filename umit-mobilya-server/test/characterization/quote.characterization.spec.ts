@@ -129,6 +129,30 @@ describe('quote + pricebook HTTP sözleşmesi', () => {
     });
   });
 
+  /*
+   * Yerel disk deposunun okuma ucu. Birim spec'i cevap gövdesini çiviliyor;
+   * ağda görülen ve BAŞKA HİÇBİR YERDE görülmeyen şey, yol kaçışının gerçek
+   * HTTP yolunda da elendiği — `:key` bir dosya yoluna dönüşüyor.
+   */
+  describe('GET /api/storage/:key', () => {
+    it('bilinmeyen anahtar 404 verir', async () => {
+      const response = await request(app.getHttpServer()).get(
+        '/api/storage/hic-boyle-bir-nesne-yok',
+      );
+
+      expect(response.status).toBe(404);
+    });
+
+    it('yol kaçışı denemesi 404 verir, dosya SIZDIRMAZ', async () => {
+      const response = await request(app.getHttpServer()).get(
+        '/api/storage/..%2F..%2F.env',
+      );
+
+      expect(response.status).toBe(404);
+      expect(response.text).not.toContain('MONGO_URI');
+    });
+  });
+
   describe('POST /api/quotes', () => {
     it('auth istemez ve 201 ile kod döner', async () => {
       const response = await createQuote();
