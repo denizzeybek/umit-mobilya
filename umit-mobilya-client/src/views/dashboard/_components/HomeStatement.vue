@@ -4,7 +4,7 @@
       <p v-reveal class="eyebrow lg:pt-4">Ne yapıyoruz</p>
 
       <div>
-        <h2 v-reveal="1" class="display max-w-[22ch] text-display-md text-f-ink">
+        <h2 class="line-rise display max-w-[22ch] text-display-md text-f-ink">
           Hazır mobilyada ölçü tutmadığında çözüm yoktur. Bizde ölçü baştan
           sizin.
         </h2>

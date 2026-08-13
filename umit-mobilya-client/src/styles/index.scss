@@ -140,7 +140,115 @@
         animation-range: entry 0%
           cover calc(18% + var(--reveal-step, 0) * 3.5%);
       }
+
+      /*
+       * İri başlıklar `reveal` yerine bunu kullanır: satırlar bir maskenin
+       * ardından yükseliyor. İkisi aynı öğede olamaz — ikisi de `transform`
+       * yazıyor, sonuncusu diğerini eziyor.
+       */
+      .line-rise {
+        animation: line-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 26%;
+      }
+
+      /*
+       * Bölüm çizgileri soldan sağa çiziliyor. Basılı bir katalogda cetvelle
+       * çekilmiş çizginin karşılığı; sayfanın ritmini kaydırmaya bağlıyor.
+       */
+      .rule-draw {
+        animation: rule-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 15% cover 32%;
+        transform-origin: left center;
+      }
+
+      /*
+       * Kadraj içinde yavaş kayma. Ölçek 1.14 çünkü kayan görselin kenarı
+       * çerçeveden içeri girmemeli — 1.0'da altta ve üstte boşluk kalıyor.
+       * `overflow: hidden` bir üst öğede zaten var (FImage'in kökü).
+       */
+      .drift,
+      .drift-reverse {
+        animation: drift linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+
+      .drift-reverse {
+        animation-direction: reverse;
+      }
+
+      /* Hero, sayfadan çıkarken metnini geride bırakıyor. */
+      .hero-lift {
+        animation: hero-lift linear both;
+        animation-timeline: view();
+        animation-range: exit 0% exit 100%;
+      }
     }
+  }
+
+  /*
+   * Okuma ilerlemesi. Yalnızca süs olduğu için desteklenmeyen tarayıcıda hiç
+   * çizilmiyor: içerik gizlemiyor, o yüzden `display: none` burada güvenli.
+   */
+  .scroll-rule {
+    display: none;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .scroll-rule {
+        display: block;
+        animation: rule-draw linear both;
+        animation-timeline: scroll(root block);
+        transform-origin: left center;
+      }
+    }
+  }
+}
+
+@keyframes line-rise {
+  from {
+    clip-path: inset(0 0 108% 0);
+    transform: translateY(0.5em);
+  }
+
+  to {
+    clip-path: inset(0 0 -25% 0);
+    transform: none;
+  }
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.14) translate3d(0, -2.6%, 0);
+  }
+
+  to {
+    transform: scale(1.14) translate3d(0, 2.6%, 0);
+  }
+}
+
+@keyframes hero-lift {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0.1;
+    transform: translateY(-3.5rem);
   }
 }
 

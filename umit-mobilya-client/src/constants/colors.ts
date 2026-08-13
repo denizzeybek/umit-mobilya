@@ -20,6 +20,9 @@ export const colors = {
   'f-white': '#ffffff',
 
   'f-ink': '#1C1A16',
+  /* Ana sayfadaki 3B sahnenin boşluğu. Hem canvas'ın arka planı hem de
+   * altındaki bölümün zemini — ikisi ayrışırsa sahne yüklenirken renk atlıyor. */
+  'f-void': '#14120E',
   'f-ink-muted': '#6B6459',
   'f-ink-faint': '#736B5E',
 

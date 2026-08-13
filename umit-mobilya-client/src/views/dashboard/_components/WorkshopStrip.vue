@@ -4,7 +4,7 @@
       <div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           <p class="eyebrow !text-f-brass-light">Atölye</p>
-          <h2 v-reveal class="display mt-5 max-w-[16ch] text-display-md text-f-bone">
+          <h2 class="line-rise display mt-5 max-w-[16ch] text-display-md text-f-bone">
             Ürettiğimiz yer, ürünün yarısıdır.
           </h2>
         </div>
@@ -31,6 +31,7 @@
             :alt="shot.alt"
             ratio="3 / 2"
             sizes="(min-width: 1024px) 33vw, 80vw"
+            :img-class="index % 2 === 0 ? 'drift' : 'drift-reverse'"
             has-variants
           />
         </div>

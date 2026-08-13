@@ -6,7 +6,7 @@
       >
         <div>
           <p class="eyebrow">Neler üretiyoruz</p>
-          <h2 class="display mt-5 text-display-md text-f-ink">
+          <h2 class="line-rise display mt-5 text-display-md text-f-ink">
             Yedi tür iş, tek bir yöntem
           </h2>
         </div>
@@ -64,7 +64,7 @@
             </div>
 
             <span
-              class="mt-5 block h-px w-full origin-left scale-x-100 bg-f-rule transition-colors duration-500 group-hover:bg-f-brass"
+              class="rule-draw mt-5 block h-px w-full bg-f-rule transition-colors duration-500 group-hover:bg-f-brass"
             />
           </RouterLink>
         </li>

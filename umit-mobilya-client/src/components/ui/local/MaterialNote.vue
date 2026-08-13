@@ -9,6 +9,7 @@
               alt="Yağlanmış ceviz damarının yakın çekimi"
               ratio="1 / 1"
               sizes="(min-width: 1024px) 25vw, 45vw"
+              img-class="drift"
             />
           </div>
           <div v-reveal="1" class="grain relative mt-10 overflow-hidden">
@@ -17,13 +18,14 @@
               alt="Meşe dolap kapağında gönye birleşim detayı"
               ratio="1 / 1"
               sizes="(min-width: 1024px) 25vw, 45vw"
+              img-class="drift-reverse"
             />
           </div>
         </div>
 
         <div>
           <p class="eyebrow">Malzeme</p>
-          <h2 v-reveal="1" class="display mt-5 max-w-[16ch] text-display-md text-f-ink">
+          <h2 class="line-rise display mt-5 max-w-[16ch] text-display-md text-f-ink">
             Damar köşeyi döner, ek yeri görünmez.
           </h2>
           <p v-reveal="2" class="prose-lede mt-7 max-w-prose">
