@@ -1,5 +1,11 @@
 <template>
   <div class="flex min-h-screen flex-col">
+    <!-- Okuma ilerlemesi: sayfanın üstünde pirinç bir kıl çizgi. -->
+    <span
+      class="scroll-rule pointer-events-none fixed inset-x-0 top-0 z-50 h-px bg-f-brass-light"
+      aria-hidden="true"
+    />
+
     <PageHeader />
 
     <!--

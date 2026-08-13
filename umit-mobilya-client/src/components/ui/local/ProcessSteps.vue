@@ -2,7 +2,7 @@
   <section class="mx-auto max-w-editorial px-5 py-section md:px-10">
     <div class="border-b border-f-rule pb-8">
       <p class="eyebrow">Nasıl ilerliyor</p>
-      <h2 class="display mt-5 max-w-[18ch] text-display-md text-f-ink">
+      <h2 class="line-rise display mt-5 max-w-[18ch] text-display-md text-f-ink">
         Dört adım, sürpriz yok
       </h2>
     </div>
