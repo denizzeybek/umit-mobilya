@@ -29,6 +29,9 @@ export const APPROVED_JOURNEYS = [
 
   /* Aşağı kaydırırken hangi bölümü düzenlediğini görebilmeli. */
   'section-picker-sticky',
+
+  /* Ana sayfada dolabın kurulduğunu görmeli; göremiyorsa yerinde fotoğraf durmalı. */
+  'hero-3d',
 ] as const;
 
 export type TApprovedJourney = (typeof APPROVED_JOURNEYS)[number];
