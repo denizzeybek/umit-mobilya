@@ -23,6 +23,9 @@
     <main class="pt-8" data-testid="app-main">
       <RouterView />
     </main>
+
+    <!-- Katalog silme onayları buradan çıkıyor; bkz. CatalogDeleteButton. -->
+    <ConfirmDialog />
   </div>
 </template>
 

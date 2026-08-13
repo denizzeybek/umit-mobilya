@@ -8,6 +8,8 @@ import Checkbox from 'primevue/checkbox';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import PrimeVue from 'primevue/config';
+import ConfirmationService from 'primevue/confirmationservice';
+import ConfirmDialog from 'primevue/confirmdialog';
 import DataTable from 'primevue/datatable';
 import DataView from 'primevue/dataview';
 import DatePicker from 'primevue/datepicker';
@@ -69,6 +71,18 @@ export default {
       },
     });
     app.use(ToastService);
+    /*
+     * Katalogdan bir kimlik silmek geri alınamaz bir karar: o kimlik
+     * paylaşılmış bağlantılarda ve eski tasarımlarda duruyor. `useConfirm`
+     * onayı zorunlu kılıyor, `<ConfirmDialog />` de AdminLayout'ta duruyor.
+     */
+    app.use(ConfirmationService);
+
+    /*
+     * Otomatik çözümleyici bunu görmüyor (Rule 03): `<ConfirmDialog />`
+     * AdminLayout'ta sessizce çözümlenmiyordu, silme onayı hiç açılmıyordu.
+     */
+    app.component('ConfirmDialog', ConfirmDialog);
 
     app.component('Galleria', Galleria);
     app.component('Splitter', Splitter);

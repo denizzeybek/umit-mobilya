@@ -32,6 +32,15 @@
           />
         </template>
       </Column>
+      <Column>
+        <template #body="{ data }">
+          <CatalogDeleteButton
+            :label="data.label"
+            kind="kapak tipi"
+            @confirm="removeRow(data.id)"
+          />
+        </template>
+      </Column>
     </DataTable>
 
     <p class="text-sm text-f-ink-muted">
@@ -42,9 +51,19 @@
 </template>
 
 <script setup lang="ts">
+import CatalogDeleteButton from './CatalogDeleteButton.vue';
+
 import type { IDoorType } from '@/views/configurator/_etc/pricing/priceBook';
 
 const rows = defineModel<IDoorType[]>({ required: true });
+
+/*
+ * Silmek yerine "Listede" anahtarını kapatmak çoğu zaman doğrusu; onay
+ * penceresi bunu söylüyor (CatalogDeleteButton).
+ */
+const removeRow = (id: string): void => {
+  rows.value = rows.value.filter((row) => row.id !== id);
+};
 </script>
 
 <style scoped>

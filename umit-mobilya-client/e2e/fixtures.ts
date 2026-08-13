@@ -23,6 +23,13 @@ const IGNORED_CONSOLE = [
   /favicon/i,
   /Download the Vue Devtools/i,
   /\[vite\] connect/i,
+  /*
+   * Vite'ın bağımlılık ön paketleyicisi koşum ortasında yeniden çalıştığında
+   * uçuşta olan chunk istekleri 404 alıyor ve sayfa kendini yeniliyor. Ürün
+   * kodunun hatası değil, dev sunucusunun iç işi — ve yalnızca dört işçi aynı
+   * anda yüklenirken görülüyor.
+   */
+  /node_modules\/\.vite\//,
 ];
 
 const isNoise = (text: string): boolean =>
@@ -58,8 +65,17 @@ export const test = base.extend<IFixtures>({
         errors.push(text);
       };
 
+      /*
+       * Kaynak adresi mesaja ekleniyor: tarayıcı "Failed to load resource:
+       * 404" derken NEYİN 404 verdiğini yazmıyor, ve o hâliyle bir kırmızı
+       * koşum teşhis edilemiyordu — bir kez tam olarak bu yüzden saatler
+       * gitti.
+       */
       page.on('console', (message) => {
-        if (message.type() === 'error') record(message.text());
+        if (message.type() !== 'error') return;
+
+        const url = message.location().url;
+        record(url ? `${message.text()} [${url}]` : message.text());
       });
       page.on('pageerror', (error) => record(String(error)));
 

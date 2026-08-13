@@ -26,6 +26,16 @@ export default defineConfig({
       resolvers: [PrimeVueResolver()]
     })
   ],
+  /*
+   * `three` dinamik `import()` ile yükleniyor (konfigüratör tembel route), o
+   * yüzden vite'ın açılıştaki tarayıcısı onu göremiyor ve ön paketleme ilk
+   * konfigüratör ziyaretinde tetikleniyor. O an uçuşta olan chunk istekleri
+   * 404 alıp sayfayı yeniletiyor — geliştirmede gözden kaçan bir titreme,
+   * paralel koşan e2e'de kırmızı.
+   */
+  optimizeDeps: {
+    include: ['three']
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

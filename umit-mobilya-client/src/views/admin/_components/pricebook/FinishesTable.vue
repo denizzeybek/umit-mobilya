@@ -81,7 +81,22 @@
           />
         </template>
       </Column>
+      <Column>
+        <template #body="{ data }">
+          <CatalogDeleteButton
+            :label="data.label"
+            kind="kaplama"
+            @confirm="removeRow(data.id)"
+          />
+        </template>
+      </Column>
     </DataTable>
+
+    <p class="text-sm text-f-ink-muted">
+      Silmek yerine <strong>"Listede"</strong> anahtarını kapatmak çoğu zaman
+      doğrusu: kimlik yerinde kalır, müşteri artık göremez, ve o kaplamayı
+      taşıyan paylaşılmış bağlantılar bozulmaz.
+    </p>
   </section>
 </template>
 
@@ -92,6 +107,7 @@ import {
   toSwatch,
 } from '@/views/admin/_etc/colorValue';
 
+import CatalogDeleteButton from './CatalogDeleteButton.vue';
 import FinishTextureCell from './FinishTextureCell.vue';
 
 import type { IFinish } from '@/views/configurator/_etc/pricing/priceBook';
@@ -121,6 +137,10 @@ const applyColor = (row: IFinish, value?: string): void => {
  */
 const replaceRow = (finish: IFinish): void => {
   rows.value = rows.value.map((row) => (row.id === finish.id ? finish : row));
+};
+
+const removeRow = (id: string): void => {
+  rows.value = rows.value.filter((row) => row.id !== id);
 };
 
 /** Metin kutusundan gelen değer; `event.target` daraltılıyor, cast yok. */
