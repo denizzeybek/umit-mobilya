@@ -470,7 +470,7 @@
             "bearer": []
           }
         ],
-        "summary": "Replaces the whole module list of a product.",
+        "summary": "Removes one gallery image, from both the record and the bucket.",
         "tags": [
           "products"
         ]

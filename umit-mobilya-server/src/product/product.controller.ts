@@ -127,9 +127,6 @@ export class ProductController {
     };
   }
 
-  /** Replaces the whole module list of a product. */
-  /** Adds one product to another as a module. */
-  /** Removes a module from a product. */
   /** Removes one gallery image, from both the record and the bucket. */
   @Post('delete-image/:id')
   @ApiOkResponse({ type: MessageResponseDto })

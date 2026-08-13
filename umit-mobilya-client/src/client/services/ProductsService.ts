@@ -90,7 +90,7 @@ export class ProductsService {
         });
     }
     /**
-     * Replaces the whole module list of a product.
+     * Removes one gallery image, from both the record and the bucket.
      * @param id
      * @param requestBody
      * @returns MessageResponseDto
