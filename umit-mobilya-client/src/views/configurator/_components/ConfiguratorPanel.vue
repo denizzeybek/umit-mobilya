@@ -41,7 +41,15 @@
       :product-type="definition.id"
     />
 
-    <ShareLink :config="config" :definition="definition" />
+    <!--
+      Sıfırlama config'i tutan yerde yapılıyor: adresteki tasarım kodunu da
+      silen izleyici oraya bağlı.
+    -->
+    <ShareLink
+      :config="config"
+      :definition="definition"
+      @reset="config = definition.createDefault()"
+    />
   </div>
 </template>
 

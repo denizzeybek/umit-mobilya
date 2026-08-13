@@ -32,17 +32,14 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
+import { useConfigUrlSync } from '@/composables/useConfigUrlSync';
 import { usePricebookStore } from '@/stores/pricebook';
 
 import ConfiguratorPanel from '../_components/ConfiguratorPanel.vue';
 import ProductViewer from '../_components/ProductViewer.vue';
-import {
-  CONFIG_QUERY_KEY,
-  decodeConfig,
-  encodeConfig,
-} from '../_etc/configUrl';
+import { CONFIG_QUERY_KEY, decodeConfig } from '../_etc/configUrl';
 import { applyDoorOpen, buildFromParts } from '../_etc/geometry/buildFromParts';
 import { sceneBoundsOf } from '../_etc/geometry/sceneBounds';
 import { sanitizeConfig } from '../_etc/sanitizeConfig';
@@ -66,7 +63,6 @@ interface IProps {
 const props = defineProps<IProps>();
 
 const route = useRoute();
-const router = useRouter();
 
 /*
  * Katalog API'den geliyor; istek düşerse store tohum kitapta kalıyor. Boş bir
@@ -188,27 +184,15 @@ watch(
 );
 
 /*
- * `replace` ve 300 ms gecikme birlikte: kaydırıcı sürüklenirken her karede
- * geçmişe yazmak hem tarayıcıyı zorlar hem geri düğmesini kırk adım geri
- * götürürdü. Yazma ilk değişiklikte başlıyor — dokunulmamış bir tasarım
- * adresi kirletmesin.
+ * Adres çubuğu tasarımın hem kaydı hem KAYNAĞI: koddaki `?c=` silinince
+ * tasarım varsayılana döner, başka bir kod yapıştırılınca o tasarım açılır.
  */
-let urlTimer: ReturnType<typeof setTimeout> | undefined;
-
-const writeConfigToUrl = () => {
-  clearTimeout(urlTimer);
-
-  urlTimer = setTimeout(() => {
-    router.replace({
-      query: {
-        ...route.query,
-        [CONFIG_QUERY_KEY]: encodeConfig(props.definition.id, config.value),
-      },
-    });
-  }, 300);
-};
-
-watch(config, writeConfigToUrl, { deep: true });
+useConfigUrlSync({
+  config,
+  productType: () => props.definition.id,
+  createDefault: () => props.definition.createDefault(),
+  decode: configFromUrl,
+});
 
 onMounted(async () => {
   await pricebookStore.fetch().catch(() => undefined);
@@ -219,8 +203,5 @@ onMounted(async () => {
   }
 });
 
-onBeforeUnmount(() => {
-  clearTimeout(urlTimer);
-  build?.dispose();
-});
+onBeforeUnmount(() => build?.dispose());
 </script>

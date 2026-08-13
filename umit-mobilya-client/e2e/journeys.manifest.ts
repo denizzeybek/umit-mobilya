@@ -32,6 +32,9 @@ export const APPROVED_JOURNEYS = [
 
   /* Ana sayfada dolabın kurulduğunu görmeli; göremiyorsa yerinde fotoğraf durmalı. */
   'hero-3d',
+
+  /* Beğenmediği tasarımı sıfırlayıp baştan başlayabilmeli. */
+  'design-reset',
 ] as const;
 
 export type TApprovedJourney = (typeof APPROVED_JOURNEYS)[number];
