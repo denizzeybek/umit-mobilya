@@ -31,7 +31,8 @@ yarn dev          # vite on port 3001 — never run this in a tool call, it bloc
 yarn lint         # eslint flat config; must be clean before a change is done
 yarn type-check   # vue-tsc for src/ + tsc -p tsconfig.e2e.json for e2e/
 yarn build        # vue-tsc -b && vite build
-yarn test:unit    # vitest
+yarn test:unit    # vitest (watch)
+yarn test:unit:run # vitest once — what the commit gate runs
 yarn format       # prettier --write src/
 yarn gcl          # regenerate src/client from the server's openapi.json
 yarn size-check   # main-bundle ceiling (1800 kB) — run it AFTER a build
@@ -44,8 +45,8 @@ not exist — the `scripts/` directory does, and holds `size-check.mjs`.
 Vitest covers pure functions only — the configurator's (`_etc/geometry`,
 `_etc/pricing`, `_etc/dimensionOps`, `_etc/products/*`, `_etc/configUrl`,
 `_etc/sanitizeConfig`, `_etc/registry`) plus `views/admin/_etc/colorValue`:
-149 tests across 11 files, no component tests. Take the count from
-`yarn test:unit run`, not from grepping `it(` — several specs generate cases in
+186 tests across 15 files, no component tests. Take the count from
+`yarn test:unit:run`, not from grepping `it(` — several specs generate cases in
 a loop, so grep undercounts. `.claude/hooks/hooks.test.sh` covers the hooks
 themselves.
 

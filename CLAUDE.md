@@ -48,6 +48,7 @@ yarn lint         # eslint flat config (eslint.config.js)
 yarn build        # vue-tsc -b && vite build
 yarn type-check   # vue-tsc for src/ + tsc -p tsconfig.e2e.json for e2e/
 yarn test:unit    # vitest (watch); vitest run <path> for a single file
+yarn test:unit:run # vitest once — what the commit gate runs
 yarn format       # prettier --write src/
 yarn size-check   # main-bundle ceiling (1800 kB) — run it AFTER a build
 yarn e2e:smoke    # Playwright: every route loads (~30 s)
@@ -78,7 +79,7 @@ Known broken/absent tooling — don't assume these work:
   doesn't exist. The `scripts/` directory itself does — it holds
   `size-check.mjs`, which `yarn size-check` runs.
 - Client vitest covers pure functions only — the configurator's, plus
-  `views/admin/_etc/colorValue`: **149 tests across 11 files**, still **no
+  `views/admin/_etc/colorValue`: **186 tests across 15 files**, still **no
   component tests**. Browser coverage is Playwright (`e2e/`), and it is
   deliberately thin: a smoke spec plus **seven** manifested journeys.
 - Playwright needs its browser once: `npx playwright install chromium`.
@@ -123,16 +124,43 @@ workaround for a broken 2.3.x publish that had become a *downgrade* below what
 
 ## Skills and the gates that need them
 
-Two gates are decided by a **skill** and merely *checked* by a hook — hooks are
+Three gates are decided by a **skill** and merely *checked* by a hook — hooks are
 deterministic shell, they cannot call a model:
 
 | Skill | Gate it feeds | Marker |
 |---|---|---|
 | [`ai-review`](.claude/skills/ai-review/SKILL.md) | `pre-push-ai-review.sh` | `.git/ai-review-pass` — the reviewed HEAD |
 | [`e2e-decision`](.claude/skills/e2e-decision/SKILL.md) | `enforce-e2e-decision.sh` | `.git/e2e-decision-pass` — hash of the staged diff |
+| [`fiyat-degisikligi`](.claude/skills/fiyat-degisikligi/SKILL.md) | `enforce-price-decision.sh` | `.git/price-decision-pass` — hash of the staged golden diff |
 
-Both markers are content-bound: a new commit or one more staged file re-arms the
-gate, because the decision was made about what was actually read.
+All three markers are content-bound: a new commit, one more staged file or one
+more moved golden re-arms the gate, because the decision was made about what was
+actually read.
+
+A fourth gate needs no skill, because its question has exactly one right answer:
+`enforce-branch.sh` denies any `Write`/`Edit` inside the repo while `main` is
+checked out. It sits at write time rather than at push time, so the question is
+asked before the work starts instead of after it has already landed.
+
+## Workflow skills — the operator's entry points
+
+These are not gates; they are the paths a non-developer takes through the repo.
+Each one encodes a sequence that is easy to half-finish:
+
+| Skill | What it walks |
+|---|---|
+| [`urun-ekle`](.claude/skills/urun-ekle/SKILL.md) | A new configurator product, all eighteen steps, gardırop/vestiyer as the template |
+| [`urun-duzenle`](.claude/skills/urun-duzenle/SKILL.md) | Editing an existing product, sorted by risk tier, with mandatory price reconciliation |
+| [`fiyat-dogrula`](.claude/skills/fiyat-dogrula/SKILL.md) | Audits the price maths: proves the arithmetic, lists what only the workshop can confirm |
+| [`yayinla`](.claude/skills/yayinla/SKILL.md) | Branch → merge → **re-run every gate on the merged state** → push → PR → delete branch |
+
+`yayinla` exists for one specific reason: `git merge` creates its merge commit
+without calling `git commit`, so none of the commit gates fire for it. Two
+branches that are each green can merge into a red state and nothing says so.
+
+The human-facing counterpart to all of this is [`KILAVUZ.md`](KILAVUZ.md) —
+plain Turkish, no code vocabulary, written for whoever runs the business rather
+than for a model.
 
 ## The testing layers, and which one owns what
 
@@ -188,8 +216,12 @@ is set to `1` so the counter sees the real client behind Railway's proxy rather
 than lumping every visitor into one bucket.
 
 **The price engine is duplicated on purpose.** `src/configurator/generated/` is
-a byte-identical copy of the client's `_etc/pricing` + product `parts.ts`,
-produced by `yarn sync:pricing` and pinned by `test/pricing-sync.spec.ts`. The
+a byte-identical copy of the client's `_etc/pricing`, `geometry/units.ts` and
+each product's `parts.ts` + `options.ts`, produced by `yarn sync:pricing` and
+pinned by `test/pricing-sync.spec.ts`. `options.ts` is in that list for the
+price net rather than the engine: the goldens price each product's **own**
+default design, so editing `createDefaultConfig` moves a golden instead of
+silently moving the first number a customer sees. The
 client needs it so the panel updates without a round trip; the server needs it
 so the amount on a quote is never the client's claim. `POST /api/quotes`
 **rejects** a `price` in the body (400, via `forbidNonWhitelisted`), recomputes,

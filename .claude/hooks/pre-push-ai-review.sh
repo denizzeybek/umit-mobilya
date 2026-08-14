@@ -34,7 +34,7 @@ if [[ "${SKIP_AI_REVIEW:-}" == "1" ]]; then
 fi
 
 head_sha="$(git rev-parse HEAD 2>/dev/null)" || exit 0
-marker="$(git rev-parse --git-dir 2>/dev/null)/ai-review-pass"
+marker="$(git rev-parse --absolute-git-dir 2>/dev/null)/ai-review-pass"
 
 if [[ -f "$marker" && "$(cat "$marker" 2>/dev/null)" == "$head_sha" ]]; then
   exit 0

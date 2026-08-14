@@ -99,6 +99,10 @@ A number is asserted on the server, never in the browser.
 
 ## Documentation
 
+[`KILAVUZ.md`](KILAVUZ.md) is for whoever **runs** the site: plain Turkish, no
+code vocabulary — how to ask for work, which questions to answer, what never to
+approve without reading, and how to undo. Start there if you are not a developer.
+
 [`CLAUDE.md`](CLAUDE.md) is the architecture document and the entry point —
 it explains how the pieces fit and why the non-obvious ones are that way. The
 rules that govern how code is written live in `.claude/rules/`, indexed from

@@ -69,6 +69,11 @@ yarn e2e:api          # boot the whole app on mongodb-memory-server, port 5055.
                       # What the client's Playwright suite starts; blocks, so
                       # don't run it in a tool call unless you background it.
 yarn price-net:bless  # regenerate test/price-net/__goldens__ — then READ THE DIFF
+yarn fiyat-acikla     # print a reference design's inputs, parts and price lines
+                      # side by side; what the `fiyat-dogrula` skill reads.
+                      # Deliberately does no multiplication — the arithmetic is
+                      # redone by hand so the engine cannot confirm itself.
+                      # `yarn fiyat-acikla --liste` for the available designs.
 ```
 
 Specs run against an in-memory mongod (`test/global-setup.ts`) with deliberately

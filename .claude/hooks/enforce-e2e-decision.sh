@@ -48,7 +48,7 @@ behavioural="$(printf '%s\n' "$staged" \
 
 [[ -z "$behavioural" ]] && exit 0
 
-marker="$(git -C "$repo_root" rev-parse --git-dir)/e2e-decision-pass"
+marker="$(git -C "$repo_root" rev-parse --absolute-git-dir)/e2e-decision-pass"
 current="$(git -C "$repo_root" diff --cached | shasum -a 256 | cut -d' ' -f1)"
 recorded="$(head -1 "$marker" 2>/dev/null || true)"
 

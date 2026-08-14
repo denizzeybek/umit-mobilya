@@ -33,25 +33,25 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-spec-first.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/umit-mobilya-server/.claude/hooks/enforce-spec-first.sh\"",
             "timeout": 15,
             "statusMessage": "Spec-first kontrolu..."
           },
           {
             "type": "command",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/block-skip-and-only.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/umit-mobilya-server/.claude/hooks/block-skip-and-only.sh\"",
             "timeout": 15,
             "statusMessage": "only/skip kontrolu..."
           },
           {
             "type": "command",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-no-direct-env.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/umit-mobilya-server/.claude/hooks/enforce-no-direct-env.sh\"",
             "timeout": 15,
             "statusMessage": "process.env kontrolu..."
           },
           {
             "type": "command",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-price-net.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/umit-mobilya-server/.claude/hooks/enforce-price-net.sh\"",
             "timeout": 15,
             "statusMessage": "Fiyat agi kontrolu..."
           }
@@ -64,7 +64,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/enforce-spec-failing.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/umit-mobilya-server/.claude/hooks/enforce-spec-failing.sh\"",
             "timeout": 180,
             "statusMessage": "Yeni spec kirmizi mi..."
           }
@@ -75,7 +75,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/umit-mobilya-server/.claude/hooks/run-related-tests.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/umit-mobilya-server/.claude/hooks/run-related-tests.sh\"",
             "timeout": 120,
             "statusMessage": "Ilgili testler calisiyor..."
           }

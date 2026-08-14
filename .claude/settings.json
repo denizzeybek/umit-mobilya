@@ -7,12 +7,15 @@
       "Bash(git log*)",
       "Bash(git branch*)",
       "Bash(git show*)",
+      "Bash(git checkout -b *)",
       "Bash(ls *)",
       "Bash(jq *)",
+      "Bash(shasum *)",
       "Bash(node --check *)"
     ],
     "ask": [
       "Bash(git push*)",
+      "Bash(git merge*)",
       "mcp__mongodb__delete-many",
       "mcp__mongodb__update-many"
     ],
@@ -25,6 +28,13 @@
       "Edit(./umit-mobilya-client/src/client/**)",
       "Write(./umit-mobilya-client/src/client/**)",
       "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git checkout -- *)",
+      "Bash(git commit --no-verify*)",
+      "Bash(git commit -n *)",
       "mcp__mongodb__drop-database",
       "mcp__mongodb__drop-collection"
     ]
@@ -38,35 +48,53 @@
             "type": "command",
             "if": "Bash(git push*)",
             "statusMessage": "Deploy guard: branch kontrol ediliyor",
-            "command": "cmd=$(jq -r '.tool_input.command // \"\"' 2>/dev/null); case \"$cmd\" in *\"git push\"*) br=$(git -C /Users/denizzeybek/Documents/umit-mobilya rev-parse --abbrev-ref HEAD 2>/dev/null); [ \"$br\" = \"main\" ] && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"UYARI: main branch uzerindesin. Su an bagli bir deploy YOK (AWS hesabi kapali, Netlify/Railway bagli degil) - yani push kodu yayinlar, baska bir sey tetiklemez. Ama main varsayilan dal: bir host baglandigi gun buraya giden her sey CI ve review olmadan uretime cikar. Dalda calismak yine de dogrusu.\"}}' ;; esac; exit 0"
+            "command": "cmd=$(jq -r '.tool_input.command // \"\"' 2>/dev/null); case \"$cmd\" in *\"git push\"*) br=$(git -C \"$CLAUDE_PROJECT_DIR\" rev-parse --abbrev-ref HEAD 2>/dev/null); [ \"$br\" = \"main\" ] && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"UYARI: main branch uzerindesin. Su an bagli bir deploy YOK (AWS hesabi kapali, Netlify/Railway bagli degil) - yani push kodu yayinlar, baska bir sey tetiklemez. Ama main varsayilan dal: bir host baglandigi gun buraya giden her sey CI ve review olmadan uretime cikar. Dalda calismak yine de dogrusu.\"}}' ;; esac; exit 0"
           },
           {
             "type": "command",
             "if": "Bash(git commit*)",
-            "statusMessage": "Kalite kapilari calisiyor (lint + type-check)...",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/enforce-pre-commit-quality.sh",
-            "timeout": 180
+            "statusMessage": "Kalite kapilari calisiyor (lint + type-check + birim testleri)...",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-pre-commit-quality.sh\"",
+            "timeout": 240
           },
           {
             "type": "command",
             "if": "Bash(git commit*)",
             "statusMessage": "e2e karari kontrol ediliyor...",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/enforce-e2e-decision.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-e2e-decision.sh\"",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "if": "Bash(git commit*)",
+            "statusMessage": "Fiyat karari kontrol ediliyor...",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-price-decision.sh\"",
             "timeout": 30
           },
           {
             "type": "command",
             "if": "Bash(git push*)",
-            "statusMessage": "e2e kapisi calisiyor (fiyat agi + smoke + yolculuklar)...",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/pre-push-e2e-gate.sh",
+            "statusMessage": "e2e kapisi calisiyor (fiyat agi + birim + build + smoke + yolculuklar)...",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre-push-e2e-gate.sh\"",
             "timeout": 600
           },
           {
             "type": "command",
             "if": "Bash(git push*)",
             "statusMessage": "AI inceleme onayi kontrol ediliyor...",
-            "command": "bash /Users/denizzeybek/Documents/umit-mobilya/.claude/hooks/pre-push-ai-review.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre-push-ai-review.sh\"",
             "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Dal kontrolu (main korumali)...",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-branch.sh\"",
+            "timeout": 15
           }
         ]
       }
