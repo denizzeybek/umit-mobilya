@@ -68,6 +68,35 @@ write_hook() {
   check "$want" "$got" "$hook" "$name"
 }
 
+# prompt_hook <beklenen-parca | BOS> <prompt> <ad>
+# route-to-skill cikis KODU degil METIN uretiyor: baglama eklenen satir.
+prompt_hook() {
+  local want="$1" prompt="$2" name="$3"
+  local out
+  out="$(jq -n --arg p "$prompt" '{prompt:$p}' \
+    | bash "$HOOKS/route-to-skill.sh" 2>/dev/null)"
+
+  if [[ "$want" == "BOS" ]]; then
+    if [[ -z "$out" ]]; then
+      pass=$((pass + 1))
+    else
+      fail=$((fail + 1))
+      printf 'FAIL  %-26s %s (bos beklendi, geldi: %.40s)\n' \
+        'route-to-skill' "$name" "$out"
+    fi
+    return
+  fi
+
+  case "$out" in
+    *"$want"*) pass=$((pass + 1)) ;;
+    *)
+      fail=$((fail + 1))
+      printf 'FAIL  %-26s %s ("%s" bekleniyordu, geldi: %.40s)\n' \
+        'route-to-skill' "$name" "$want" "${out:-<bos>}"
+      ;;
+  esac
+}
+
 GOLDENS='umit-mobilya-server/test/price-net/__goldens__'
 
 # Gercek reponun agac yapisini taklit eden, tek commit'lik bos bir depo.
@@ -209,6 +238,40 @@ printf '\n— enforce-pre-commit-quality (yalnizca matcher) —\n'
 bash_hook "$fx" 0 enforce-pre-commit-quality 'yarn lint' 'commit olmayan komut'
 bash_hook "$fx" 0 enforce-pre-commit-quality 'git commit -m x' \
   'hicbir sey sahnelenmemis'
+
+# -------------------------------------------------------------- yonlendirme
+
+printf '\n— route-to-skill —\n'
+
+prompt_hook 'urun-ekle'     'moruq mutfak dolabı da ekleyelim'       'yeni urun'
+prompt_hook 'urun-ekle'     'yeni bir kitaplık ürünü ekleyelim'      'yeni urun (kitaplik)'
+prompt_hook 'urun-duzenle'  'vestiyerin oturağı biraz alçak olsun'   'var olani duzenleme'
+prompt_hook 'urun-duzenle'  'gardırobun raf sayısını değiştir'       'var olani duzenleme (raf)'
+
+# Ayrim fiile DEGIL, urunun var olup olmadigina bakiyor. Bu dort satir tam
+# olarak o ayrimi civiliyor: var olan urune "eklemek" duzenlemedir, olmayan
+# urunu "yapmak" eklemedir.
+prompt_hook 'urun-duzenle'  'gardıroba çekmece ekleyelim'            'var olana ekleme = duzenleme'
+prompt_hook 'urun-ekle'     'mutfağı da yapalım'                     'olmayani yapmak = ekleme'
+prompt_hook 'urun-duzenle'  'dolabı biraz genişletelim'              'genel dolap + duzenleme fiili'
+prompt_hook 'urun-ekle'     'yeni bir dolap tipi ekleyelim'          'genel dolap + ekleme fiili'
+
+# En degerli iki yonlendirme: fiyat GUNCELLEMEK kod isi degil, DENETLEMEK skill.
+prompt_hook '/admin/fiyat-kitabi' 'fiyatları %10 zamlayalım'         'fiyat guncelleme -> admin paneli'
+prompt_hook '/admin/fiyat-kitabi' 'işçilik ücretini güncelle'        'iscilik guncelleme -> admin paneli'
+prompt_hook 'fiyat-dogrula' 'fiyatlar doğru mu acaba'                'fiyat denetimi'
+prompt_hook 'fiyat-dogrula' 'bu tutar tutuyor mu kontrol eder misin' 'fiyat denetimi (kontrol)'
+
+prompt_hook 'TEKRAR ÜRET'   'teklif sayfası açılmıyor'               'hata bildirimi'
+prompt_hook 'yayinla'       'hadi bunu yayınlayalım'                 'yayina alma'
+prompt_hook 'dalı silmek'   'bunu geri alalım beğenmedim'            'geri alma'
+prompt_hook 'atlamak'       'bu testi atla gitsin'                   'kapi atlama istegi'
+
+# Buyuk harf ve slash komutu: ilki eslesmeli, ikincisi zaten skill cagirmis.
+prompt_hook 'urun-ekle'     'MUTFAK EKLEYELIM'                       'buyuk harf'
+prompt_hook 'BOS'           '/urun-ekle mutfak'                      'zaten slash komutu'
+prompt_hook 'BOS'           'bugün hava nasıl'                       'alakasiz cumle sessiz'
+prompt_hook 'BOS'           ''                                       'bos prompt sessiz'
 
 # ---------------------------------------------------------------------- ozet
 

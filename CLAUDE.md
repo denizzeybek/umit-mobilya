@@ -162,6 +162,22 @@ The human-facing counterpart to all of this is [`KILAVUZ.md`](KILAVUZ.md) —
 plain Turkish, no code vocabulary, written for whoever runs the business rather
 than for a model.
 
+**Routing.** `.claude/hooks/route-to-skill.sh` runs on `UserPromptSubmit`,
+matches the Turkish sentence the owner actually types and injects which skill
+owns the work. It exists because a skill being *visible* is not the same as it
+being *called*: the likely failure is jumping straight into code and skipping an
+eighteen-step checklist. It also catches the highest-value routing of all —
+"fiyatları zamlayalım" is **not** a code task, it is the admin panel. The
+matcher looks for Turkish word *stems*, because `gardırop` becomes `gardırobun`
+and a whole-word pattern silently missed it (the hook suite caught that).
+
+**Carry-over.** [`.claude/DURUM.md`](.claude/DURUM.md) holds what must survive
+between sessions: answers awaited from the workshop, the assumption being used
+until each arrives, and decisions nobody has made yet. **Read it before
+answering a question about prices, defaults or manufacturing** — several numbers
+in this repo are seed guesses that look authoritative. `fiyat-dogrula` both
+reads and updates it.
+
 ## The testing layers, and which one owns what
 
 | Question | Layer | Where |

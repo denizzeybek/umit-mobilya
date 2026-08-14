@@ -119,6 +119,12 @@ kalem kalem değil topluca kayar):
 Her maddeyi soru cümlesi olarak yaz, cevabı boş bırak. Sahibi fabrikada bakıp
 dönecek.
 
+**Liste `.claude/DURUM.md` içinde yaşıyor.** Önce oku: bir madde zaten
+cevaplanmışsa tekrar sorma — aynı soruyu ikinci kez sormak, cevabı kaydetmemiş
+olmak demektir. Yeni bir teyit geldiğinde cevabı ve tarihi yaz, maddeyi Arşiv'e
+taşı ve cevabın nereye yansıdığını belirt (fiyat kitabı alanı ya da kod satırı).
+Cevaplanan maddeyi silme.
+
 ### 5. Kararı söyle — ve iki yarıyı karıştırma
 
 Doğru sonuç cümlesi şudur:

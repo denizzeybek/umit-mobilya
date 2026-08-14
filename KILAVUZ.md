@@ -22,8 +22,21 @@ nasıl yapılacağını Claude bulur.
 | Fiyat değiştirmek | **Kod değil** — admin panelinden: `/admin/fiyat-kitabi` |
 | Fiyatlar doğru mu diye kontrol | `/fiyat-dogrula` |
 
-`/` ile başlayan şeyler hazır tarifler. Yazmayı unutursanız sorun değil; ne
-istediğinizi anlatın, Claude doğru tarifi kendisi açar.
+`/` ile başlayan şeyler hazır tarifler. **Bunları ezberlemenize gerek yok.**
+Normal cümlenizi yazın — "mutfak dolabı da ekleyelim", "vestiyerin oturağı
+alçak olsun", "fiyatlar doğru mu" — arka planda çalışan bir kontrol hangi
+tarifin gerektiğini anlayıp Claude'a söylüyor. Slash komutu yalnızca bir
+kısayol.
+
+### Fabrikada öğrendiklerinizi nereye yazıyoruz
+
+Atölyeden bir cevap getirdiğinizde ("işçilik aslında m² 420 TL") bunu söylemeniz
+yeterli; `.claude/DURUM.md` dosyasına tarihiyle kaydediliyor. Orada **hangi
+soruların cevap beklediği** de duruyor — fabrikaya gitmeden önce "bana neyi
+sormuştun" diye sorabilirsiniz.
+
+Bu önemli, çünkü sitedeki bazı rakamlar henüz **tahmin**: gerçek değilmiş gibi
+görünmüyorlar ama öyleler. Hangilerinin teyit beklediği o dosyada yazıyor.
 
 ### Fiyatlar için kod yazılmaz
 
