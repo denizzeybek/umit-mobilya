@@ -47,7 +47,9 @@ const heading = (text: string): void => {
   process.stdout.write(`\n${'═'.repeat(72)}\n${text}\n${'═'.repeat(72)}\n`);
 };
 
-const line = (text: string): void => process.stdout.write(`${text}\n`);
+const line = (text: string): void => {
+  process.stdout.write(`${text}\n`);
+};
 
 /** Etiket başına toplanmış parça bilgisi — fiyat kalemleri de etikete göre. */
 interface IGroup {
