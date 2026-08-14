@@ -1,6 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 
 import { DEFAULT_PRICE_BOOK } from './generated/pricing/defaults';
+import { createDefaultConfig as gardiropDefaultConfig } from './generated/products/gardirop/options';
+import { createDefaultConfig as vestiyerDefaultConfig } from './generated/products/vestiyer/options';
 import { PricingService } from './pricing.service';
 
 /**
@@ -15,18 +17,33 @@ describe('PricingService', () => {
     service = new PricingService();
   });
 
-  const gardirop = () => service.defaultConfig('gardirop', DEFAULT_PRICE_BOOK);
+  const gardirop = () => service.defaultConfig('gardirop');
 
   it('bilinen her ürün tipi için varsayılan config üretir', () => {
     expect(service.productTypes()).toEqual(['gardirop', 'vestiyer']);
 
     for (const type of service.productTypes()) {
-      expect(service.defaultConfig(type, DEFAULT_PRICE_BOOK)).toBeTruthy();
+      expect(service.defaultConfig(type)).toBeTruthy();
     }
   });
 
+  /*
+   * Varsayılan tasarım ürünün KENDİ fabrikasından gelmeli, burada elle
+   * kurulmamalı. Bir zamanlar elle kurulmuş bir taban vardı (`SECTION_SEED`)
+   * ve sessizce ayrışmıştı: vestiyerin bölümünü `shelves: [30]` yazıyordu,
+   * ürünün gerçeği `[25]`. Spec'ler müşterinin hiç görmediği bir tasarımı
+   * test ediyor ama yeşil yanıyordu.
+   *
+   * Bu iddia bugün önemsiz görünüyor (aynı fonksiyon) — işi, o kopyanın
+   * yeniden yazılmasını kırmızıya çevirmek.
+   */
+  it('varsayılan tasarım ürünün kendi fabrikasından gelir', () => {
+    expect(service.defaultConfig('gardirop')).toEqual(gardiropDefaultConfig());
+    expect(service.defaultConfig('vestiyer')).toEqual(vestiyerDefaultConfig());
+  });
+
   it('bilinmeyen ürün tipi 400 verir', () => {
-    expect(() => service.defaultConfig('mutfak', DEFAULT_PRICE_BOOK)).toThrow(
+    expect(() => service.defaultConfig('mutfak')).toThrow(
       BadRequestException,
     );
   });
@@ -63,7 +80,7 @@ describe('PricingService', () => {
     };
 
     const config = {
-      ...service.defaultConfig('gardirop', bare),
+      ...service.defaultConfig('gardirop'),
       height: 180,
       depth: 60,
       sectionCount: 1,

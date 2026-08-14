@@ -50,7 +50,7 @@ describe('QuoteService', () => {
   });
 
   const defaultConfig = () =>
-    new PricingService().defaultConfig('gardirop', DEFAULT_PRICE_BOOK);
+    new PricingService().defaultConfig('gardirop');
 
   const create = () =>
     service.create({

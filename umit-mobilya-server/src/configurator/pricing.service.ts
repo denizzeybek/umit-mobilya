@@ -2,7 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { selectionOf } from './generated/pricing/config';
 import { priceOf } from './generated/pricing/priceOf';
+import { createDefaultConfig as gardiropDefaultConfig } from './generated/products/gardirop/options';
 import { gardiropParts } from './generated/products/gardirop/parts';
+import { createDefaultConfig as vestiyerDefaultConfig } from './generated/products/vestiyer/options';
 import { vestiyerParts } from './generated/products/vestiyer/parts';
 
 import type { IBaseConfig } from './generated/pricing/config';
@@ -33,18 +35,21 @@ const PARTS: Record<string, TPartsFn> = {
 };
 
 /**
- * Varsayılan bölüm ürüne göre değişiyor ve `options.ts` istemcide kaldı
- * (panel metinleri ve hazır düzenlerle birlikte). Sunucunun ihtiyacı olan tek
- * şey fiyatlanabilir bir taban; onu fiyat kitabının ürün ayarlarından kuruyor.
+ * Ürünün KENDİ varsayılan tasarımı — istemcideki `createDefaultConfig`in ta
+ * kendisi, `yarn sync:pricing` ile kopyalanmış hâli.
+ *
+ * Burada bir zamanlar elle kurulmuş bir taban vardı, gerekçesi "options.ts
+ * istemcide kaldı" idi. O gerekçe artık geçerli değil — `options.ts` fiyat ağı
+ * için sunucuya kopyalanıyor — ve elle kurulmuş taban ÜÇÜNCÜ bir kopyaydı:
+ * vestiyerin bölümünü `shelves: [30]` yazıyordu, ürünün gerçeği `[25]`.
+ *
+ * Kimse fark etmemişti çünkü bu yolu yalnızca spec'ler kullanıyor — ve tehlike
+ * tam olarak oradaydı: spec'ler müşterinin hiç görmediği bir tasarımı test
+ * ediyor, "varsayılan gardırop fiyatlanıyor" diye yeşil yanıyordu.
  */
-const SECTION_SEED: Record<string, Record<string, unknown>> = {
-  gardirop: { shelves: [35, 120], rails: [42], drawers: 0 },
-  vestiyer: {
-    benchFromFloor: 45,
-    shoeShelves: 2,
-    shelves: [30],
-    hookRail: 60,
-  },
+const DEFAULTS: Record<string, () => IBaseConfig> = {
+  gardirop: gardiropDefaultConfig,
+  vestiyer: vestiyerDefaultConfig,
 };
 
 @Injectable()
@@ -53,32 +58,24 @@ export class PricingService {
     return Object.keys(PARTS);
   }
 
-  defaultConfig(productType: string, book: IPriceBook): IBaseConfig {
-    const settings = book.products[productType];
-    if (!PARTS[productType] || !settings) {
+  /**
+   * Ürünün varsayılan tasarımı. BUGÜN hiçbir route bunu çağırmıyor; spec'ler
+   * "geçerli bir tasarım" fixture'ı olarak kullanıyor. Yine de ürünün kendi
+   * fabrikasından geliyor — yani spec'lerin denediği tasarım, müşterinin
+   * konfigüratörü açtığında gördüğünün aynısı.
+   *
+   * Fiyat kitabı parametresi YOK: `createDefaultConfig` varsayılan malzemesini
+   * ve kapak tipini tohum kitaptan okuyor, istemcide de öyle. Yayınlanmış bir
+   * kitabın varsayılanları buraya yansımıyor — istemciyle aynı davranış, ve
+   * ikisini birden değiştirmek ayrı bir karar.
+   */
+  defaultConfig(productType: string): IBaseConfig {
+    const create = DEFAULTS[productType];
+    if (!create) {
       throw new BadRequestException(`Bilinmeyen ürün tipi: ${productType}`);
     }
 
-    const width = Math.min(180, settings.width.max);
-    const sectionCount = 2;
-    const bay =
-      Math.round(((width - 2 * sectionCount * 1.8) / sectionCount) * 100) / 100;
-
-    return {
-      width,
-      height: Math.min(220, settings.height.max),
-      depth: Math.min(60, settings.depth.max),
-      sectionCount,
-      material: settings.defaultMaterial,
-      finish: book.finishes[0]?.id ?? 'beyaz',
-      backPanel: book.backPanels[0]?.id ?? 8,
-      doorType: settings.defaultDoorType,
-      doorOpen: 0,
-      sections: Array.from({ length: sectionCount }, () => ({
-        width: bay,
-        ...SECTION_SEED[productType],
-      })),
-    } as IBaseConfig;
+    return create();
   }
 
   quote(
