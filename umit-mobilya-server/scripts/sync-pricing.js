@@ -19,13 +19,26 @@ const CLIENT = resolve(
 );
 const SERVER = resolve(__dirname, '../src/configurator/generated');
 
-/** Taşınabilir çekirdek: Vue ve Three.js bilmeyen her şey. */
+/**
+ * Taşınabilir çekirdek: Vue ve Three.js bilmeyen her şey.
+ *
+ * `options.ts` fiyat motorunun parçası değil ama fiyat ağı ona muhtaç: golden'lar
+ * ürünün KENDİ varsayılan tasarımını da fiyatlıyor. O dosya olmadan
+ * `createDefaultConfig` değiştiğinde müşterinin siteyi açtığında gördüğü rakam
+ * kayar ve hiçbir golden kırılmaz — ağın kanıtladığı config'i testin kendisi
+ * kurmuş olurdu. `geometry/units.ts` de onun yüzünden geliyor: `options.ts`
+ * panel kalınlığını oradan okuyor ve o dosyada sahne kodu değil yalnızca ölçü
+ * sabitleri var.
+ */
 const SOURCES = [
   { from: 'pricing', kind: 'dir' },
+  { from: 'geometry/units.ts', kind: 'file' },
   { from: 'products/gardirop/types.ts', kind: 'file' },
   { from: 'products/gardirop/parts.ts', kind: 'file' },
+  { from: 'products/gardirop/options.ts', kind: 'file' },
   { from: 'products/vestiyer/types.ts', kind: 'file' },
   { from: 'products/vestiyer/parts.ts', kind: 'file' },
+  { from: 'products/vestiyer/options.ts', kind: 'file' },
 ];
 
 const HEADER = [

@@ -81,6 +81,17 @@ run() { # run <etiket> <dizin> <yarn-script>
 # her commit Claude uzerinden atilmiyor.
 run "sunucu testleri (fiyat agi + characterization)" "$server" test
 
+# Istemci aritmetigi. Commit hook'u da kosuyor ama bu kapi onun kosup
+# kosmadigina bagli olamaz — her commit Claude uzerinden atilmiyor.
+run "istemci birim testleri (konfigurator aritmetigi)" "$client" test:unit:run
+
+# type-check'in GORMEDIGI seyi build goruyor, ve ana paket tavani ancak
+# build'den SONRA olculebiliyor. Ikisi de hicbir kapida yoktu: bir composable
+# registry'yi import edip ana paketi 1741 kB'den 2237 kB'ye cikardiginda hicbir
+# test kirilmamisti (Rule 10).
+run "istemci build" "$client" build
+run "ana paket tavani (size-check)" "$client" size-check
+
 # Tarayici katmani: commit hook'unun goremedigi tek sey.
 run "e2e:smoke (butun route'lar aciliyor)" "$client" e2e:smoke
 run "e2e:journeys (fiyat round-trip, paylasim baglantisi, 3B)" "$client" e2e:journeys

@@ -62,9 +62,14 @@ export const PUBLIC_ROUTES: ISmokeRoute[] = [
   /*
    * Bilinmeyen ürün 404 gösterir ve YÖNLENDİRMEZ — adres kullanıcının yazdığı
    * gibi kalmalı ki yanlışı görebilsin.
+   *
+   * Slug ASLA gerçek bir ürün olamayacak bir şey olmalı. Burada bir süre
+   * `mutfak` yazıyordu ve bu bir mayındı: mutfak eklendiği gün bu test
+   * kırılacak, hata da "yeni ürün routing'i bozdu" gibi okunacaktı — oysa
+   * kırılan şey testin kendi örneğiydi. Ürün adayı bir slug seçme.
    */
   {
-    path: '/tasarla/mutfak',
+    path: '/tasarla/boyle-bir-urun-yok',
     title: `Sayfa Bulunamadı - ${SUFFIX}`,
     testId: 'not-found',
   },

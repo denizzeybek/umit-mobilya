@@ -14,3 +14,14 @@ export declare const HEADER: string;
 export declare const collect: () => Promise<ISyncedFile[]>;
 export declare const expectedContent: (from: string) => Promise<string>;
 export declare const serverPath: (to: string) => string;
+
+/**
+ * İstemcideki `_etc/` kökünün mutlak yolu. Bildirilmişti ama tipte yoktu; ürün
+ * eksiksizlik spec'i ürün listesini istemcinin KLASÖRLERİNDEN okuyor ve o yolu
+ * ikinci kez yazmak, tam olarak bu testin yakalamak istediği ayrışmayı
+ * üretirdi.
+ */
+export declare const CLIENT: string;
+
+/** Sunucudaki `src/configurator/generated/` kökünün mutlak yolu. */
+export declare const SERVER: string;

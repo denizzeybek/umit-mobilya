@@ -1,3 +1,7 @@
+/* ÜRETİLMİŞ DOSYA — ELLE DÜZENLEMEYİN.
+ * Kaynak: umit-mobilya-client/src/views/configurator/_etc/
+ * Yeniden üretmek için: cd umit-mobilya-server && yarn sync:pricing
+ */
 import { PANEL_THICKNESS_CM } from '../../geometry/units';
 import { DEFAULT_PRICE_BOOK } from '../../pricing/defaults';
 

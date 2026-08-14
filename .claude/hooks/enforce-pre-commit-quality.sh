@@ -30,6 +30,11 @@ if printf '%s\n' "$staged" | grep -q '^umit-mobilya-client/src/' \
   && [[ -d "$client/node_modules" ]]; then
   run_gate "$client" lint /tmp/umb-client-lint.log
   run_gate "$client" type-check /tmp/umb-client-tsc.log
+  # Konfiguratorun aritmetigi. Bu kapida hic kosmuyordu: fiyat motorunu koruyan
+  # tek katman, otomatik kosmayan tek katmandi. ~12 sn, o yuzden commit'te.
+  # `build` ve `size-check` push kapisinda: ikisi dakikalar suruyor ve bir
+  # commit'i o kadar bekletmek, kapiyi atlamanin gerekcesi olur.
+  run_gate "$client" test:unit:run /tmp/umb-client-vitest.log
 fi
 
 if printf '%s\n' "$staged" | grep -qE '^umit-mobilya-server/(src|test)/' \

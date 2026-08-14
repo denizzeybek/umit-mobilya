@@ -14,6 +14,7 @@
     "test:changed": "jest --onlyChanged --bail",
     "schema:dump": "nest build && node dist/tools/dump-openapi.js",
     "sync:pricing": "node scripts/sync-pricing.js",
+    "fiyat-acikla": "ts-node --files --transpile-only -P tsconfig.json scripts/price-explain.ts",
     "e2e:api": "ts-node --files --transpile-only -P tsconfig.json test/e2e-api.ts",
     "price-net:bless": "PRICE_NET_BLESS=1 jest --runTestsByPath test/price-net/price-net.spec.ts"
   },

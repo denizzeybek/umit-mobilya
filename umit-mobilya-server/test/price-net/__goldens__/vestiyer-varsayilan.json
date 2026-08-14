@@ -1,0 +1,72 @@
+{
+  "productType": "vestiyer",
+  "configSchemaVersion": 1,
+  "priceBookVersion": 0,
+  "config": {
+    "width": 140,
+    "height": 200,
+    "depth": 35,
+    "sectionCount": 2,
+    "material": "mdf-gloss",
+    "finish": "mese",
+    "backPanel": 8,
+    "doorType": "yok",
+    "doorOpen": 0,
+    "sections": [
+      {
+        "width": 66.4,
+        "benchFromFloor": 45,
+        "shoeShelves": 2,
+        "shelves": [
+          25
+        ],
+        "hookRail": 60
+      },
+      {
+        "width": 66.4,
+        "benchFromFloor": 45,
+        "shoeShelves": 2,
+        "shelves": [
+          25
+        ],
+        "hookRail": 60
+      }
+    ]
+  },
+  "price": {
+    "lines": [
+      {
+        "label": "Gövde",
+        "amount": 7560
+      },
+      {
+        "label": "Oturak",
+        "amount": 855.2320000000001
+      },
+      {
+        "label": "Ayakkabılık",
+        "amount": 1710.4640000000002
+      },
+      {
+        "label": "Raflar",
+        "amount": 855.2320000000001
+      },
+      {
+        "label": "Askı çıtası",
+        "amount": 239.04000000000002
+      },
+      {
+        "label": "Kenar bandı",
+        "amount": 239.04000000000002
+      },
+      {
+        "label": "İşçilik",
+        "amount": 4401.662400000001
+      }
+    ],
+    "netTotal": 20735.838000000003,
+    "vat": 4147.167600000001,
+    "total": 24883.005600000004
+  },
+  "displayTotal": 24880
+}

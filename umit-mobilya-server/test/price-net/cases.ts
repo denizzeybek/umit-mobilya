@@ -1,4 +1,6 @@
 import { panelThicknessOf } from '../../src/configurator/generated/pricing/moduleLayout';
+import { createDefaultConfig as gardiropDefaultConfig } from '../../src/configurator/generated/products/gardirop/options';
+import { createDefaultConfig as vestiyerDefaultConfig } from '../../src/configurator/generated/products/vestiyer/options';
 
 import type { IBaseConfig } from '../../src/configurator/generated/pricing/config';
 import type { IPriceBook } from '../../src/configurator/generated/pricing/priceBook';
@@ -15,6 +17,19 @@ import type { IVestiyerSection } from '../../src/configurator/generated/products
  * Ölçüler kataloğun kendi sınırlarından okunuyor, elle yazılmış sayılardan
  * değil: katalog değişince case onunla birlikte hareket eder ve golden diff'i
  * "sınır değişti" ile "fiyat kaydı"nı ayırt edilebilir tutar.
+ *
+ * İki case ailesi var ve ayrımı bilerek:
+ *
+ *   1. `<urun>-varsayilan` — tasarım ÜRÜNÜN kendi fabrikasından geliyor
+ *      (`createDefaultConfig`). Bu ailenin kanıtladığı şey, kullanıcının
+ *      konfigüratörü açtığında gördüğü ilk rakam.
+ *   2. Kalanı — tasarım burada, sabit değerlerle kuruluyor. Bunlar motorun
+ *      belirli dallarını (modül bölünmesi, kapaksız yol, köşe modülü) sıkıştırıp
+ *      sabit tutuyor; ürünün varsayılanı değişse bile kaymamaları gerekiyor.
+ *
+ * Yalnızca ikinci aile olduğunda `options.ts` düzenlemek — oturağı kaldırmak,
+ * varsayılan ölçüyü değiştirmek — müşteriye giden tutarı oynatıp bütün ağı
+ * yeşil bırakıyordu. Birinci aile tam olarak o boşluk için var.
  */
 export interface IPriceCase {
   /** Golden dosyasının adı. */
@@ -159,6 +174,18 @@ export const priceCases = (book: IPriceBook): IPriceCase[] => {
 
   return [
     {
+      id: 'gardirop-varsayilan',
+      title: 'Ürünün kendi varsayılanı — konfigüratörü açan ilk bunu görür',
+      guards:
+        'Öteki senaryolar tasarımı testin içinde kuruyor; bu senaryo ürünün ' +
+        'KENDİ fabrikasına bağlı (createDefaultConfig + createSection). ' +
+        'Varsayılan ölçü, iç düzen, malzeme ya da kapak tipi değiştiğinde kayan ' +
+        'golden budur — ve o tutar müşterinin konfigüratörü açtığında gördüğü ' +
+        'ilk rakam, yani sessizce kaymaya en açık olan sayı.',
+      productType: 'gardirop',
+      config: gardiropDefaultConfig(),
+    },
+    {
       id: 'gardirop-standart',
       title: '180 x 220 x 60, iki bölüm, kulpsuz kapak, MDF High Gloss',
       guards:
@@ -229,6 +256,18 @@ export const priceCases = (book: IPriceBook): IPriceCase[] => {
           index === 2 ? { ...section, corner: true } : section,
         ),
       },
+    },
+    {
+      id: 'vestiyer-varsayilan',
+      title: 'Vestiyerin kendi varsayılanı — oturak, ayakkabılık ve askı dahil',
+      guards:
+        'Vestiyerin varsayılan bölümü: oturak yüksekliği, ayakkabılık rafı ' +
+        'sayısı ve askı çıtası. Bu üçü options.ts içinde yaşıyor ve öteki iki ' +
+        'vestiyer senaryosu kendi bölümünü kurduğu için onları göremiyor. ' +
+        'Oturağı kaldıran ya da raf sayısını değiştiren bir düzenleme yalnızca ' +
+        'burada kırmızı verir.',
+      productType: 'vestiyer',
+      config: vestiyerDefaultConfig(),
     },
     {
       id: 'vestiyer-standart',

@@ -4,6 +4,7 @@ import { buildFromParts } from './geometry/buildFromParts';
 import { DEFAULT_PRICE_BOOK } from './pricing/defaults';
 import { priceOf } from './pricing/priceOf';
 import { gardiropDefinition } from './products/gardirop';
+import { PRODUCT_SUMMARIES } from './productList';
 import { PRODUCTS } from './registry';
 
 import type { IBaseConfig } from './types';
@@ -27,6 +28,27 @@ const selectionOf = (config: IBaseConfig) => ({
 const entries = Object.entries(PRODUCTS);
 
 describe('ürün kayıt defteri', () => {
+  /*
+   * Bir ürün eklemek ~13 yere dokunuyor ve `registry.ts` derleyici tarafından
+   * korunuyor (`Record<EProductType, ...>` eksik üyeyi hata yapar). Korunmayan
+   * iki yer şunlar: menü listesi ve fiyat kitabı ayarı.
+   *
+   * İkisi de SESSİZ kırılıyor. `productLabel` bulamadığında boş dize dönüyor,
+   * yani başlık "Tasarla" oluyor ve menüde adsız bir satır duruyor. Fiyat
+   * kitabı ayarı eksik olduğunda `createDefaultConfig` artık erken düşüyor ama
+   * bunu ancak o ürünün sayfasını açan görür — burada hepsi bir arada sorulur.
+   */
+  it.each(entries)('%s hem menü listesinde hem fiyat kitabında var', (id, definition) => {
+    expect(PRODUCT_SUMMARIES.some((product) => product.id === id)).toBe(true);
+    expect(definition.label).not.toBe('');
+    expect(DEFAULT_PRICE_BOOK.products[id]).toBeDefined();
+  });
+
+  /* Tersi de tuzak: menüde duran ama tanımı olmayan bir satır 404'e götürür. */
+  it.each(PRODUCT_SUMMARIES)('menüdeki $label bir ürün tanımına karşılık gelir', ({ id }) => {
+    expect(Object.keys(PRODUCTS)).toContain(id);
+  });
+
   it.each(entries)('%s varsayılanı katalogda var olan kimlikler taşır', (_, definition) => {
     const config = definition.createDefault();
     const ids = DEFAULT_PRICE_BOOK;

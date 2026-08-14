@@ -148,6 +148,19 @@ Rule 08'in üstüne, bu ağa özel olanlar:
 6. **Yeni spec kırmızı başlamak zorunda değil.** `test/price-net/**` var olan
    davranışı çiviliyor — characterization ile aynı iddia — ve
    `enforce-spec-failing` bu yolu bu yüzden muaf tutuyor.
+7. **Her ürünün bir `<slug>-varsayilan` case'i vardır** ve o case'in tasarımı
+   ürünün KENDİ `createDefaultConfig()`'inden gelir — `cases.ts` içinde elle
+   kurulmaz. Yeni ürün eklerken bu case zorunlu.
+
+   Sebebi ölçüldü: bütün case'ler tasarımı testin içinde kurarken
+   `products/vestiyer/options.ts`'te `shoeShelves` 2'den 3'e çekilmek
+   müşterinin gördüğü varsayılan vestiyerin tutarını oynatıyordu ve **ağın
+   tamamı yeşil kalıyordu** — golden'lar kendi config'ini kurduğu için ürünün
+   fabrikasını kimse denemiyordu. `registry.spec.ts` varsayılanı deniyor ama
+   yalnızca "sıfırdan büyük" diyor, rakamı çivilemiyor.
+
+   Bu yüzden `options.ts` da `yarn sync:pricing` listesinde: motorun parçası
+   değil, ağın konusu.
 
 ## Do
 
