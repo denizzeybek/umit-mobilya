@@ -160,6 +160,20 @@ kararı skill verir ve kaydı o yazar:
 - `fiyat-degisikligi` → `.git/price-decision-pass` (sahnelenmiş golden diff'inin özeti)
 - `ai-review` → `.git/ai-review-pass` (incelenen HEAD SHA'sı)
 
+### Dosya düzenlemesi `Edit`/`Write` üstünden yapılır — `sed -i` değil
+
+Yukarıdaki kapıların **hiçbiri** kabuktan yapılan yerinde düzenlemeyi görmüyor:
+`Write|Edit` üstünde duruyorlar. `sed -i`, `perl -pi` ya da `> dosya` ile
+yazmak dal muhafızını, yorum politikasını, dosya boyutu tavanını, `any`
+kontrolünü, ürün izolasyonunu ve fiyat ağı korumasını **tek seferde** atlıyor.
+
+Bu teorik değil: bu repoda `perl -pi` ile iki dosya düzenlendi ve altı hook'un
+hiçbiri çalışmadı. O yüzden `sed -i` / `perl -pi` / `perl -i` artık
+`.claude/settings.json` içinde **deny**.
+
+Kaçış yolu yok çünkü gerekmiyor: aynı işi `Edit` yapıyor ve kapılar görüyor.
+Toplu bir değişiklik gerekiyorsa `Edit`'in `replace_all` seçeneği var.
+
 `enforce-branch.sh` bir skill istemiyor: sorusunun tek bir doğru cevabı var.
 `main` deploy edilen dal ve arada CI yok, o yüzden repo içine yazmak için dal
 şart — kapı yazma anında duruyor, yani iş main'e yazıldıktan *sonra* değil

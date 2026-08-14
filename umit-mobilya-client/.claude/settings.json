@@ -14,8 +14,15 @@
       "Bash(yarn type-check*)",
       "Bash(yarn test:unit*)",
       "Bash(yarn format*)",
+      "Bash(yarn size-check*)",
+      "Bash(yarn e2e:smoke*)",
+      "Bash(yarn e2e:journeys*)",
+      "Bash(yarn gcl*)",
       "Bash(npx vue-tsc*)",
-      "Bash(npx vitest*)"
+      "Bash(npx vitest*)",
+      "Bash(npx tsc*)",
+      "Bash(npx eslint*)",
+      "Bash(npx playwright test*)"
     ]
   },
   "hooks": {
